@@ -10,6 +10,7 @@ const PROJECTILE_SCENE := preload(\"res://knife_projectile.tscn\")
 @export var min_throw_speed: float = 10.0
 @export var max_throw_speed: float = 32.0
 @export var max_charge_seconds: float = 1.25
+@export var ui_fade_seconds: float = 0.15
 ## 相对摄像机右侧偏移，避免从镜头中心穿出
 @export var spawn_offset_right: float = 0.35
 ## 沿视线向前推出，避免生在相机体内
@@ -21,8 +22,15 @@ const PROJECTILE_SCENE := preload(\"res://knife_projectile.tscn\")
 
 var _charging: bool = false
 var _charge_elapsed_seconds: float = 0.0
+var _ui_fade_tween: Tween
 
 @onready var camera_3d: Camera3D = $CameraYaw/Camera3D
+@onready var progress_root: Control = %Progress
+@onready var strength_bar: TextureRect = %Strength
+
+
+func _ready() -> void:
+	strength_bar.progress = 1.0
 
 
 func _process(delta: float) -> void:
@@ -31,6 +39,22 @@ func _process(delta: float) -> void:
 			_charge_elapsed_seconds + delta,
 			max_charge_seconds
 		)
+		var charge_ratio := 0.0
+		if max_charge_seconds > 0.0:
+			charge_ratio = clampf(_charge_elapsed_seconds / max_charge_seconds, 0.0, 1.0)
+		strength_bar.progress = charge_ratio
+
+
+func _fade_progress_ui(target_alpha: float) -> void:
+	if _ui_fade_tween != null:
+		_ui_fade_tween.kill()
+	_ui_fade_tween = create_tween()
+	_ui_fade_tween.tween_property(
+		progress_root,
+		^\"modulate\",
+		Color(1.0, 1.0, 1.0, target_alpha),
+		ui_fade_seconds
+	)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -43,10 +67,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		if mouse_event.pressed:
 			_charging = true
 			_charge_elapsed_seconds = 0.0
+			strength_bar.progress = 1.0
+			_fade_progress_ui(1.0)
 		else:
 			if _charging:
 				_throw_knife()
 			_charging = false
+			_fade_progress_ui(0.0)
 
 
 func _throw_knife() -> void:
@@ -196,9 +223,10 @@ environment = SubResource("Environment_white_bg")
 current = true
 fov = 20.0
 
-[node name="Strength" type="TextureRect" parent="." unique_id=160357816]
+[node name="Progress" type="Control" parent="." unique_id=1700000001]
 unique_name_in_owner = true
-material = SubResource("ShaderMaterial_kpjcp")
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -210,6 +238,16 @@ offset_right = -25.0
 offset_bottom = -22.0
 grow_horizontal = 0
 grow_vertical = 0
+
+[node name="Strength" type="TextureRect" parent="Progress" unique_id=160357816]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_kpjcp")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_xhfnw")
 script = SubResource("GDScript_kpjcp")
 progress = 1.0
