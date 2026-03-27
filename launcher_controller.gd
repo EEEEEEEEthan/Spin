@@ -11,6 +11,8 @@ const PROJECTILE_SCENE := preload("res://knife_projectile.tscn")
 @export var spawn_offset_forward: float = 0.4
 ## 初速度向上分量 = throw_speed * 该系数，形成抛物线感
 @export var arc_up_factor: float = 0.15
+## 绕飞刀刚体局部 X 轴自旋角速度（弧度/秒，写入世界空间 angular_velocity）
+@export var knife_spin_radians_per_second: float = 7.0
 
 var _charging: bool = false
 var _charge_elapsed_seconds: float = 0.0
@@ -61,5 +63,5 @@ func _throw_knife() -> void:
 	projectiles_root.add_child(knife)
 	knife.global_position = spawn_origin
 	knife.linear_velocity = initial_velocity
-	# 绕侧轴轻旋，便于看出立方体在运动
-	knife.angular_velocity = camera_basis.x * 7.0
+	var spin_axis_world: Vector3 = knife.global_transform.basis.x.normalized()
+	knife.angular_velocity = spin_axis_world * knife_spin_radians_per_second

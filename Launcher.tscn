@@ -14,6 +14,7 @@ size = Vector3(40, 1, 40)
 
 [node name="Launcher" type="Node3D" unique_id=1151770281]
 script = ExtResource("1_launcher")
+knife_spin_radians_per_second = -20.0
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=15691348]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2, 8)
