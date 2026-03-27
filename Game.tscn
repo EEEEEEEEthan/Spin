@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bxsfl8hvrdh7b" path="res://Player.tscn" id="1_wbfu4"]
 [ext_resource type="PackedScene" uid="uid://cjjycohe2mwu4" path="res://Table.tscn" id="2_xkndl"]
+[ext_resource type="PackedScene" uid="uid://by0ecoe3gqiag" path="res://Wall.blend" id="3_sb48q"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="3_u44n3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
@@ -14,13 +15,8 @@ size = Vector3(40, 1, 40)
 [sub_resource type="BoxShape3D" id="BoxShape3D_u44n3"]
 size = Vector3(40, 1, 40)
 
-[sub_resource type="QuadMesh" id="QuadMesh_xkndl"]
-material = ExtResource("3_u44n3")
-size = Vector2(1000, 1000)
-center_offset = Vector3(0, 500, 0)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_sb48q"]
-size = Vector3(816.02246, 75.573975, 1.513794)
+size = Vector3(7.9804688, 4.519409, 0.18261719)
 
 [node name="Game" type="Node3D" unique_id=552426368]
 
@@ -38,12 +34,18 @@ mesh = SubResource("BoxMesh_xkndl")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=377258206]
 shape = SubResource("BoxShape3D_u44n3")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=364837384]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=48545751]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D" unique_id=1883912893]
-mesh = SubResource("QuadMesh_xkndl")
+[node name="Wall" parent="StaticBody3D" unique_id=1158833840 instance=ExtResource("3_sb48q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1599128575]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 37.72937, -0.743103)
+[node name="Cube" parent="StaticBody3D/Wall" index="0" unique_id=529368497]
+transform = Transform3D(4, 0, 0, 0, 2, 0, 0, 0, 0.09200412, 0, 2.0522444, -2)
+surface_material_override/0 = ExtResource("3_u44n3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=841732013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7597046, 0)
 shape = SubResource("BoxShape3D_sb48q")
+
+[editable path="StaticBody3D/Wall"]
