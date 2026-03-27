@@ -7,7 +7,9 @@
 
 [node name="Human" parent="." unique_id=155100909 instance=ExtResource("2_s1pbw")]
 
-[node name="身体" parent="Human/骨架/Skeleton3D" parent_id_path=PackedInt32Array(155100909, 238912148) index="0" unique_id=2071996272]
+[node name="身体" parent="Human/骨架/Skeleton3D" parent_id_path=PackedInt32Array(155100909, 224271085) index="0" unique_id=2059002218]
 surface_material_override/0 = ExtResource("2_qefdq")
+
+[node name="PhysicalBoneSimulator3D" type="PhysicalBoneSimulator3D" parent="Human/骨架/Skeleton3D" parent_id_path=PackedInt32Array(155100909, 224271085) index="1" unique_id=677144911]
 
 [editable path="Human"]
