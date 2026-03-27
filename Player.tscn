@@ -129,7 +129,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 "
 
-[node name="Launcher" type="Node3D" unique_id=1151770281]
+[node name="Player" type="Node3D" unique_id=1151770281]
 script = SubResource("GDScript_xhfnw")
 knife_spin_radians_per_second = -20.0
 
