@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://22e28u4ukqvi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape_cube"]
+size = Vector3(0.2, 0.2, 0.2)
+
+[node name="KnifeProjectile" type="RigidBody3D"]
+continuous_cd = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_cube")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape_cube")
