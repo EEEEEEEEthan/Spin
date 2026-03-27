@@ -1,15 +1,7 @@
 [gd_scene format=3 uid="uid://dahfgxxyxlf71"]
 
-[ext_resource type="ArrayMesh" uid="uid://dlf5idoahnpvq" path="res://Human.obj" id="1_gjav3"]
 [ext_resource type="Shader" uid="uid://csqd0hqga7xpd" path="res://shaders/outline_unlit.gdshader" id="2_qefdq"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_s1pbw"]
-render_priority = 0
-shader = ExtResource("2_qefdq")
-shader_parameter/fill_color = Color(1, 1, 1, 1)
-shader_parameter/edge_color = Color(0, 0, 0, 1)
-shader_parameter/hard_edge_width = 0.514000024415
-shader_parameter/transition_width = 0.01600000076
+[ext_resource type="PackedScene" uid="uid://p824wqdipd0h" path="res://Human.glb" id="2_s1pbw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qefdq"]
 render_priority = 0
@@ -26,14 +18,11 @@ height = 2.0
 
 [node name="Node3D" type="Node3D" unique_id=386154028]
 
-[node name="Human" type="MeshInstance3D" parent="." unique_id=1527180549]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.8564095, 0)
-mesh = ExtResource("1_gjav3")
-skeleton = NodePath("../Skeleton3D")
-surface_material_override/0 = SubResource("ShaderMaterial_s1pbw")
-
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1975725029]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.66399, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.750555, 0)
 mesh = SubResource("SphereMesh_s1pbw")
 
-[node name="Skeleton3D" type="Skeleton3D" parent="." unique_id=1246395710]
+[node name="Human" parent="." unique_id=1542932331 instance=ExtResource("2_s1pbw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.22414, 0)
+
+[editable path="Human"]
