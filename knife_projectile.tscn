@@ -1,163 +1,17 @@
 [gd_scene format=3 uid="uid://22e28u4ukqvi"]
 
-[ext_resource type="PackedScene" uid="uid://cfpgksxa8rvcb" path="res://Knife.glb" id="1_knife"]
+[ext_resource type="PackedScene" uid="uid://cq1h63fai8qtb" path="res://Knife.blend" id="1_itxqv"]
 
-[sub_resource type="GDScript" id="GDScript_itxqv"]
-script/source = "@tool
-extends Node3D
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.01
 
-@export var mat_inner: Material
-@export var mat_outline: Material
-
-@export var rotation_axis: Vector3 = Vector3(1, 0, 0):
-	get:
-		return rotation_axis
-	set(value):
-		rotation_axis = value
-		mat_inner.set_shader_parameter('rotation_axis', value)
-		mat_outline.set_shader_parameter('rotation_axis', value)
-
-@export var axis_center_model: Vector3 = Vector3.ZERO:
-	get:
-		return axis_center_model
-	set(value):
-		axis_center_model = value
-		mat_inner.set_shader_parameter('axis_center_model', value)
-		mat_outline.set_shader_parameter('axis_center_model', value)
-
-@export_range(-720.0, 720.0, 0.1) var standard_degree: float = -360.0:
-	get:
-		return standard_degree
-	set(value):
-		standard_degree = value
-		mat_inner.set_shader_parameter('standard_degree', value)
-		mat_outline.set_shader_parameter('standard_degree', value)
-
-@export_range(0.05, 8.0, 0.01) var distance_power: float = 2.89:
-	get:
-		return distance_power
-	set(value):
-		distance_power = value
-		mat_inner.set_shader_parameter('distance_power', value)
-		mat_outline.set_shader_parameter('distance_power', value)
-
-@export var outline_color: Color = Color(0.08, 0.09, 0.11):
-	get:
-		return outline_color
-	set(value):
-		outline_color = value
-		mat_outline.set_shader_parameter('outline_color', value)
-
-@export_range(0.0, 0.2, 0.0001) var outline_width: float = 0.008:
-	get:
-		return outline_width
-	set(value):
-		outline_width = value
-		mat_outline.set_shader_parameter('outline_width', value)
-
-func _ready() -> void:
-	rotation_axis = rotation_axis
-	axis_center_model = axis_center_model
-	standard_degree = standard_degree
-	distance_power = distance_power
-	outline_color = outline_color
-	outline_width = outline_width
-"
-
-[sub_resource type="Shader" id="Shader_m8wqu"]
-code = "shader_type spatial;
-
-// 与 outline_unlit 相同：先按距离旋转，再沿法线外扩，cull_front 形成轮廓壳。
-render_mode unshaded, cull_front, depth_draw_opaque;
-
-uniform vec3 rotation_axis = vec3(0.0, 1.0, 0.0);
-uniform vec3 axis_center_model = vec3(0.0, 0.0, 0.0);
-/// 模型空间下距轴心距离为 1 且 pow 指数为 1 时的转角；实际为 standard_degree * pow(距离, distance_power)。
-uniform float standard_degree : hint_range(-720.0, 720.0, 0.1) = 45.0;
-uniform float distance_power : hint_range(0.05, 8.0, 0.01) = 2.0;
-
-uniform vec3 outline_color : source_color = vec3(0.08, 0.09, 0.11);
-uniform float outline_width : hint_range(0.0, 0.2, 0.0001) = 0.012;
-
-void vertex() {
-	vec3 axis_unit = normalize(rotation_axis);
-	vec3 offset = VERTEX - axis_center_model;
-	float distance_from_center = length(offset);
-	float angle_weight = pow(distance_from_center, distance_power);
-	float angle_radians = radians(standard_degree) * angle_weight;
-	float cosine = cos(angle_radians);
-	float sine = sin(angle_radians);
-	vec3 rotated_offset = offset * cosine + cross(axis_unit, offset) * sine
-			+ axis_unit * dot(axis_unit, offset) * (1.0 - cosine);
-	vec3 rotated_vertex = rotated_offset + axis_center_model;
-	vec3 n = NORMAL;
-	vec3 rotated_normal = normalize(n * cosine + cross(axis_unit, n) * sine
-			+ axis_unit * dot(axis_unit, n) * (1.0 - cosine));
-	vec3 t = TANGENT.xyz;
-	TANGENT.xyz = normalize(t * cosine + cross(axis_unit, t) * sine
-			+ axis_unit * dot(axis_unit, t) * (1.0 - cosine));
-	VERTEX = rotated_vertex + normalize(rotated_normal) * outline_width;
-	NORMAL = rotated_normal;
-}
-
-void fragment() {
-	ALBEDO = outline_color;
-}
-"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dav7w"]
-render_priority = 0
-shader = SubResource("Shader_m8wqu")
-shader_parameter/rotation_axis = Vector3(1, 0, 0)
-shader_parameter/axis_center_model = Vector3(0, 0, 0)
-shader_parameter/standard_degree = 0.0
-shader_parameter/distance_power = 1.0
-shader_parameter/outline_color = Color(0.08, 0.09, 0.11, 1)
-shader_parameter/outline_width = 0.005
-
-[sub_resource type="Shader" id="Shader_g2e78"]
-code = "shader_type spatial;
-
-render_mode unshaded;
-
-/// 顶点绕轴旋转；距轴心越近转角越小，distance_power 控制距离-转角曲线。
-uniform vec3 rotation_axis = vec3(0.0, 1.0, 0.0);
-uniform vec3 axis_center_model = vec3(0.0, 0.0, 0.0);
-uniform float standard_degree : hint_range(-720.0, 720.0, 0.1) = 45.0;
-uniform float distance_power : hint_range(0.05, 8.0, 0.01) = 2.0;
-
-void vertex() {
-	vec3 axis_unit = normalize(rotation_axis);
-	vec3 offset = VERTEX - axis_center_model;
-	float distance_from_center = length(offset);
-	float angle_weight = pow(distance_from_center, distance_power);
-	float angle_radians = radians(standard_degree) * angle_weight;
-	float cosine = cos(angle_radians);
-	float sine = sin(angle_radians);
-	vec3 rotated_offset = offset * cosine + cross(axis_unit, offset) * sine
-			+ axis_unit * dot(axis_unit, offset) * (1.0 - cosine);
-	VERTEX = rotated_offset + axis_center_model;
-	vec3 n = NORMAL;
-	NORMAL = normalize(n * cosine + cross(axis_unit, n) * sine
-			+ axis_unit * dot(axis_unit, n) * (1.0 - cosine));
-	vec3 t = TANGENT.xyz;
-	TANGENT.xyz = normalize(t * cosine + cross(axis_unit, t) * sine
-			+ axis_unit * dot(axis_unit, t) * (1.0 - cosine));
-}
-
-void fragment() {
-	ALBEDO = vec3(0.85, 0.88, 0.92);
-}
-"
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_m8wqu"]
-render_priority = 0
-next_pass = SubResource("ShaderMaterial_dav7w")
-shader = SubResource("Shader_g2e78")
-shader_parameter/rotation_axis = Vector3(1, 0, 0)
-shader_parameter/axis_center_model = Vector3(0, 0, 0)
-shader_parameter/standard_degree = 0.0
-shader_parameter/distance_power = 1.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g2e78"]
+next_pass = SubResource("StandardMaterial3D_itxqv")
+shading_mode = 0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_itxqv"]
 size = Vector3(0.009521484, 0.017089844, 0.018432617)
@@ -168,17 +22,11 @@ size = Vector3(0.017333984, 0.1743164, 0.031463623)
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 continuous_cd = true
 
-[node name="Knife" parent="." unique_id=1360066393 instance=ExtResource("1_knife")]
+[node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
-script = SubResource("GDScript_itxqv")
-mat_inner = SubResource("ShaderMaterial_m8wqu")
-mat_outline = SubResource("ShaderMaterial_dav7w")
-standard_degree = 0.0
-distance_power = 1.0
-outline_width = 0.005
 
-[node name="匕首" parent="Knife" index="0" unique_id=1172966167]
-surface_material_override/0 = SubResource("ShaderMaterial_m8wqu")
+[node name="匕首" parent="Knife" index="0" unique_id=793544672]
+surface_material_override/0 = SubResource("StandardMaterial3D_g2e78")
 
 [node name="Blade" type="CollisionShape3D" parent="." unique_id=432524605]
 unique_name_in_owner = true
