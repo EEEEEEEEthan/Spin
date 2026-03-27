@@ -3,10 +3,20 @@
 [ext_resource type="PackedScene" uid="uid://c40t0d267hf1w" path="res://Balloon.blend" id="1_12dx6"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_rpx6m"]
 [ext_resource type="Script" uid="uid://gjtf2w7hhs8a" path="res://balloon.gd" id="3_balloon"]
+[ext_resource type="Texture2D" uid="uid://bso4h3xn18wc7" path="res://Explode.png" id="4_qu23q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_12dx6"]
 radius = 0.21289063
 height = 0.6167908
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u1ntq"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("4_qu23q")
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_gxany"]
+material = SubResource("StandardMaterial3D_u1ntq")
 
 [node name="Balloon" type="RigidBody3D" unique_id=400769925]
 mass = 0.001
@@ -14,6 +24,7 @@ gravity_scale = 0.01
 script = ExtResource("3_balloon")
 
 [node name="Balloon" parent="." unique_id=761245651 instance=ExtResource("1_12dx6")]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012249172, 0)
 
 [node name="球体" parent="Balloon" index="0" unique_id=927407977]
@@ -22,5 +33,10 @@ surface_material_override/0 = ExtResource("2_rpx6m")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952877138]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29666066, 0)
 shape = SubResource("CapsuleShape3D_12dx6")
+
+[node name="Explode" type="MeshInstance3D" parent="." unique_id=1903084844]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.282651, 0)
+mesh = SubResource("QuadMesh_gxany")
 
 [editable path="Balloon"]
