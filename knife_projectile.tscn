@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://22e28u4ukqvi"]
 
-[ext_resource type="Script" path="res://knife_projectile.gd" id="1_knifeproj"]
 [ext_resource type="PackedScene" uid="uid://cq1h63fai8qtb" path="res://Knife.blend" id="1_itxqv"]
+[ext_resource type="Script" uid="uid://dt7cwe450sxbs" path="res://knife_projectile.gd" id="1_knifeproj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
 cull_mode = 1
