@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bxsfl8hvrdh7b"]
 
 [sub_resource type="GDScript" id="GDScript_xhfnw"]
-script/source = "extends Node3D
+script/source = "extends Node
 
 const PROJECTILE_SCENE := preload(\"res://knife_projectile.tscn\")
 
@@ -21,7 +21,6 @@ var _charging: bool = false
 var _charge_elapsed_seconds: float = 0.0
 
 @onready var camera_3d: Camera3D = $CameraYaw/Camera3D
-@onready var projectiles_root: Node3D = $Projectiles
 
 
 func _process(delta: float) -> void:
@@ -65,7 +64,7 @@ func _throw_knife() -> void:
 	var initial_velocity: Vector3 = forward * throw_speed + Vector3.UP * (throw_speed * arc_up_factor)
 
 	var knife: RigidBody3D = PROJECTILE_SCENE.instantiate() as RigidBody3D
-	projectiles_root.add_child(knife)
+	add_child(knife)
 	knife.global_position = spawn_origin
 	knife.linear_velocity = initial_velocity
 	var spin_axis_world: Vector3 = knife.global_transform.basis.x.normalized()
@@ -148,7 +147,7 @@ func _unhandled_input(event: InputEvent) -> void:
 background_mode = 1
 background_color = Color(1, 1, 1, 1)
 
-[node name="Player" type="Node3D" unique_id=1151770281]
+[node name="Player" type="Node" unique_id=1311655955]
 script = SubResource("GDScript_xhfnw")
 knife_spin_radians_per_second = -20.0
 
@@ -159,6 +158,5 @@ script = SubResource("GDScript_0rwas")
 [node name="Camera3D" type="Camera3D" parent="CameraYaw" unique_id=15691348]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881898, 0, -0.25881898, 0.9659259, 0, 0, 0)
 environment = SubResource("Environment_white_bg")
+current = true
 fov = 20.0
-
-[node name="Projectiles" type="Node3D" parent="." unique_id=1135782429]
