@@ -150,7 +150,8 @@ background_mode = 1
 background_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Shader" id="Shader_xhfnw"]
-code = "shader_type canvas_item;
+code = "
+shader_type canvas_item;
 
 uniform float progress;
 
@@ -165,7 +166,21 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kpjcp"]
 shader = SubResource("Shader_xhfnw")
-shader_parameter/progress = 0.705
+shader_parameter/progress = 1.0
+
+[sub_resource type="GDScript" id="GDScript_kpjcp"]
+script/source = "@tool
+extends TextureRect
+
+var _progress: float = 0.705
+
+@export_range(0, 1) var progress: float:
+	get:
+		return _progress
+	set(value):
+		_progress = value
+		material.set_shader_parameter(&\"progress\", _progress)
+"
 
 [node name="Player" type="Node" unique_id=1311655955]
 script = SubResource("GDScript_xhfnw")
@@ -196,3 +211,5 @@ offset_bottom = -22.0
 grow_horizontal = 0
 grow_vertical = 0
 texture = ExtResource("1_xhfnw")
+script = SubResource("GDScript_kpjcp")
+progress = 1.0
