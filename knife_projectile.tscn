@@ -2,6 +2,77 @@
 
 [ext_resource type="PackedScene" uid="uid://cfpgksxa8rvcb" path="res://Knife.glb" id="1_knife"]
 
+[sub_resource type="GDScript" id="GDScript_itxqv"]
+script/source = "@tool
+extends Node3D
+
+@export var mat_inner: Material
+@export var mat_outline: Material
+
+@export var rotation_axis: Vector3 = Vector3(1, 0, 0):
+	get:
+		return rotation_axis
+	set(value):
+		rotation_axis = value
+		mat_inner.set_shader_parameter('rotation_axis', value)
+		mat_outline.set_shader_parameter('rotation_axis', value)
+
+@export var axis_center_model: Vector3 = Vector3.ZERO:
+	get:
+		return axis_center_model
+	set(value):
+		axis_center_model = value
+		mat_inner.set_shader_parameter('axis_center_model', value)
+		mat_outline.set_shader_parameter('axis_center_model', value)
+
+@export_range(0.001, 100.0, 0.01) var influence_radius: float:
+	get:
+		return influence_radius
+	set(value):
+		influence_radius = value
+		mat_inner.set_shader_parameter('influence_radius', value)
+		mat_outline.set_shader_parameter('influence_radius', value)
+
+@export_range(-360.0, 360.0, 0.1) var max_angle_degrees: float = -360.0:
+	get:
+		return max_angle_degrees
+	set(value):
+		max_angle_degrees = value
+		mat_inner.set_shader_parameter('max_angle_degrees', value)
+		mat_outline.set_shader_parameter('max_angle_degrees', value)
+
+@export_range(0.05, 8.0, 0.01) var distance_power: float = 2.89:
+	get:
+		return distance_power
+	set(value):
+		distance_power = value
+		mat_inner.set_shader_parameter('distance_power', value)
+		mat_outline.set_shader_parameter('distance_power', value)
+
+@export var outline_color: Color = Color(0.08, 0.09, 0.11):
+	get:
+		return outline_color
+	set(value):
+		outline_color = value
+		mat_outline.set_shader_parameter('outline_color', value)
+
+@export_range(0.0, 0.2, 0.0001) var outline_width: float = 0.008:
+	get:
+		return outline_width
+	set(value):
+		outline_width = value
+		mat_outline.set_shader_parameter('outline_width', value)
+
+func _ready() -> void:
+	rotation_axis = rotation_axis
+	axis_center_model = axis_center_model
+	influence_radius = influence_radius
+	max_angle_degrees = max_angle_degrees
+	distance_power = distance_power
+	outline_color = outline_color
+	outline_width = outline_width
+"
+
 [sub_resource type="Shader" id="Shader_m8wqu"]
 code = "shader_type spatial;
 
@@ -47,13 +118,13 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dav7w"]
 render_priority = 0
 shader = SubResource("Shader_m8wqu")
-shader_parameter/rotation_axis = Vector3(0, 1, 0)
+shader_parameter/rotation_axis = Vector3(1, 0, 0)
 shader_parameter/axis_center_model = Vector3(0, 0, 0)
-shader_parameter/influence_radius = 2.0
-shader_parameter/max_angle_degrees = 45.0
-shader_parameter/distance_power = 2.0
+shader_parameter/influence_radius = 100.0
+shader_parameter/max_angle_degrees = -360.0
+shader_parameter/distance_power = 1.06
 shader_parameter/outline_color = Color(0.08, 0.09, 0.11, 1)
-shader_parameter/outline_width = 0.012
+shader_parameter/outline_width = 0.0079999997976
 
 [sub_resource type="Shader" id="Shader_g2e78"]
 code = "shader_type spatial;
@@ -98,9 +169,9 @@ next_pass = SubResource("ShaderMaterial_dav7w")
 shader = SubResource("Shader_g2e78")
 shader_parameter/rotation_axis = Vector3(1, 0, 0)
 shader_parameter/axis_center_model = Vector3(0, 0, 0)
-shader_parameter/influence_radius = 0.1009999978123
-shader_parameter/max_angle_degrees = 8.900005497052689
-shader_parameter/distance_power = 1.7799999620761
+shader_parameter/influence_radius = 100.0
+shader_parameter/max_angle_degrees = -360.0
+shader_parameter/distance_power = 1.06
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_itxqv"]
 size = Vector3(0.009521484, 0.017089844, 0.018432617)
@@ -113,15 +184,22 @@ continuous_cd = true
 
 [node name="Knife" parent="." unique_id=1360066393 instance=ExtResource("1_knife")]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
+script = SubResource("GDScript_itxqv")
+mat_inner = SubResource("ShaderMaterial_m8wqu")
+mat_outline = SubResource("ShaderMaterial_dav7w")
+influence_radius = 100.0
+distance_power = 1.06
 
 [node name="匕首" parent="Knife" index="0" unique_id=1172966167]
 surface_material_override/0 = SubResource("ShaderMaterial_m8wqu")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=432524605]
+[node name="Blade" type="CollisionShape3D" parent="." unique_id=432524605]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0.00083007663, -0.11298639, -0.00044280398)
 shape = SubResource("BoxShape3D_itxqv")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1051444601]
+[node name="Handle" type="CollisionShape3D" parent="." unique_id=1051444601]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00048828125, -0.016845703, 0.0005340576)
 shape = SubResource("BoxShape3D_g2e78")
 
