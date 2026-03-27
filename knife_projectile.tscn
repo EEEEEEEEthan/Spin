@@ -18,7 +18,7 @@ shading_mode = 0
 size = Vector3(0.009521484, 0.017089844, 0.018432617)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_g2e78"]
-size = Vector3(0.017333984, 0.1743164, 0.031463623)
+size = Vector3(0.017333984, 0.18383789, 0.031463623)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 continuous_cd = true
@@ -37,7 +37,7 @@ shape = SubResource("BoxShape3D_itxqv")
 
 [node name="Handle" type="CollisionShape3D" parent="." unique_id=1051444601]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00048828125, -0.016845703, 0.0005340576)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00048828125, -0.021606445, 0.0005340576)
 shape = SubResource("BoxShape3D_g2e78")
 
 [editable path="Knife"]
