@@ -1,17 +1,29 @@
 [gd_scene format=3 uid="uid://22e28u4ukqvi"]
 
 [ext_resource type="PackedScene" uid="uid://cfpgksxa8rvcb" path="res://Knife.glb" id="1_knife"]
+[ext_resource type="Shader" uid="uid://b668b8ctgfheu" path="res://shaders/vertex_distance_rotate.gdshader" id="2_g2e78"]
+[ext_resource type="Shader" uid="uid://btd0sinbkjp30" path="res://shaders/vertex_distance_rotate_outline.gdshader" id="2_m8wqu"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gjav3"]
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.005
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dav7w"]
+render_priority = 0
+shader = ExtResource("2_m8wqu")
+shader_parameter/rotation_axis = Vector3(0, 1, 0)
+shader_parameter/axis_center_model = Vector3(0, 0, 0)
+shader_parameter/influence_radius = 2.0
+shader_parameter/max_angle_degrees = 45.0
+shader_parameter/distance_power = 2.0
+shader_parameter/outline_color = Color(0.08, 0.09, 0.11, 1)
+shader_parameter/outline_width = 0.012
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
-next_pass = SubResource("StandardMaterial3D_gjav3")
-shading_mode = 0
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m8wqu"]
+render_priority = 0
+next_pass = SubResource("ShaderMaterial_dav7w")
+shader = ExtResource("2_g2e78")
+shader_parameter/rotation_axis = Vector3(1, 0, 0)
+shader_parameter/axis_center_model = Vector3(0, 0, 0)
+shader_parameter/influence_radius = 0.1009999978123
+shader_parameter/max_angle_degrees = 8.900005497052689
+shader_parameter/distance_power = 1.7799999620761
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_itxqv"]
 size = Vector3(0.009521484, 0.017089844, 0.018432617)
@@ -26,7 +38,7 @@ continuous_cd = true
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
 
 [node name="匕首" parent="Knife" index="0" unique_id=1172966167]
-surface_material_override/0 = SubResource("StandardMaterial3D_itxqv")
+surface_material_override/0 = SubResource("ShaderMaterial_m8wqu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=432524605]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0.00083007663, -0.11298639, -0.00044280398)
