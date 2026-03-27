@@ -1,9 +1,25 @@
 [gd_scene format=3 uid="uid://cjjycohe2mwu4"]
 
-[ext_resource type="PackedScene" uid="uid://cihhjtac31m6o" path="res://Table.glb" id="1_2sdc1"]
+[ext_resource type="PackedScene" uid="uid://b2ag4fxdl0sv8" path="res://Table.blend" id="1_muxx0"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_muxx0"]
 
-[node name="Table" unique_id=200869156 instance=ExtResource("1_2sdc1")]
+[node name="Table" type="RigidBody3D" unique_id=8936073]
 
-[node name="applied" parent="." index="0" unique_id=183995437]
+[node name="Table2" parent="." unique_id=753476991 instance=ExtResource("1_muxx0")]
+
+[node name="桌面" parent="Table2" index="0" unique_id=183773740]
 surface_material_override/0 = ExtResource("2_muxx0")
+
+[node name="腿1" parent="Table2" index="1" unique_id=2090139708]
+surface_material_override/0 = ExtResource("2_muxx0")
+
+[node name="腿2" parent="Table2" index="2" unique_id=1698039308]
+surface_material_override/0 = ExtResource("2_muxx0")
+
+[node name="腿3" parent="Table2" index="3" unique_id=1606216769]
+surface_material_override/0 = ExtResource("2_muxx0")
+
+[node name="腿4" parent="Table2" index="4" unique_id=883820991]
+surface_material_override/0 = ExtResource("2_muxx0")
+
+[editable path="Table2"]

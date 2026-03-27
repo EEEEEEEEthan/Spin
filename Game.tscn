@@ -8,4 +8,4 @@
 [node name="Launcher" parent="." unique_id=1151770281 instance=ExtResource("1_wbfu4")]
 
 [node name="Table" parent="." unique_id=200869156 instance=ExtResource("2_xkndl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009534121, 3.6544285)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.010436341, 0)
