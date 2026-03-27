@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dahfgxxyxlf71"]
+
+[ext_resource type="ArrayMesh" uid="uid://dlf5idoahnpvq" path="res://Human.obj" id="1_gjav3"]
+
+[node name="Node3D" type="Node3D" unique_id=386154028]
+
+[node name="Human" type="MeshInstance3D" parent="." unique_id=1527180549]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.031069, 0, -42.592514)
+mesh = ExtResource("1_gjav3")
