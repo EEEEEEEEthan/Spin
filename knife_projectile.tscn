@@ -25,21 +25,13 @@ extends Node3D
 		mat_inner.set_shader_parameter('axis_center_model', value)
 		mat_outline.set_shader_parameter('axis_center_model', value)
 
-@export_range(0.001, 100.0, 0.01) var influence_radius: float:
+@export_range(-720.0, 720.0, 0.1) var standard_degree: float = -360.0:
 	get:
-		return influence_radius
+		return standard_degree
 	set(value):
-		influence_radius = value
-		mat_inner.set_shader_parameter('influence_radius', value)
-		mat_outline.set_shader_parameter('influence_radius', value)
-
-@export_range(-360.0, 360.0, 0.1) var max_angle_degrees: float = -360.0:
-	get:
-		return max_angle_degrees
-	set(value):
-		max_angle_degrees = value
-		mat_inner.set_shader_parameter('max_angle_degrees', value)
-		mat_outline.set_shader_parameter('max_angle_degrees', value)
+		standard_degree = value
+		mat_inner.set_shader_parameter('standard_degree', value)
+		mat_outline.set_shader_parameter('standard_degree', value)
 
 @export_range(0.05, 8.0, 0.01) var distance_power: float = 2.89:
 	get:
@@ -66,8 +58,7 @@ extends Node3D
 func _ready() -> void:
 	rotation_axis = rotation_axis
 	axis_center_model = axis_center_model
-	influence_radius = influence_radius
-	max_angle_degrees = max_angle_degrees
+	standard_degree = standard_degree
 	distance_power = distance_power
 	outline_color = outline_color
 	outline_width = outline_width
@@ -81,8 +72,8 @@ render_mode unshaded, cull_front, depth_draw_opaque;
 
 uniform vec3 rotation_axis = vec3(0.0, 1.0, 0.0);
 uniform vec3 axis_center_model = vec3(0.0, 0.0, 0.0);
-uniform float influence_radius : hint_range(0.001, 100.0, 0.01) = 2.0;
-uniform float max_angle_degrees : hint_range(-360.0, 360.0, 0.1) = 45.0;
+/// 模型空间下距轴心距离为 1 且 pow 指数为 1 时的转角；实际为 standard_degree * pow(距离, distance_power)。
+uniform float standard_degree : hint_range(-720.0, 720.0, 0.1) = 45.0;
 uniform float distance_power : hint_range(0.05, 8.0, 0.01) = 2.0;
 
 uniform vec3 outline_color : source_color = vec3(0.08, 0.09, 0.11);
@@ -92,9 +83,8 @@ void vertex() {
 	vec3 axis_unit = normalize(rotation_axis);
 	vec3 offset = VERTEX - axis_center_model;
 	float distance_from_center = length(offset);
-	float normalized_distance = clamp(distance_from_center / influence_radius, 0.0, 1.0);
-	float angle_weight = pow(normalized_distance, distance_power);
-	float angle_radians = radians(max_angle_degrees) * angle_weight;
+	float angle_weight = pow(distance_from_center, distance_power);
+	float angle_radians = radians(standard_degree) * angle_weight;
 	float cosine = cos(angle_radians);
 	float sine = sin(angle_radians);
 	vec3 rotated_offset = offset * cosine + cross(axis_unit, offset) * sine
@@ -120,31 +110,28 @@ render_priority = 0
 shader = SubResource("Shader_m8wqu")
 shader_parameter/rotation_axis = Vector3(1, 0, 0)
 shader_parameter/axis_center_model = Vector3(0, 0, 0)
-shader_parameter/influence_radius = 100.0
-shader_parameter/max_angle_degrees = -360.0
-shader_parameter/distance_power = 1.06
+shader_parameter/standard_degree = 0.0
+shader_parameter/distance_power = 1.0
 shader_parameter/outline_color = Color(0.08, 0.09, 0.11, 1)
-shader_parameter/outline_width = 0.0079999997976
+shader_parameter/outline_width = 0.005
 
 [sub_resource type="Shader" id="Shader_g2e78"]
 code = "shader_type spatial;
 
 render_mode unshaded;
 
-/// 顶点绕轴旋转；距轴心越近转角越小，distance_power 越大近处越「僵」。
+/// 顶点绕轴旋转；距轴心越近转角越小，distance_power 控制距离-转角曲线。
 uniform vec3 rotation_axis = vec3(0.0, 1.0, 0.0);
 uniform vec3 axis_center_model = vec3(0.0, 0.0, 0.0);
-uniform float influence_radius : hint_range(0.001, 100.0, 0.01) = 2.0;
-uniform float max_angle_degrees : hint_range(-360.0, 360.0, 0.1) = 45.0;
+uniform float standard_degree : hint_range(-720.0, 720.0, 0.1) = 45.0;
 uniform float distance_power : hint_range(0.05, 8.0, 0.01) = 2.0;
 
 void vertex() {
 	vec3 axis_unit = normalize(rotation_axis);
 	vec3 offset = VERTEX - axis_center_model;
 	float distance_from_center = length(offset);
-	float normalized_distance = clamp(distance_from_center / influence_radius, 0.0, 1.0);
-	float angle_weight = pow(normalized_distance, distance_power);
-	float angle_radians = radians(max_angle_degrees) * angle_weight;
+	float angle_weight = pow(distance_from_center, distance_power);
+	float angle_radians = radians(standard_degree) * angle_weight;
 	float cosine = cos(angle_radians);
 	float sine = sin(angle_radians);
 	vec3 rotated_offset = offset * cosine + cross(axis_unit, offset) * sine
@@ -169,9 +156,8 @@ next_pass = SubResource("ShaderMaterial_dav7w")
 shader = SubResource("Shader_g2e78")
 shader_parameter/rotation_axis = Vector3(1, 0, 0)
 shader_parameter/axis_center_model = Vector3(0, 0, 0)
-shader_parameter/influence_radius = 100.0
-shader_parameter/max_angle_degrees = -360.0
-shader_parameter/distance_power = 1.06
+shader_parameter/standard_degree = 0.0
+shader_parameter/distance_power = 1.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_itxqv"]
 size = Vector3(0.009521484, 0.017089844, 0.018432617)
@@ -187,8 +173,9 @@ transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0
 script = SubResource("GDScript_itxqv")
 mat_inner = SubResource("ShaderMaterial_m8wqu")
 mat_outline = SubResource("ShaderMaterial_dav7w")
-influence_radius = 100.0
-distance_power = 1.06
+standard_degree = 0.0
+distance_power = 1.0
+outline_width = 0.005
 
 [node name="匕首" parent="Knife" index="0" unique_id=1172966167]
 surface_material_override/0 = SubResource("ShaderMaterial_m8wqu")
