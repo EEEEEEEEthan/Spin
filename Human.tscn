@@ -1,23 +1,13 @@
 [gd_scene format=3 uid="uid://dahfgxxyxlf71"]
 
+[ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_qefdq"]
 [ext_resource type="PackedScene" uid="uid://p824wqdipd0h" path="res://Human.glb" id="2_s1pbw"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gjav3"]
-cull_mode = 1
-shading_mode = 0
-albedo_color = Color(0, 0, 0, 1)
-grow = true
-grow_amount = 0.02
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qefdq"]
-next_pass = SubResource("StandardMaterial3D_gjav3")
-shading_mode = 0
 
 [node name="Node3D" type="Node3D" unique_id=386154028]
 
 [node name="Human" parent="." unique_id=155100909 instance=ExtResource("2_s1pbw")]
 
 [node name="身体" parent="Human/骨架/Skeleton3D" parent_id_path=PackedInt32Array(155100909, 238912148) index="0" unique_id=2071996272]
-surface_material_override/0 = SubResource("StandardMaterial3D_qefdq")
+surface_material_override/0 = ExtResource("2_qefdq")
 
 [editable path="Human"]
