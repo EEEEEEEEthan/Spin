@@ -3,9 +3,28 @@
 [ext_resource type="PackedScene" uid="uid://bxsfl8hvrdh7b" path="res://Launcher.tscn" id="1_wbfu4"]
 [ext_resource type="PackedScene" uid="uid://cjjycohe2mwu4" path="res://Table.tscn" id="2_xkndl"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_xkndl"]
+material = SubResource("StandardMaterial3D_gybg2")
+size = Vector3(40, 1, 40)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u44n3"]
+size = Vector3(40, 1, 40)
+
 [node name="Game" type="Node3D" unique_id=552426368]
 
 [node name="Launcher" parent="." unique_id=1151770281 instance=ExtResource("1_wbfu4")]
 
 [node name="Table" parent="." unique_id=200869156 instance=ExtResource("2_xkndl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.010436341, 0)
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=1957208448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1396335306]
+mesh = SubResource("BoxMesh_xkndl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=377258206]
+shape = SubResource("BoxShape3D_u44n3")
