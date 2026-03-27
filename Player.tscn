@@ -129,6 +129,10 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 "
 
+[sub_resource type="Environment" id="Environment_white_bg"]
+background_mode = 1
+background_color = Color(1, 1, 1, 1)
+
 [node name="Player" type="Node3D" unique_id=1151770281]
 script = SubResource("GDScript_xhfnw")
 knife_spin_radians_per_second = -20.0
@@ -139,6 +143,7 @@ script = SubResource("GDScript_0rwas")
 
 [node name="Camera3D" type="Camera3D" parent="CameraYaw" unique_id=15691348]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881898, 0, -0.25881898, 0.9659259, 0, 0, 0)
+environment = SubResource("Environment_white_bg")
 fov = 20.0
 
 [node name="Projectiles" type="Node3D" parent="." unique_id=1135782429]
