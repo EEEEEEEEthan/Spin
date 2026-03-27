@@ -15,11 +15,9 @@ shading_mode = 0
 
 [node name="Node3D" type="Node3D" unique_id=386154028]
 
-[node name="Human" parent="." unique_id=1677109939 instance=ExtResource("2_s1pbw")]
+[node name="Human" parent="." unique_id=155100909 instance=ExtResource("2_s1pbw")]
 
-[node name="身体" parent="Human/骨架/Skeleton3D" parent_id_path=PackedInt32Array(1677109939, 411156850) index="0" unique_id=687659425]
+[node name="身体" parent="Human/骨架/Skeleton3D" parent_id_path=PackedInt32Array(155100909, 238912148) index="0" unique_id=2071996272]
 surface_material_override/0 = SubResource("StandardMaterial3D_qefdq")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=818478442]
 
 [editable path="Human"]
