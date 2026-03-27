@@ -13,12 +13,25 @@ const PROJECTILE_SCENE := preload("res://knife_projectile.tscn")
 @export var arc_up_factor: float = 0.15
 ## 绕飞刀刚体局部 X 轴自旋角速度（弧度/秒，写入世界空间 angular_velocity）
 @export var knife_spin_radians_per_second: float = 7.0
+## 鼠标移动灵敏度（弧度/像素）
+@export var mouse_look_sensitivity: float = 0.0022
+## 俯仰角下限（弧度，略小于 ±90° 避免万向节死锁数值问题）
+@export var pitch_limit_radians: float = 1.553343
 
 var _charging: bool = false
 var _charge_elapsed_seconds: float = 0.0
+var _look_yaw: float = 0.0
+var _look_pitch: float = 0.0
 
-@onready var camera_3d: Camera3D = $Camera3D
+@onready var camera_yaw: Node3D = $CameraYaw
+@onready var camera_3d: Camera3D = $CameraYaw/Camera3D
 @onready var projectiles_root: Node3D = $Projectiles
+
+
+func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	_look_yaw = camera_yaw.rotation.y
+	_look_pitch = camera_3d.rotation.x
 
 
 func _process(delta: float) -> void:
@@ -30,9 +43,32 @@ func _process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and key_event.keycode == KEY_ESCAPE:
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			get_viewport().set_input_as_handled()
+			return
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		var motion := event as InputEventMouseMotion
+		_look_yaw -= motion.relative.x * mouse_look_sensitivity
+		_look_pitch -= motion.relative.y * mouse_look_sensitivity
+		_look_pitch = clampf(_look_pitch, -pitch_limit_radians, pitch_limit_radians)
+		camera_yaw.rotation.y = _look_yaw
+		camera_3d.rotation.x = _look_pitch
 	if event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
+			if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+				get_viewport().set_input_as_handled()
+				return
 		if mouse_event.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			return
 		if mouse_event.pressed:
 			_charging = true
