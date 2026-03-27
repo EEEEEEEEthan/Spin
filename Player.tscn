@@ -77,8 +77,10 @@ script/source = "extends Node3D
 
 ## 鼠标移动灵敏度（弧度/像素）
 @export var mouse_look_sensitivity: float = 0.0022
-## 俯仰角限制（弧度，略小于 ±90°）
-@export var pitch_limit_radians: float = 1.553343
+## 相对进入场景时朝向：左右偏航最大偏转（弧度）
+@export var yaw_limit_radians: float = deg_to_rad(20.0)
+## 相对进入场景时朝向：上下俯仰最大偏转（弧度）
+@export var pitch_limit_radians: float = deg_to_rad(20.0)
 ## 视角朝目标角度靠拢的速度（越大越跟手；帧率无关指数平滑）
 @export var view_angle_smoothing: float = 5.0
 
@@ -86,16 +88,20 @@ var _look_yaw: float = 0.0
 var _look_pitch: float = 0.0
 var _target_yaw: float = 0.0
 var _target_pitch: float = 0.0
+var _yaw_center: float = 0.0
+var _pitch_center: float = 0.0
 
 @onready var camera_3d: Camera3D = $Camera3D
 
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	_look_yaw = rotation.y
-	_look_pitch = camera_3d.rotation.x
-	_target_yaw = _look_yaw
-	_target_pitch = _look_pitch
+	_yaw_center = rotation.y
+	_pitch_center = camera_3d.rotation.x
+	_look_yaw = _yaw_center
+	_look_pitch = _pitch_center
+	_target_yaw = _yaw_center
+	_target_pitch = _pitch_center
 
 
 func _process(delta: float) -> void:
@@ -120,7 +126,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		var motion := event as InputEventMouseMotion
 		_target_yaw -= motion.relative.x * mouse_look_sensitivity
 		_target_pitch -= motion.relative.y * mouse_look_sensitivity
-		_target_pitch = clampf(_target_pitch, -pitch_limit_radians, pitch_limit_radians)
+		_target_yaw = clampf(
+			_target_yaw,
+			_yaw_center - yaw_limit_radians,
+			_yaw_center + yaw_limit_radians
+		)
+		_target_pitch = clampf(
+			_target_pitch,
+			_pitch_center - pitch_limit_radians,
+			_pitch_center + pitch_limit_radians
+		)
 	if event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
