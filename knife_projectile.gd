@@ -1,8 +1,20 @@
 extends RigidBody3D
 
+## 命中体的 collision_layer 与此掩码有交集时才扎住并 reparent。为 0 时保持旧行为：任意碰撞体均可扎住。
+@export_flags_3d_physics var stick_collision_layer_mask: int = 0
+
 @onready var blade: CollisionShape3D = %Blade
 
 var _stuck: bool = false
+
+
+func _hit_allows_stick(hit_body: Node) -> bool:
+	if stick_collision_layer_mask == 0:
+		return true
+	var collision_object := hit_body as CollisionObject3D
+	if collision_object == null:
+		return false
+	return (collision_object.collision_layer & stick_collision_layer_mask) != 0
 
 
 func _ready() -> void:
@@ -29,6 +41,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			continue
 		var hit_body := state.get_contact_collider_object(contact_index) as Node3D
 		if hit_body == null or hit_body == self:
+			continue
+		if not _hit_allows_stick(hit_body):
 			continue
 		_stuck = true
 		state.linear_velocity = Vector3.ZERO

@@ -23,6 +23,7 @@ size = Vector3(0.017333984, 0.18383789, 0.031463623)
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 continuous_cd = true
 script = ExtResource("1_knifeproj")
+stick_collision_layer_mask = 2
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
