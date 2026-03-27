@@ -5,5 +5,5 @@
 [node name="Node3D" type="Node3D" unique_id=386154028]
 
 [node name="Human" type="MeshInstance3D" parent="." unique_id=1527180549]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.031069, 0, -42.592514)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.8564095, 0)
 mesh = ExtResource("1_gjav3")
