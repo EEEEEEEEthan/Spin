@@ -13,7 +13,10 @@ height = 0.6167908
 transparency = 1
 shading_mode = 0
 albedo_texture = ExtResource("4_qu23q")
-billboard_mode = 1
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_gxany"]
 material = SubResource("StandardMaterial3D_u1ntq")
