@@ -222,7 +222,7 @@ script = SubResource("GDScript_0rwas")
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881898, 0, -0.25881898, 0.9659259, 0, 0, 0)
 environment = SubResource("Environment_white_bg")
 current = true
-fov = 20.0
+fov = 25.0
 
 [node name="Progress" type="Control" parent="." unique_id=1700000001]
 unique_name_in_owner = true
