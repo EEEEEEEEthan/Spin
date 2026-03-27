@@ -154,30 +154,18 @@ code = "shader_type canvas_item;
 
 uniform float progress;
 
-void vertex() {
-}
-
 void fragment() {
-	if(UV.r < progress)
-	{
-		COLOR.g = 0.0;
-		COLOR.b = 0.0;
-		COLOR.r = 0.0;
-	}
-	else
-	{
-		COLOR.a = COLOR.b * COLOR.a;
-		COLOR.r = 0.0;
-		COLOR.g = 0.0;
-		COLOR.b = 0.0;
-	}
+	vec4 source = COLOR;
+	float revealed = step(progress, UV.r);
+	COLOR.rgb = vec3(0.0);
+	COLOR.a = mix(source.a, source.b * source.a, revealed);
 }
 
 "
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kpjcp"]
 shader = SubResource("Shader_xhfnw")
-shader_parameter/progress = -1.56
+shader_parameter/progress = 0.705
 
 [node name="Player" type="Node" unique_id=1311655955]
 script = SubResource("GDScript_xhfnw")
