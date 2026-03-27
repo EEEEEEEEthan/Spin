@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bxsfl8hvrdh7b"]
 
-[ext_resource type="Script" uid="uid://xqi7kv2y70eo" path="res://addons/editable_texture/editable_texture.gd" id="1_xhfnw"]
+[ext_resource type="Texture2D" uid="uid://bcjauyuirgh2h" path="res://Strength.png" id="1_xhfnw"]
 
 [sub_resource type="GDScript" id="GDScript_xhfnw"]
 script/source = "extends Node
@@ -149,13 +149,6 @@ func _unhandled_input(event: InputEvent) -> void:
 background_mode = 1
 background_color = Color(1, 1, 1, 1)
 
-[sub_resource type="Texture2D" id="Texture2D_kpjcp"]
-resource_local_to_scene = false
-resource_name = ""
-script = ExtResource("1_xhfnw")
-_hex_data = "89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000000017352474200aece1ce90000001d49444154388d63fcffffff7f060a0013259a470d183560d480c16400006bca041ca7e175530000000049454e44ae426082"
-metadata/_custom_type_script = "uid://xqi7kv2y70eo"
-
 [node name="Player" type="Node" unique_id=1311655955]
 script = SubResource("GDScript_xhfnw")
 knife_spin_radians_per_second = -20.0
@@ -176,10 +169,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -422.0
-offset_top = -160.0
-offset_right = -38.0
-offset_bottom = -32.0
+offset_left = -409.0
+offset_top = -150.0
+offset_right = -25.0
+offset_bottom = -22.0
 grow_horizontal = 0
 grow_vertical = 0
-texture = SubResource("Texture2D_kpjcp")
+texture = ExtResource("1_xhfnw")
