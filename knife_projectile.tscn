@@ -3,6 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://cq1h63fai8qtb" path="res://Knife.blend" id="1_itxqv"]
 [ext_resource type="Script" uid="uid://dt7cwe450sxbs" path="res://knife_projectile.gd" id="1_knifeproj"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g2e78"]
+bounce = 1.0
+absorbent = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
 cull_mode = 1
 shading_mode = 0
@@ -21,9 +25,11 @@ size = Vector3(0.009521484, 0.017089844, 0.018432617)
 size = Vector3(0.017333984, 0.18383789, 0.031463623)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
+physics_material_override = SubResource("PhysicsMaterial_g2e78")
 continuous_cd = true
 script = ExtResource("1_knifeproj")
 stick_collision_layer_mask = 2
+min_stick_relative_speed = 3.0
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)

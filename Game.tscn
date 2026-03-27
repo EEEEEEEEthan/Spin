@@ -47,7 +47,7 @@ transform = Transform3D(4, 0, 0, 0, 2, 0, 0, 0, 0.09200412, 0, 2.0522444, -2)
 surface_material_override/0 = ExtResource("3_u44n3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=841732013]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7597046, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7597046, 0.025998116)
 shape = SubResource("BoxShape3D_sb48q")
 
 [editable path="StaticBody3D/Wall"]
