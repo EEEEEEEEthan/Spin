@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cjjycohe2mwu4"]
+
+[ext_resource type="PackedScene" uid="uid://cihhjtac31m6o" path="res://Table.glb" id="1_2sdc1"]
+[ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_muxx0"]
+
+[node name="Table" unique_id=200869156 instance=ExtResource("1_2sdc1")]
+
+[node name="applied" parent="." index="0" unique_id=183995437]
+surface_material_override/0 = ExtResource("2_muxx0")

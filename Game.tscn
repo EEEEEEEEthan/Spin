@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://q7cck1xb2vm"]
+
+[ext_resource type="PackedScene" uid="uid://bxsfl8hvrdh7b" path="res://Launcher.tscn" id="1_wbfu4"]
+[ext_resource type="PackedScene" uid="uid://cjjycohe2mwu4" path="res://Table.tscn" id="2_xkndl"]
+
+[node name="Game" type="Node3D" unique_id=552426368]
+
+[node name="Launcher" parent="." unique_id=1151770281 instance=ExtResource("1_wbfu4")]
+
+[node name="Table" parent="." unique_id=200869156 instance=ExtResource("2_xkndl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.009534121, 3.6544285)
