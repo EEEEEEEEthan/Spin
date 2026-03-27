@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bxsfl8hvrdh7b"]
 
 [ext_resource type="Script" uid="uid://hkgs3546322c" path="res://launcher_controller.gd" id="1_launcher"]
+[ext_resource type="Script" uid="uid://c8y4n2k1launchrcm" path="res://launcher_camera_rig.gd" id="2_camera_rig"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
 shading_mode = 0
@@ -18,6 +19,7 @@ knife_spin_radians_per_second = -20.0
 
 [node name="CameraYaw" type="Node3D" parent="." unique_id=1151770282]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 5)
+script = ExtResource("2_camera_rig")
 
 [node name="Camera3D" type="Camera3D" parent="CameraYaw" unique_id=15691348]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881898, 0, -0.25881898, 0.9659259, 0, 0, 0)
