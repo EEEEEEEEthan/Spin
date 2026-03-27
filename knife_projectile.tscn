@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://22e28u4ukqvi"]
 
+[ext_resource type="Script" path="res://knife_projectile.gd" id="1_knifeproj"]
 [ext_resource type="PackedScene" uid="uid://cq1h63fai8qtb" path="res://Knife.blend" id="1_itxqv"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
@@ -21,6 +22,7 @@ size = Vector3(0.017333984, 0.1743164, 0.031463623)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 continuous_cd = true
+script = ExtResource("1_knifeproj")
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
