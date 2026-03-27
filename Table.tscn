@@ -7,19 +7,34 @@
 
 [node name="Table2" parent="." unique_id=753476991 instance=ExtResource("1_muxx0")]
 
-[node name="桌面" parent="Table2" index="0" unique_id=183773740]
+[node name="桌面" parent="Table2" index="0" unique_id=224540862]
 surface_material_override/0 = ExtResource("2_muxx0")
 
-[node name="腿1" parent="Table2" index="1" unique_id=2090139708]
+[node name="腿1" parent="Table2" index="1" unique_id=2114237766]
 surface_material_override/0 = ExtResource("2_muxx0")
 
-[node name="腿2" parent="Table2" index="2" unique_id=1698039308]
+[node name="腿2" parent="Table2" index="2" unique_id=194747765]
 surface_material_override/0 = ExtResource("2_muxx0")
 
-[node name="腿3" parent="Table2" index="3" unique_id=1606216769]
+[node name="腿3" parent="Table2" index="3" unique_id=2014285095]
 surface_material_override/0 = ExtResource("2_muxx0")
 
-[node name="腿4" parent="Table2" index="4" unique_id=883820991]
+[node name="腿4" parent="Table2" index="4" unique_id=431138026]
 surface_material_override/0 = ExtResource("2_muxx0")
+
+[node name="腿4_001" parent="Table2" index="5" unique_id=786116139]
+visible = false
+
+[node name="腿3_001" parent="Table2" index="6" unique_id=605264140]
+visible = false
+
+[node name="腿2_001" parent="Table2" index="7" unique_id=2086047999]
+visible = false
+
+[node name="腿1_001" parent="Table2" index="8" unique_id=367550343]
+visible = false
+
+[node name="桌面_001" parent="Table2" index="9" unique_id=330761481]
+visible = false
 
 [editable path="Table2"]
