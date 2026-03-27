@@ -27,6 +27,7 @@ size = Vector3(0.017333984, 0.18383789, 0.031463623)
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 physics_material_override = SubResource("PhysicsMaterial_g2e78")
 continuous_cd = true
+can_sleep = false
 script = ExtResource("1_knifeproj")
 stick_collision_layer_mask = 2
 min_stick_relative_speed = 3.0

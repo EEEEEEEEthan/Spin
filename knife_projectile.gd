@@ -1,5 +1,6 @@
 extends RigidBody3D
 
+## 组 balloon 且含 explode()：仅戳破（queue_free），飞刀不冻结、不 reparent。
 ## 命中体的 collision_layer 与此掩码有交集时才扎住并 reparent。为 0 时保持旧行为：任意碰撞体均可扎住。
 @export_flags_3d_physics var stick_collision_layer_mask: int = 0
 
@@ -9,6 +10,21 @@ extends RigidBody3D
 @onready var blade: CollisionShape3D = %Blade
 
 var _stuck: bool = false
+
+
+func _try_pop_balloon(hit_body: Node3D, contact_index: int, state: PhysicsDirectBodyState3D) -> bool:
+	if not hit_body.is_in_group("balloon"):
+		return false
+	if not hit_body.has_method("explode"):
+		return false
+	if min_stick_relative_speed > 0.0:
+		var self_at_contact := state.get_contact_local_velocity_at_position(contact_index)
+		var other_at_contact := state.get_contact_collider_velocity_at_position(contact_index)
+		var relative_velocity := self_at_contact - other_at_contact
+		if relative_velocity.length() < min_stick_relative_speed:
+			return false
+	hit_body.explode()
+	return true
 
 
 func _hit_allows_stick(hit_body: Node) -> bool:
@@ -45,6 +61,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		var hit_body := state.get_contact_collider_object(contact_index) as Node3D
 		if hit_body == null or hit_body == self:
 			continue
+		if _try_pop_balloon(hit_body, contact_index, state):
+			break
 		if not _hit_allows_stick(hit_body):
 			continue
 		if min_stick_relative_speed > 0.0:
