@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://dt7cwe450sxbs" path="res://knife_projectile.gd" id="1_knifeproj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g2e78"]
-bounce = 1.0
+bounce = 0.0
 absorbent = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]

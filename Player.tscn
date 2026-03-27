@@ -211,6 +211,7 @@ var _progress: float = 0.705
 
 [node name="Player" type="Node" unique_id=1311655955]
 script = SubResource("GDScript_xhfnw")
+spawn_offset_right = 0.1
 knife_spin_radians_per_second = -20.0
 
 [node name="CameraYaw" type="Node3D" parent="." unique_id=1151770282]
