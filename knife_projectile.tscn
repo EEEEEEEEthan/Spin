@@ -1,12 +1,52 @@
 [gd_scene format=3 uid="uid://22e28u4ukqvi"]
 
 [ext_resource type="PackedScene" uid="uid://cfpgksxa8rvcb" path="res://Knife.glb" id="1_knife"]
-[ext_resource type="Shader" uid="uid://b668b8ctgfheu" path="res://shaders/vertex_distance_rotate.gdshader" id="2_g2e78"]
-[ext_resource type="Shader" uid="uid://btd0sinbkjp30" path="res://shaders/vertex_distance_rotate_outline.gdshader" id="2_m8wqu"]
+
+[sub_resource type="Shader" id="Shader_m8wqu"]
+code = "shader_type spatial;
+
+// 与 outline_unlit 相同：先按距离旋转，再沿法线外扩，cull_front 形成轮廓壳。
+render_mode unshaded, cull_front, depth_draw_opaque;
+
+uniform vec3 rotation_axis = vec3(0.0, 1.0, 0.0);
+uniform vec3 axis_center_model = vec3(0.0, 0.0, 0.0);
+uniform float influence_radius : hint_range(0.001, 100.0, 0.01) = 2.0;
+uniform float max_angle_degrees : hint_range(-360.0, 360.0, 0.1) = 45.0;
+uniform float distance_power : hint_range(0.05, 8.0, 0.01) = 2.0;
+
+uniform vec3 outline_color : source_color = vec3(0.08, 0.09, 0.11);
+uniform float outline_width : hint_range(0.0, 0.2, 0.0001) = 0.012;
+
+void vertex() {
+	vec3 axis_unit = normalize(rotation_axis);
+	vec3 offset = VERTEX - axis_center_model;
+	float distance_from_center = length(offset);
+	float normalized_distance = clamp(distance_from_center / influence_radius, 0.0, 1.0);
+	float angle_weight = pow(normalized_distance, distance_power);
+	float angle_radians = radians(max_angle_degrees) * angle_weight;
+	float cosine = cos(angle_radians);
+	float sine = sin(angle_radians);
+	vec3 rotated_offset = offset * cosine + cross(axis_unit, offset) * sine
+			+ axis_unit * dot(axis_unit, offset) * (1.0 - cosine);
+	vec3 rotated_vertex = rotated_offset + axis_center_model;
+	vec3 n = NORMAL;
+	vec3 rotated_normal = normalize(n * cosine + cross(axis_unit, n) * sine
+			+ axis_unit * dot(axis_unit, n) * (1.0 - cosine));
+	vec3 t = TANGENT.xyz;
+	TANGENT.xyz = normalize(t * cosine + cross(axis_unit, t) * sine
+			+ axis_unit * dot(axis_unit, t) * (1.0 - cosine));
+	VERTEX = rotated_vertex + normalize(rotated_normal) * outline_width;
+	NORMAL = rotated_normal;
+}
+
+void fragment() {
+	ALBEDO = outline_color;
+}
+"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dav7w"]
 render_priority = 0
-shader = ExtResource("2_m8wqu")
+shader = SubResource("Shader_m8wqu")
 shader_parameter/rotation_axis = Vector3(0, 1, 0)
 shader_parameter/axis_center_model = Vector3(0, 0, 0)
 shader_parameter/influence_radius = 2.0
@@ -15,10 +55,47 @@ shader_parameter/distance_power = 2.0
 shader_parameter/outline_color = Color(0.08, 0.09, 0.11, 1)
 shader_parameter/outline_width = 0.012
 
+[sub_resource type="Shader" id="Shader_g2e78"]
+code = "shader_type spatial;
+
+render_mode unshaded;
+
+/// 顶点绕轴旋转；距轴心越近转角越小，distance_power 越大近处越「僵」。
+uniform vec3 rotation_axis = vec3(0.0, 1.0, 0.0);
+uniform vec3 axis_center_model = vec3(0.0, 0.0, 0.0);
+uniform float influence_radius : hint_range(0.001, 100.0, 0.01) = 2.0;
+uniform float max_angle_degrees : hint_range(-360.0, 360.0, 0.1) = 45.0;
+uniform float distance_power : hint_range(0.05, 8.0, 0.01) = 2.0;
+
+void vertex() {
+	vec3 axis_unit = normalize(rotation_axis);
+	vec3 offset = VERTEX - axis_center_model;
+	float distance_from_center = length(offset);
+	float normalized_distance = clamp(distance_from_center / influence_radius, 0.0, 1.0);
+	float angle_weight = pow(normalized_distance, distance_power);
+	float angle_radians = radians(max_angle_degrees) * angle_weight;
+	float cosine = cos(angle_radians);
+	float sine = sin(angle_radians);
+	vec3 rotated_offset = offset * cosine + cross(axis_unit, offset) * sine
+			+ axis_unit * dot(axis_unit, offset) * (1.0 - cosine);
+	VERTEX = rotated_offset + axis_center_model;
+	vec3 n = NORMAL;
+	NORMAL = normalize(n * cosine + cross(axis_unit, n) * sine
+			+ axis_unit * dot(axis_unit, n) * (1.0 - cosine));
+	vec3 t = TANGENT.xyz;
+	TANGENT.xyz = normalize(t * cosine + cross(axis_unit, t) * sine
+			+ axis_unit * dot(axis_unit, t) * (1.0 - cosine));
+}
+
+void fragment() {
+	ALBEDO = vec3(0.85, 0.88, 0.92);
+}
+"
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m8wqu"]
 render_priority = 0
 next_pass = SubResource("ShaderMaterial_dav7w")
-shader = ExtResource("2_g2e78")
+shader = SubResource("Shader_g2e78")
 shader_parameter/rotation_axis = Vector3(1, 0, 0)
 shader_parameter/axis_center_model = Vector3(0, 0, 0)
 shader_parameter/influence_radius = 0.1009999978123
