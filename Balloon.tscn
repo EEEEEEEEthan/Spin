@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://n8ghmhw2f1oy"]
+
+[ext_resource type="PackedScene" uid="uid://c40t0d267hf1w" path="res://Balloon.blend" id="1_12dx6"]
+[ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_rpx6m"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_12dx6"]
+radius = 0.21289063
+height = 0.6167908
+
+[node name="Balloon" type="RigidBody3D" unique_id=400769925]
+mass = 0.001
+gravity_scale = 0.01
+
+[node name="Balloon" parent="." unique_id=761245651 instance=ExtResource("1_12dx6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012249172, 0)
+
+[node name="球体" parent="Balloon" index="0" unique_id=927407977]
+surface_material_override/0 = ExtResource("2_rpx6m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=952877138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29666066, 0)
+shape = SubResource("CapsuleShape3D_12dx6")
+
+[editable path="Balloon"]
