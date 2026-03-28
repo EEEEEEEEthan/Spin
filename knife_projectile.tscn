@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://cq1h63fai8qtb" path="res://Knife.blend" id="1_itxqv"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g2e78"]
+bounce = 1.0
 absorbent = true
 
 [sub_resource type="GDScript" id="GDScript_itxqv"]
@@ -106,8 +107,8 @@ grow_amount = 0.01
 next_pass = SubResource("StandardMaterial3D_itxqv")
 shading_mode = 0
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_itxqv"]
-size = Vector3(0.009521484, 0.0078125, 0.0078125)
+[sub_resource type="SphereShape3D" id="SphereShape3D_itxqv"]
+radius = 0.001
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_g2e78"]
 size = Vector3(0.025634766, 0.2000122, 0.034179688)
@@ -118,7 +119,7 @@ can_sleep = false
 continuous_cd = true
 script = SubResource("GDScript_itxqv")
 stick_collision_layer_mask = 4
-min_stick_relative_speed = 3.0
+min_stick_relative_speed = 1.0
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
@@ -128,8 +129,8 @@ surface_material_override/0 = SubResource("StandardMaterial3D_g2e78")
 
 [node name="Blade" type="CollisionShape3D" parent="." unique_id=432524605]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.70710677, -0.70710677, 0, 0.70710677, 0.70710677, 0.00083007663, -0.11390093, -0.00044280398)
-shape = SubResource("BoxShape3D_itxqv")
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0.00083007663, -0.12512168, -0.00044280398)
+shape = SubResource("SphereShape3D_itxqv")
 
 [node name="Handle" type="CollisionShape3D" parent="." unique_id=1051444601]
 unique_name_in_owner = true
