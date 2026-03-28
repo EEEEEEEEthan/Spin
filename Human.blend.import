@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/Human.blend-a6334773f98a61622368c19f12604c83.
 
 [params]
 
-nodes/root_type="RigidBody3D"
+nodes/root_type="Node3D"
 nodes/root_name=""
 nodes/root_script=null
 nodes/apply_root_scale=true

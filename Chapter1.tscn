@@ -33,6 +33,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5796246, 0.7307588, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1396335306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.010790765, 0)
 mesh = SubResource("BoxMesh_xkndl")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=377258206]
