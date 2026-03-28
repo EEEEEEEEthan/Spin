@@ -8,7 +8,8 @@
 script/source = "extends Node3D
 ## Trigger（Human）飞刀击中报告的部位名，与 PhysicalBone3D.bone_name 一致。
 const knife_hit_right_foot_part: StringName = &\"右脚\"
-## 主 Skeleton3D 上 AnimationPlayer 的动画名（自 Human.blend 导入）。
+const knife_hit_left_foot_part: StringName = &\"左脚\"
+## 主 Skeleton3D 上 AnimationPlayer 的动画名（自 Human.blend 导入）。左脚命中时对称共用此轨。
 const right_foot_dodge_animation: StringName = &\"右脚闪避\"
 ## 最后一次播放闪避后，无新的播放则此时长后回到 RESET；期间再次播放会重新计时。
 const dodge_reset_delay_seconds: float = 0.5
@@ -16,19 +17,35 @@ const dodge_reset_delay_seconds: float = 0.5
 const dodge_reset_blend_seconds: float = 0.1
 
 var _dodge_reset_generation: int = 0
+## 记录根节点初始 scale.x，用于左脚命中时镜像后仍能还原。
+var _foot_dodge_scale_x_default: float = 1.0
 
 func _ready() -> void:
+	_foot_dodge_scale_x_default = scale.x
 	$Trigger.knife_hit_body_part.connect(_on_trigger_knife_hit_body_part)
 
 
 func _on_trigger_knife_hit_body_part(body_part: String, _stuck: bool) -> void:
-	if StringName(body_part) != knife_hit_right_foot_part:
+	var body_name := StringName(body_part)
+	if body_name != knife_hit_right_foot_part and body_name != knife_hit_left_foot_part:
 		return
 	var animation_player: AnimationPlayer = $AnimationPlayer
 	if not animation_player.has_animation(right_foot_dodge_animation):
 		return
+	_apply_foot_dodge_horizontal_mirror(body_name == knife_hit_left_foot_part)
 	animation_player.play(right_foot_dodge_animation)
 	_schedule_reset_after_dodge(animation_player)
+
+
+func _apply_foot_dodge_horizontal_mirror(left_foot: bool) -> void:
+	var magnitude: float = absf(_foot_dodge_scale_x_default)
+	if magnitude < 0.0001:
+		magnitude = 1.0
+	var sign_default: float = signf(_foot_dodge_scale_x_default)
+	if sign_default == 0.0:
+		sign_default = 1.0
+	var mirror_sign: float = -1.0 if left_foot else 1.0
+	scale.x = magnitude * sign_default * mirror_sign
 
 
 func _schedule_reset_after_dodge(animation_player: AnimationPlayer) -> void:
@@ -39,6 +56,10 @@ func _schedule_reset_after_dodge(animation_player: AnimationPlayer) -> void:
 		return
 	if animation_player.has_animation(&\"RESET\"):
 		animation_player.play(&\"RESET\", dodge_reset_blend_seconds)
+		await get_tree().create_timer(dodge_reset_blend_seconds).timeout
+		if generation != _dodge_reset_generation:
+			return
+	scale.x = _foot_dodge_scale_x_default
 "
 
 [node name="Human" unique_id=981423662 instance=ExtResource("1_j0vwa")]
