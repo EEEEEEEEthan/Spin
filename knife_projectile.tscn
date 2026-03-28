@@ -1,11 +1,99 @@
 [gd_scene format=3 uid="uid://22e28u4ukqvi"]
 
 [ext_resource type="PackedScene" uid="uid://cq1h63fai8qtb" path="res://Knife.blend" id="1_itxqv"]
-[ext_resource type="Script" uid="uid://dt7cwe450sxbs" path="res://knife_projectile.gd" id="1_knifeproj"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g2e78"]
-bounce = 0.0
 absorbent = true
+
+[sub_resource type="GDScript" id="GDScript_itxqv"]
+script/source = "extends RigidBody3D
+
+## 组 balloon 且含 explode()：仅戳破（queue_free），飞刀不冻结、不 reparent。
+## 命中体的 collision_layer 与此掩码有交集时才扎住并 reparent。为 0 时保持旧行为：任意碰撞体均可扎住。
+@export_flags_3d_physics var stick_collision_layer_mask: int = 0
+
+## 接触点处两物体世界速度的相对速度模长 ≥ 此值才扎住（含角速度带来的线速度）。≤0 表示不限制。
+@export var min_stick_relative_speed: float = 0.0
+
+@onready var blade: CollisionShape3D = %Blade
+
+var _stuck: bool = false
+
+
+func _try_pop_balloon(hit_body: Node3D, contact_index: int, state: PhysicsDirectBodyState3D) -> bool:
+	if not hit_body.is_in_group(\"balloon\"):
+		return false
+	if not hit_body.has_method(\"explode\"):
+		return false
+	if min_stick_relative_speed > 0.0:
+		var self_at_contact := state.get_contact_local_velocity_at_position(contact_index)
+		var other_at_contact := state.get_contact_collider_velocity_at_position(contact_index)
+		var relative_velocity := self_at_contact - other_at_contact
+		if relative_velocity.length() < min_stick_relative_speed:
+			return false
+	hit_body.explode()
+	return true
+
+
+func _hit_allows_stick(hit_body: Node) -> bool:
+	if stick_collision_layer_mask == 0:
+		return true
+	var collision_object := hit_body as CollisionObject3D
+	if collision_object == null:
+		return false
+	return (collision_object.collision_layer & stick_collision_layer_mask) != 0
+
+
+func _ready() -> void:
+	add_to_group(\"knife_projectile\")
+	contact_monitor = true
+	max_contacts_reported = 8
+
+
+func _collision_shape_index(target: CollisionShape3D) -> int:
+	var index := 0
+	for child in get_children():
+		if child is CollisionShape3D:
+			if child == target:
+				return index
+			index += 1
+	return 0
+
+
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	if _stuck:
+		return
+	var blade_index := _collision_shape_index(blade)
+	for contact_index in state.get_contact_count():
+		if state.get_contact_local_shape(contact_index) != blade_index:
+			continue
+		var hit_body := state.get_contact_collider_object(contact_index) as Node3D
+		if hit_body == null or hit_body == self:
+			continue
+		if _try_pop_balloon(hit_body, contact_index, state):
+			break
+		if not _hit_allows_stick(hit_body):
+			continue
+		if min_stick_relative_speed > 0.0:
+			var self_at_contact := state.get_contact_local_velocity_at_position(contact_index)
+			var other_at_contact := state.get_contact_collider_velocity_at_position(contact_index)
+			var relative_velocity := self_at_contact - other_at_contact
+			if relative_velocity.length() < min_stick_relative_speed:
+				continue
+		_stuck = true
+		state.linear_velocity = Vector3.ZERO
+		state.angular_velocity = Vector3.ZERO
+		freeze = true
+		freeze_mode = RigidBody3D.FREEZE_MODE_STATIC
+		call_deferred(\"_reparent_to_hit\", hit_body)
+		break
+
+
+func _reparent_to_hit(hit_body: Node3D) -> void:
+	if not is_instance_valid(hit_body) or not is_inside_tree():
+		return
+	reparent(hit_body)
+"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_itxqv"]
 cull_mode = 1
@@ -26,9 +114,9 @@ size = Vector3(0.017333984, 0.18383789, 0.031463623)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 physics_material_override = SubResource("PhysicsMaterial_g2e78")
-continuous_cd = true
 can_sleep = false
-script = ExtResource("1_knifeproj")
+continuous_cd = true
+script = SubResource("GDScript_itxqv")
 stick_collision_layer_mask = 4
 min_stick_relative_speed = 3.0
 
