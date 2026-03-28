@@ -20,6 +20,9 @@ const human_environment_collision_layer: int = 2
 ## 仅用于与飞刀产生物理接触的层，须与 knife 的 stick_collision_layer_mask 一致。
 const human_knife_block_collision_layer: int = 4
 
+## 飞刀击中人体时发出。body_part：被击中部位名；stuck：true 扎住，false 穿透。
+signal knife_hit_body_part(body_part: String, stuck: bool)
+
 @onready var _physical_bone_simulator: PhysicalBoneSimulator3D = $Skeleton3D/PhysicalBoneSimulator3D
 
 var _physical_bones: Array[PhysicalBone3D] = []
@@ -118,7 +121,9 @@ func _on_overlap_body_entered(hit_body: Node3D, physical_bone: PhysicalBone3D) -
 	var part_label: String = physical_bone.bone_name
 	if part_label.is_empty():
 		part_label = physical_bone.name
-	if knife_physical_collision_enabled:
+	var stuck: bool = knife_physical_collision_enabled
+	knife_hit_body_part.emit(part_label, stuck)
+	if stuck:
 		print(\"飞刀击中了\", part_label)
 	else:
 		print(\"飞刀击中了\", part_label, \"，但是穿透了\")

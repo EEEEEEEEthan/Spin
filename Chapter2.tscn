@@ -67,7 +67,77 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1
 shape = SubResource("CylinderShape3D_fitsj")
 
 [node name="Human" parent="." unique_id=650279287 instance=ExtResource("5_xmarw")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0.27122444)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.01960656, 0.27122444)
+knife_physical_collision_enabled = false
+
+[node name="HumanTrigger" parent="." unique_id=1797960747 instance=ExtResource("5_xmarw")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.01960656, 0.27122444)
+knife_physical_collision_enabled = false
+
+[node name="身体" parent="HumanTrigger/Skeleton3D" parent_id_path=PackedInt32Array(1797960747, 460315754) index="0" unique_id=744654585]
+visible = false
+
+[node name="Phys3D_1_髋" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="0" unique_id=1947381080]
+transform = Transform3D(1, 5.5809593e-08, 2.4158504e-07, -5.5809576e-08, 1, -7.092962e-08, -2.4158504e-07, 7.092961e-08, 1, 0, 0.6412859, 0)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.786089e-15, -1.2159363e-07, 8.624589e-15)
+body_offset = Transform3D(1.4705863, 8.20728e-08, 4.656613e-09, -8.2072795e-08, 1.4705863, -1.04308135e-07, -4.656613e-09, 1.0430813e-07, 1.4705863, 0, 1.7881393e-07, 0)
+
+[node name="Phys3D_2_胸" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="1" unique_id=1036522594]
+transform = Transform3D(1, 4.4742663e-07, 1.8522134e-07, -4.4742663e-07, 1, 1.0132826e-08, -1.8522134e-07, -1.0132909e-08, 1, 0, 0.6837015, 0)
+
+[node name="Phys3D_3_头" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="2" unique_id=1231801340]
+transform = Transform3D(1, 3.29316e-08, 1.5735618e-07, -3.2931602e-08, 1, 1.013282e-08, -1.5735618e-07, -1.0132825e-08, 1, 0, 0.9682981, 0)
+body_offset = Transform3D(1.4705863, 4.8428763e-08, -1.19209204e-07, -4.8428767e-08, 1.4705864, 1.4901188e-08, 1.19209204e-07, -1.4901183e-08, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_4_左肩" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="3" unique_id=1170578159]
+transform = Transform3D(-1.1928049e-07, -1, 6.5606473e-06, 1.9174834e-06, 6.560647e-06, 1, -1, 1.1929306e-07, 1.9174827e-06, 0, 0.9682981, 0)
+body_offset = Transform3D(1.4705863, -1.2255441e-10, -1.4905027e-08, 1.04847686e-10, 1.4705863, -3.5669686e-07, 1.4904117e-08, 3.5669711e-07, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_5_左臂" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="4" unique_id=1259591656]
+transform = Transform3D(-3.8738264e-08, -1, -9.192485e-08, 1.8318507e-06, -9.1924925e-08, 1, -1, 3.8738094e-08, 1.8318507e-06, -0.20205988, 0.96829927, 0)
+body_offset = Transform3D(1.4705863, 1.1834072e-07, -1.1368684e-12, -1.1835843e-07, 1.4705863, -1.3037874e-08, 0, 1.3038515e-08, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_6_左手" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="5" unique_id=274941619]
+transform = Transform3D(4.283908e-08, -1, -1.10290564e-07, 1.9496445e-06, -1.1029048e-07, 1, -1, -4.2839297e-08, 1.9496445e-06, -0.39983737, 0.96829915, 5.9604645e-08)
+body_offset = Transform3D(1.4705863, 2.3830728e-07, -1.7322714e-07, -2.3832496e-07, 1.4705863, 1.3970516e-08, 1.73226e-07, -1.3969832e-08, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_7_右肩" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="6" unique_id=1511161068]
+transform = Transform3D(6.80785e-09, 1, 3.191833e-07, -1, 6.8080226e-09, -5.408142e-07, -5.408142e-07, -3.191833e-07, 1, 0, 0.9682981, 0)
+body_offset = Transform3D(1.4705863, -1.0011541e-08, 2.9802209e-08, 1.0011713e-08, 1.4705863, 4.693866e-07, -2.9802266e-08, -4.6938663e-07, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_8_右臂" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="7" unique_id=1400329914]
+transform = Transform3D(4.6364384e-08, 1, -5.9768084e-09, -1, 4.636438e-08, -5.408142e-07, -5.408142e-07, 5.976837e-09, 1, 0.20205988, 0.9682982, 0)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4318726e-07, -1.1275259e-14, 4.9283274e-15)
+body_offset = Transform3D(1.4705863, -6.818282e-08, 2.9802209e-08, 6.818301e-08, 1.4705863, -8.789385e-09, -2.9802266e-08, 8.789371e-09, 1.4705863, -3.5762787e-07, 0, 0)
+
+[node name="Phys3D_9_右手" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="8" unique_id=859340804]
+transform = Transform3D(2.0265531e-08, 1, 2.0265574e-08, -1, 2.0265542e-08, -5.3068135e-07, -5.3068135e-07, -2.026556e-08, 1, 0.39983737, 0.96829796, 0)
+body_offset = Transform3D(1.4705863, -2.9802214e-08, 1.4900991e-08, 2.9802393e-08, 1.4705863, 2.9802308e-08, -1.49010475e-08, -2.9802322e-08, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_10_右髋" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="9" unique_id=1141386769]
+transform = Transform3D(2.0265603e-08, 1, -1.5199203e-07, -2.0265604e-08, 1.5199203e-07, 1, 1, -2.0265603e-08, 2.0265608e-08, 0, 0.6412859, 0)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.464168e-15, -1.8481263e-14, -1.2159363e-07)
+body_offset = Transform3D(1.4705863, -2.9802322e-08, 2.9802322e-08, 2.9802322e-08, 1.4705863, -2.2351739e-07, -2.980232e-08, 2.2351739e-07, 1.4705863, 0, 0, 1.7881393e-07)
+
+[node name="Phys3D_11_右腿" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="10" unique_id=215019433]
+transform = Transform3D(-4.3711395e-08, 0, 1, 0, -1, 0, 1, 0, 4.3711395e-08, 0.07463604, 0.6412859, 0)
+
+[node name="Phys3D_12_右脚" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="11" unique_id=1970502658]
+body_offset = Transform3D(1.4705863, 7.450572e-09, 2.9802312e-08, -7.450581e-09, 1.4705864, 3.7439165e-07, -2.9802312e-08, -3.7439162e-07, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_13_左髋" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="12" unique_id=115394849]
+transform = Transform3D(3.1665337e-10, -1, -3.16848e-08, -2.5332005e-09, -3.16848e-08, 1, -1, -3.1665337e-10, -2.5332005e-09, 0, 0.6412859, 0)
+joint_offset = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0802104e-16, 3.85267e-15, -1.2159363e-07)
+body_offset = Transform3D(1.4705863, 4.656613e-10, 3.72529e-09, -4.656613e-10, 1.4705863, 4.6595233e-08, -3.72529e-09, -4.6595233e-08, 1.4705863, 0, 0, 1.7881393e-07)
+
+[node name="Phys3D_14_左腿" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="13" unique_id=1881898672]
+transform = Transform3D(-4.3711395e-08, 4.1124927e-08, -1, 0, -1, -4.1124927e-08, -1, -1.797628e-15, 4.3711395e-08, -0.07463604, 0.6412859, 0)
+body_offset = Transform3D(1.4705863, 8.4703295e-22, 0, 0, 1.4705863, 6.047775e-08, 0, -6.047775e-08, 1.4705863, 0, 0, 0)
+
+[node name="Phys3D_15_左脚" parent="HumanTrigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="14" unique_id=835837828]
+transform = Transform3D(-4.3731774e-08, -1.2626423e-08, -1, 0, -1, 1.2626423e-08, -1, 5.521758e-16, 4.3731774e-08, -0.07463604, 0.32157117, 0)
+body_offset = Transform3D(1.4705863, -3.7841197e-19, -2.9970693e-11, 0, 1.4705864, -1.8568246e-08, 2.9970693e-11, 1.8568244e-08, 1.4705863, 0, 0, 0)
 
 [editable path="StaticBody3D/Wall"]
 [editable path="StaticBody3D2/Wheel"]
+[editable path="HumanTrigger"]
