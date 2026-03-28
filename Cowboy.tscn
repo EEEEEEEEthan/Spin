@@ -20,6 +20,8 @@ const dodge_reset_delay_seconds: float = 0.5
 const dodge_reset_blend_seconds: float = 0.1
 
 var _dodge_reset_generation: int = 0
+## 已触发过闪避动画的飞刀 instance_id，同一把飞刀多骨骼重叠只响应一次。
+var _dodge_responded_knife_instance_ids: Dictionary = {}
 ## 记录根节点初始 scale.x，左侧部位镜像闪避后仍能还原。
 var _dodge_scale_x_default: float = 1.0
 
@@ -28,7 +30,7 @@ func _ready() -> void:
 	$Trigger.knife_hit_body_part.connect(_on_trigger_knife_hit_body_part)
 
 
-func _on_trigger_knife_hit_body_part(body_part: String, _stuck: bool) -> void:
+func _on_trigger_knife_hit_body_part(body_part: String, _stuck: bool, knife: Node) -> void:
 	var body_name := StringName(body_part)
 	var dodge_animation: StringName
 	var mirror_horizontal: bool
@@ -50,6 +52,11 @@ func _on_trigger_knife_hit_body_part(body_part: String, _stuck: bool) -> void:
 	var animation_player: AnimationPlayer = $AnimationPlayer
 	if not animation_player.has_animation(dodge_animation):
 		return
+	if knife != null:
+		var knife_instance_id: int = knife.get_instance_id()
+		if _dodge_responded_knife_instance_ids.has(knife_instance_id):
+			return
+		_dodge_responded_knife_instance_ids[knife_instance_id] = true
 	_apply_dodge_horizontal_mirror(mirror_horizontal)
 	animation_player.play(dodge_animation)
 	_schedule_reset_after_dodge(animation_player)
@@ -77,7 +84,10 @@ func _schedule_reset_after_dodge(animation_player: AnimationPlayer) -> void:
 		await get_tree().create_timer(dodge_reset_blend_seconds).timeout
 		if generation != _dodge_reset_generation:
 			return
-	scale.x = _dodge_scale_x_default
+		scale.x = _dodge_scale_x_default
+		_dodge_responded_knife_instance_ids.clear()
+	else:
+		_dodge_responded_knife_instance_ids.clear()
 "
 
 [node name="Human" unique_id=981423662 instance=ExtResource("1_j0vwa")]
