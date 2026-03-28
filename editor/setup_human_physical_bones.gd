@@ -7,8 +7,8 @@ extends EditorScript
 
 const HUMAN_SKELETON_PATH := "Human/骨架/Skeleton3D"
 const SIMULATOR_NODE_NAME := "PhysicalBoneSimulator3D"
-## 与 knife_projectile.tscn 中 stick_collision_layer_mask 对齐（第 2 层），便于飞刀只扎目标层。
-const TARGET_COLLISION_LAYER: int = 2
+## layer2 环境 + layer3(值4) 飞刀物理；与 knife stick_collision_layer_mask=4 对齐。human_knife_collision 关闭飞刀层时脚本会改为仅 layer2。
+const TARGET_COLLISION_LAYER: int = 6
 
 
 func _run() -> void:

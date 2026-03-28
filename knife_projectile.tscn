@@ -29,7 +29,7 @@ physics_material_override = SubResource("PhysicsMaterial_g2e78")
 continuous_cd = true
 can_sleep = false
 script = ExtResource("1_knifeproj")
-stick_collision_layer_mask = 2
+stick_collision_layer_mask = 4
 min_stick_relative_speed = 3.0
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]

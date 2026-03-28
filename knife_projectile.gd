@@ -37,6 +37,7 @@ func _hit_allows_stick(hit_body: Node) -> bool:
 
 
 func _ready() -> void:
+	add_to_group("knife_projectile")
 	contact_monitor = true
 	max_contacts_reported = 8
 
