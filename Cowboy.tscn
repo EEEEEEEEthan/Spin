@@ -15,6 +15,7 @@ const knife_hit_hip_part: StringName = &\"髋\"
 const knife_hit_left_hip_part: StringName = &\"左髋\"
 const knife_hit_right_hip_part: StringName = &\"右髋\"
 const knife_hit_chest_part: StringName = &\"胸\"
+const knife_hit_head_part: StringName = &\"头\"
 const knife_hit_right_hand_part: StringName = &\"右手\"
 const knife_hit_left_hand_part: StringName = &\"左手\"
 const knife_hit_right_arm_part: StringName = &\"右臂\"
@@ -26,6 +27,7 @@ const right_foot_dodge_animation: StringName = &\"右脚闪避\"
 const right_leg_dodge_animation: StringName = &\"右腿闪避\"
 const body_dodge_animation: StringName = &\"身体闪避\"
 const right_hand_dodge_animation: StringName = &\"右手闪避\"
+const head_dodge_animation: StringName = &\"头部闪避\"
 ## 最后一次播放闪避后，无新的播放则此时长后回到 RESET；期间再次播放会重新计时。
 const dodge_reset_delay_seconds: float = 0.5
 ## 切回 RESET 时的混合时长（秒）。
@@ -71,6 +73,9 @@ func _on_trigger_knife_hit_body_part(body_part: String, _stuck: bool, knife: Nod
 		knife_hit_left_hip_part:
 			dodge_animation = body_dodge_animation
 			mirror_horizontal = true
+		knife_hit_head_part:
+			dodge_animation = head_dodge_animation
+			mirror_horizontal = false
 		_:
 			return
 	var animation_player: AnimationPlayer = $AnimationPlayer
@@ -114,76 +119,196 @@ func _schedule_reset_after_dodge(animation_player: AnimationPlayer) -> void:
 		_dodge_responded_knife_instance_ids.clear()
 "
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v22yx"]
+radius = 0.1352539
+height = 0.2705078
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_jic6a"]
+radius = 0.19921875
+height = 0.484375
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u0vf3"]
+radius = 0.16748047
+height = 0.3486328
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5g675"]
+radius = 0.08886719
+height = 0.34179688
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5bfpj"]
+radius = 0.091796875
+height = 0.33276367
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1y52b"]
+radius = 0.08300781
+height = 0.5185547
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hdyvo"]
+radius = 0.13623047
+height = 0.27246094
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4xi4j"]
+radius = 0.103027344
+height = 0.36279297
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_aasv1"]
+radius = 0.09472656
+height = 0.5024414
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yw8wh"]
+radius = 0.12756348
+height = 0.25512695
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yjoyn"]
+radius = 0.10595703
+height = 0.49658203
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_m1jvj"]
+radius = 0.10253906
+height = 0.5834961
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pqw6h"]
+radius = 0.1303711
+height = 0.29077148
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mrtmt"]
+radius = 0.123046875
+height = 0.48168945
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2eei0"]
+radius = 0.11621094
+height = 0.6726074
+
 [node name="Human" unique_id=981423662 instance=ExtResource("1_j0vwa")]
 script = SubResource("GDScript_v22yx")
 
-[node name="身体" parent="Skeleton3D" parent_id_path=PackedInt32Array(1929748417) index="0" unique_id=491872141]
+[node name="身体" parent="Skeleton3D" parent_id_path=PackedInt32Array(304171964) index="0" unique_id=1723885047]
 surface_material_override/0 = ExtResource("2_v22yx")
 
 [node name="Trigger" parent="." index="2" unique_id=1797960747 instance=ExtResource("2_vxfuf")]
 knife_physical_collision_enabled = false
 
-[node name="身体" parent="Trigger/Skeleton3D" parent_id_path=PackedInt32Array(1797960747, 1929748417) index="0" unique_id=491872141]
+[node name="身体" parent="Trigger/Skeleton3D" parent_id_path=PackedInt32Array(1797960747, 304171964) index="0" unique_id=1723885047]
 visible = false
 
 [node name="Phys3D_1_髋" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="0" unique_id=1947381080]
 transform = Transform3D(1, 5.58096e-08, 2.4158507e-07, -5.5809583e-08, 1, -7.092963e-08, -2.4158507e-07, 7.0929616e-08, 1, 0, 0.8345246, 0)
 body_offset = Transform3D(1.1300641, 6.3068406e-08, 3.57835e-09, -6.3068406e-08, 1.1300641, -8.015503e-08, -3.57835e-09, 8.0155026e-08, 1.1300641, 0, 0, 0)
 
+[node name="Collision_髋" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_1_髋" index="0" unique_id=1370157010]
+transform = Transform3D(0, 6.280326e-16, -1, 0, 1, -6.280326e-16, 1, 0, 0, 0, 0.031187952, 0)
+shape = SubResource("CapsuleShape3D_v22yx")
+
 [node name="Phys3D_2_胸" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="1" unique_id=1036522594]
 transform = Transform3D(1, 4.4742666e-07, 1.8522137e-07, -4.4742666e-07, 1, 1.0132826e-08, -1.8522137e-07, -1.0132909e-08, 1, 0, 0.88972133, 0)
 body_offset = Transform3D(1.1300641, 5.056208e-07, -6.0116264e-08, -5.056208e-07, 1.1300641, 1.14507435e-08, 6.0116264e-08, -1.1450716e-08, 1.1300641, 0, 0, 0)
+
+[node name="Collision_胸" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_2_胸" index="0" unique_id=777716889]
+transform = Transform3D(0, 1.8768313e-15, -1, 0, 1, -1.8768313e-15, 1, 0, 0, -5.684342e-14, 0.19705492, 6.217249e-15)
+shape = SubResource("CapsuleShape3D_jic6a")
 
 [node name="Phys3D_3_头" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="2" unique_id=1231801340]
 transform = Transform3D(1, 3.2931606e-08, 1.573562e-07, -3.2931606e-08, 1, 1.01328235e-08, -1.573562e-07, -1.0132829e-08, 1, 0, 1.2600753, 0)
 body_offset = Transform3D(1.1300641, 3.721483e-08, -9.160571e-08, -3.7214825e-08, 1.1300641, 1.145074e-08, 9.160571e-08, -1.1450737e-08, 1.1300641, 0, 0, 0)
 
+[node name="Collision_头" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_3_头" index="0" unique_id=1692869497]
+transform = Transform3D(0, 1.5944634e-15, -1, 0, 1, -1.5944634e-15, 1, 0, 0, 0, 0.20500767, 3.5527137e-15)
+shape = SubResource("CapsuleShape3D_u0vf3")
+
 [node name="Phys3D_4_左肩" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="3" unique_id=1170578159]
 transform = Transform3D(-1.19209226e-07, -1, 6.5606478e-06, 1.9174815e-06, 6.5606473e-06, 1, -1, 1.1922181e-07, 1.9174809e-06, 0, 1.2600753, 0)
 body_offset = Transform3D(1.1300641, -1.362821e-11, -1.14519025e-08, 0, 1.1300641, -2.741019e-07, 1.1450766e-08, 2.7410286e-07, 1.1300641, 0, 0, 0)
+
+[node name="Collision_左肩" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_4_左肩" index="0" unique_id=1354994028]
+transform = Transform3D(7.958079e-12, 2.842171e-13, -1, 4.0118107e-07, 1, 2.5579538e-13, 1, -4.0118107e-07, 0, 0, 0.19495997, -1.1920929e-07)
+shape = SubResource("CapsuleShape3D_5g675")
 
 [node name="Phys3D_5_左臂" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="4" unique_id=1259591656]
 transform = Transform3D(-3.8655088e-08, -1, -9.192509e-08, 1.8318513e-06, -9.192516e-08, 1, -1, 3.865492e-08, 1.8318513e-06, -0.2629466, 1.260077, 3.1345603e-08)
 body_offset = Transform3D(1.1300641, 9.103227e-08, -1.364242e-12, -9.104589e-08, 1.1300641, -1.0019038e-08, 6.82121e-13, 1.0019372e-08, 1.1300641, 0, 0, 0)
 
+[node name="Collision_左臂" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_5_左臂" index="0" unique_id=353632852]
+transform = Transform3D(7.1622708e-12, -8.31335e-13, -1, 4.0986677e-07, 1, -6.82121e-13, 1, -4.0986686e-07, 0, -1.1368684e-12, 0.13578093, 1.1920929e-07)
+shape = SubResource("CapsuleShape3D_5bfpj")
+
 [node name="Phys3D_6_左手" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="5" unique_id=274941619]
 transform = Transform3D(4.2902716e-08, -1, -1.1029081e-07, 1.949645e-06, -1.1029073e-07, 1, -1, -4.2902933e-08, 1.949645e-06, -0.52032036, 1.2600771, 6.202726e-08)
 body_offset = Transform3D(1.1300641, 1.8319784e-07, -1.3311592e-07, -1.8321145e-07, 1.1300641, 1.0735427e-08, 1.3311501e-07, -1.0735061e-08, 1.1300641, 0, 0, 0)
 
+[node name="Collision_左手" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_6_左手" index="0" unique_id=1196329114]
+transform = Transform3D(6.053597e-08, 1.2079227e-13, -1.0000005, 1.8160794e-08, 1.0000012, 5.9604645e-08, 1.0000002, -9.2666596e-07, -1.1269003e-07, 1.4901161e-08, 0.15772635, 2.3841858e-07)
+shape = SubResource("CapsuleShape3D_1y52b")
+
 [node name="Phys3D_7_右肩" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="6" unique_id=1511161068]
-transform = Transform3D(6.8294943e-09, 1, 3.1918324e-07, -1, 6.829667e-09, -5.4081414e-07, -5.4081414e-07, -3.1918324e-07, 1, 0, 1.2600753, 0)
-body_offset = Transform3D(1.1300641, -7.717774e-09, 2.2901304e-08, 7.717906e-09, 1.1300641, 3.606975e-07, -2.290136e-08, -3.6069753e-07, 1.1300641, 0, 0, 0)
+transform = Transform3D(6.8375505e-09, 1, 3.1918324e-07, -1, 6.8377233e-09, -5.4081414e-07, -5.4081414e-07, -3.1918324e-07, 1, 0, 1.2600753, 0)
+body_offset = Transform3D(1.1300641, -7.726878e-09, 2.2901304e-08, 7.72701e-09, 1.1300641, 3.606975e-07, -2.290136e-08, -3.6069753e-07, 1.1300641, 0, 0, 0)
+
+[node name="Collision_右肩" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_7_右肩" index="0" unique_id=242200381]
+transform = Transform3D(0, 4.0118016e-07, -1, -1.9895197e-13, 1, 4.0118022e-07, 1, 1.9895197e-13, 0, 0, 0.14857325, 2.842171e-13)
+shape = SubResource("CapsuleShape3D_hdyvo")
 
 [node name="Phys3D_8_右臂" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="7" unique_id=1400329914]
 transform = Transform3D(4.6364384e-08, 1, -5.976786e-09, -1, 4.636438e-08, -5.4081414e-07, -5.4081414e-07, 5.976811e-09, 1, 0.2629466, 1.2600753, 5.030106e-14)
 body_offset = Transform3D(1.1300641, -5.239473e-08, 2.2901304e-08, 5.2394867e-08, 1.1300641, -6.754172e-09, -2.290136e-08, 6.7541364e-09, 1.1300641, 0, 0, 0)
 
+[node name="Collision_右臂" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_8_右臂" index="0" unique_id=1062685758]
+transform = Transform3D(0, 4.0986677e-07, -1, -1.8074431e-13, 1, 4.0986677e-07, 1, 1.8074431e-13, 0, 0, 0.086098254, -5.684342e-14)
+shape = SubResource("CapsuleShape3D_4xi4j")
+
 [node name="Phys3D_9_右手" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="8" unique_id=859340804]
 transform = Transform3D(2.026549e-08, 1, 2.02656e-08, -1, 2.0265501e-08, -5.3068135e-07, -5.3068135e-07, -2.026559e-08, 1, 0.52032036, 1.2600753, 1.0052292e-13)
 body_offset = Transform3D(1.1300641, -2.2901304e-08, 1.1450595e-08, 2.2901444e-08, 1.1300641, 2.2901409e-08, -1.1450652e-08, -2.2901444e-08, 1.1300641, 0, 0, 0)
+
+[node name="Collision_右手" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_9_右手" index="0" unique_id=324146113]
+transform = Transform3D(7.450581e-09, -1.0617077e-07, -1.0000001, 0, 1, 9.778888e-08, 1, 0, -7.0780516e-08, 0, 0.14039212, -5.684342e-14)
+shape = SubResource("CapsuleShape3D_aasv1")
 
 [node name="Phys3D_10_右髋" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="9" unique_id=1141386769]
 transform = Transform3D(2.0265606e-08, 1, -1.5199203e-07, -2.0265606e-08, 1.5199203e-07, 1, 1, -2.0265603e-08, 2.026561e-08, 0, 0.8345246, 0)
 body_offset = Transform3D(1.1300641, -2.290143e-08, 2.2901439e-08, 2.2901434e-08, 1.1300641, -1.7176073e-07, -2.2901434e-08, 1.7176073e-07, 1.1300641, 0, 0, 0)
 
+[node name="Collision_右髋" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_10_右髋" index="0" unique_id=649141035]
+transform = Transform3D(0, 0, -1, -5.4305144e-07, 1, 0, 1, 5.4305144e-07, 0, 0, 0.07892722, 5.9604645e-08)
+shape = SubResource("CapsuleShape3D_yw8wh")
+
 [node name="Phys3D_11_右腿" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="10" unique_id=215019433]
-transform = Transform3D(-4.382385e-08, 0, 1, 0, -1, 0, 1, 0, 4.382385e-08, 0.09712613, 0.8345246, 0)
-body_offset = Transform3D(1.1300641, 0, 1.2708057e-10, 0, 1.1300641, 0, -1.2708057e-10, 0, 1.1300641, 0, 0, 0)
+transform = Transform3D(-4.386571e-08, 0, 1, 0, -1, 0, 1, 0, 4.386571e-08, 0.09712613, 0.8345246, 0)
+body_offset = Transform3D(1.1300641, 0, 1.7438495e-10, 0, 1.1300641, 0, -1.7438495e-10, 0, 1.1300641, 0, 0, 0)
+
+[node name="Collision_右腿" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_11_右腿" index="0" unique_id=1991189327]
+transform = Transform3D(-8.940697e-08, 6.556511e-07, -0.99999976, 4.8428774e-07, 0.99999833, 2.682209e-07, 0.9999999, 2.4586916e-07, 3.5762787e-07, 3.028254e-08, 0.23581642, -5.9604645e-08)
+shape = SubResource("CapsuleShape3D_yjoyn")
 
 [node name="Phys3D_12_右脚" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="11" unique_id=1970502658]
 transform = Transform3D(-6.3977026e-08, -2.5458672e-07, 1, 5.0664015e-09, -1, -2.5458672e-07, 1, 5.066385e-09, 6.3977026e-08, 0.09712612, 0.4184701, 1.04785175e-16)
 body_offset = Transform3D(1.1300641, 5.7253526e-09, 2.2901457e-08, -5.7253584e-09, 1.1300641, 2.8769932e-07, -2.2901457e-08, -2.8769932e-07, 1.1300641, 0, 0, 0)
 
+[node name="Collision_右脚" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_12_右脚" index="0" unique_id=1704989862]
+transform = Transform3D(1.0430813e-07, 5.5879354e-08, -1.0000008, -1.8626451e-07, 1.0000006, 3.7252907e-09, 1.0000007, 7.050112e-07, 2.9802322e-08, 2.0289917e-08, 0.20222372, 2.4586916e-07)
+shape = SubResource("CapsuleShape3D_m1jvj")
+
 [node name="Phys3D_13_左髋" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="12" unique_id=115394849]
 transform = Transform3D(3.166501e-10, -1, -3.1684802e-08, -2.5332008e-09, -3.1684802e-08, 1, -1, -3.1665e-10, -2.5332008e-09, 0, 0.8345246, 0)
 body_offset = Transform3D(1.1300641, 3.5783482e-10, 2.8626792e-09, -3.578349e-10, 1.1300641, 3.5805858e-08, -2.8626792e-09, -3.5805858e-08, 1.1300641, 0, 0, 0)
 
+[node name="Collision_左髋" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_13_左髋" index="0" unique_id=1018605604]
+transform = Transform3D(0, 0, -1, -5.4305144e-07, 1, 0, 1, 5.4305144e-07, 0, 0, 0.101144016, 5.9604645e-08)
+shape = SubResource("CapsuleShape3D_pqw6h")
+
 [node name="Phys3D_14_左腿" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="13" unique_id=1881898672]
-transform = Transform3D(-4.382385e-08, 4.1124927e-08, -1, 0, -1, -4.1124927e-08, -1, -1.8022525e-15, 4.382385e-08, -0.09712613, 0.8345246, 0)
-body_offset = Transform3D(1.1300641, 5.2261933e-18, -1.2708057e-10, 0, 1.1300641, 4.6473804e-08, 1.2708057e-10, -4.6473804e-08, 1.1300641, 0, 0, 0)
+transform = Transform3D(-4.386571e-08, 4.1124927e-08, -1, 0, -1, -4.1124927e-08, -1, -1.8039741e-15, 4.386571e-08, -0.09712613, 0.8345246, 0)
+body_offset = Transform3D(1.1300641, 7.171616e-18, -1.7438495e-10, 0, 1.1300641, 4.6473804e-08, 1.7438495e-10, -4.6473804e-08, 1.1300641, 0, 0, 0)
+
+[node name="Collision_左腿" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_14_左腿" index="0" unique_id=1637197028]
+transform = Transform3D(0, 0, -1, -7.9034725e-23, 1, 0, 1, -7.9034725e-23, 0, 8.881784e-16, 0.23935652, 4.4703484e-08)
+shape = SubResource("CapsuleShape3D_mrtmt")
 
 [node name="Phys3D_15_左脚" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D" parent_id_path=PackedInt32Array(1797960747, 1140326449) index="14" unique_id=835837828]
 transform = Transform3D(-4.373179e-08, -1.2626424e-08, -1, 0, -1, 1.2626424e-08, -1, 5.5217617e-16, 4.373179e-08, -0.09712612, 0.4184701, 1.04785175e-16)
 body_offset = Transform3D(1.1300641, -2.9100876e-19, -2.3042901e-11, 0, 1.1300641, -1.4268669e-08, 2.3042901e-11, 1.4268669e-08, 1.1300641, 0, 0, 0)
+
+[node name="Collision_左脚" parent="Trigger/Skeleton3D/PhysicalBoneSimulator3D/Phys3D_15_左脚" index="0" unique_id=907597008]
+transform = Transform3D(0, 0, -1, 2.4147654e-23, 1, 0, 1, 2.4147654e-23, 0, -1.3322676e-15, 0.12592942, -4.4703484e-08)
+shape = SubResource("CapsuleShape3D_2eei0")
 
 [editable path="Trigger"]
