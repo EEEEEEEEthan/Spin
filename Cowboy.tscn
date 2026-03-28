@@ -11,9 +11,14 @@ const knife_hit_right_foot_part: StringName = &\"右脚\"
 const knife_hit_left_foot_part: StringName = &\"左脚\"
 const knife_hit_right_leg_part: StringName = &\"右腿\"
 const knife_hit_left_leg_part: StringName = &\"左腿\"
+const knife_hit_hip_part: StringName = &\"髋\"
+const knife_hit_left_hip_part: StringName = &\"左髋\"
+const knife_hit_right_hip_part: StringName = &\"右髋\"
+const knife_hit_chest_part: StringName = &\"胸\"
 ## 主 Skeleton3D 上 AnimationPlayer 的动画名（自 Human.blend 导入）。
 const right_foot_dodge_animation: StringName = &\"右脚闪避\"
 const right_leg_dodge_animation: StringName = &\"右腿闪避\"
+const body_dodge_animation: StringName = &\"身体闪避\"
 ## 最后一次播放闪避后，无新的播放则此时长后回到 RESET；期间再次播放会重新计时。
 const dodge_reset_delay_seconds: float = 0.5
 ## 切回 RESET 时的混合时长（秒）。
@@ -46,6 +51,12 @@ func _on_trigger_knife_hit_body_part(body_part: String, _stuck: bool, knife: Nod
 			mirror_horizontal = false
 		knife_hit_left_leg_part:
 			dodge_animation = right_leg_dodge_animation
+			mirror_horizontal = true
+		knife_hit_hip_part, knife_hit_chest_part, knife_hit_right_hip_part:
+			dodge_animation = body_dodge_animation
+			mirror_horizontal = false
+		knife_hit_left_hip_part:
+			dodge_animation = body_dodge_animation
 			mirror_horizontal = true
 		_:
 			return
