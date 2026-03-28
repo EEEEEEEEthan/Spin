@@ -29,6 +29,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.010436341, 0)
 [node name="Balloon" parent="Table" unique_id=400769925 instance=ExtResource("3_t88pq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5796246, 0.7307588, 0)
 
+[node name="Balloon2" parent="Table" unique_id=1921574106 instance=ExtResource("3_t88pq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.019909322, 0.7307588, 0)
+
+[node name="Balloon3" parent="Table" unique_id=1776396389 instance=ExtResource("3_t88pq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6020714, 0.7307588, 0)
+
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1957208448]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 

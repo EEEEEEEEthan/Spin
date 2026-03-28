@@ -42,8 +42,13 @@ billboard_mode = 1
 material = SubResource("StandardMaterial3D_u1ntq")
 
 [node name="Balloon" type="RigidBody3D" unique_id=400769925]
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
 mass = 0.001
 gravity_scale = 0.01
+center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0.01, 0)
 script = SubResource("GDScript_gxany")
 
 [node name="Balloon" parent="." unique_id=761245651 instance=ExtResource("1_12dx6")]

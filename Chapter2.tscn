@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cmwe30idxr08a"]
 
 [ext_resource type="PackedScene" uid="uid://bxsfl8hvrdh7b" path="res://Player.tscn" id="1_xmarw"]
+[ext_resource type="PackedScene" uid="uid://n8ghmhw2f1oy" path="res://Balloon.tscn" id="3_63cdw"]
 [ext_resource type="PackedScene" uid="uid://ccu51yko7o522" path="res://Wheel.blend" id="4_fitsj"]
 [ext_resource type="PackedScene" uid="uid://by0ecoe3gqiag" path="res://Wall.blend" id="4_kteal"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="5_dou4o"]
@@ -63,12 +64,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.030877113, 0)
 layers = 1048575
 surface_material_override/0 = ExtResource("5_dou4o")
 
+[node name="Balloon" parent="StaticBody3D2/Wheel" unique_id=400769925 instance=ExtResource("3_63cdw")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.49530602, 0.44372988, 0.09222674)
+
+[node name="Balloon2" parent="StaticBody3D2/Wheel" unique_id=1512463111 instance=ExtResource("3_63cdw")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.49530602, 0.944129, 0.09222674)
+
+[node name="Balloon3" parent="StaticBody3D2/Wheel" unique_id=807447821 instance=ExtResource("3_63cdw")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.49530602, 1.6487021, 0.09222674)
+
+[node name="Balloon4" parent="StaticBody3D2/Wheel" unique_id=589811937 instance=ExtResource("3_63cdw")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.46206212, 1.6487021, 0.09222674)
+
+[node name="Balloon5" parent="StaticBody3D2/Wheel" unique_id=1794893143 instance=ExtResource("3_63cdw")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.52951264, 0.91468453, 0.09222674)
+
+[node name="Balloon6" parent="StaticBody3D2/Wheel" unique_id=1106021090 instance=ExtResource("3_63cdw")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.4999733, 0.42355883, 0.09222674)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=1922935986]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, 0)
 shape = SubResource("CylinderShape3D_fitsj")
 
 [node name="Cowboy" parent="." unique_id=981423662 instance=ExtResource("5_xmarw")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.02002418, 0.5911212)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.02002418, 0.9446242)
 
 [editable path="StaticBody3D/Wall"]
 [editable path="StaticBody3D2/Wheel"]
