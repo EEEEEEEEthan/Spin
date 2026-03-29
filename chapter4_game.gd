@@ -59,6 +59,12 @@ func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, knife: RigidBo
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if OS.has_feature("editor") and event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_R:
+			_force_complete_in_editor()
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
@@ -75,6 +81,13 @@ func _process(_delta: float) -> void:
 	if _completion_started:
 		return
 	if not _every_target_has_stuck_knife():
+		return
+	_completion_started = true
+	all_chapter4_cleared.emit()
+
+
+func _force_complete_in_editor() -> void:
+	if _completion_started:
 		return
 	_completion_started = true
 	all_chapter4_cleared.emit()

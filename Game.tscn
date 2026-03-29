@@ -106,7 +106,7 @@ func _run_chapter4_cleared_sequence() -> void:
 	await Transition.typewriter_display(\"游戏结束喽！\", _TYPEWRITER_CHAR_SEC)
 	PlayerSession.submit_current_score_and_prepare_focus()
 	Transition.begin_delayed_overlay_reveal(_TRANSITION_SHADER_INDEX, 3.0, _OVERLAY_HIDE_SEC)
-	get_tree().change_scene_to_packed(preload(\"res://MainMenu.tscn\"))
+	get_tree().change_scene_to_file(\"res://MainMenu.tscn\")
 "
 
 [node name="Game" type="Node" unique_id=538117735]
