@@ -1,3 +1,132 @@
 [gd_scene format=3 uid="uid://b2kpquvc7r366"]
 
+[ext_resource type="Texture2D" uid="uid://dplxiw7dijtg4" path="res://Menu.png" id="1_wbfu4"]
+[ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="2_xkndl"]
+[ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="3_sb48q"]
+[ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_u44n3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xkndl"]
+atlas = ExtResource("1_wbfu4")
+region = Rect2(21.037354, -6.937607, 1044.2412, 425.11456)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u44n3"]
+atlas = ExtResource("1_wbfu4")
+region = Rect2(10.673706, 488.8869, 1035.6818, 359.49286)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wbfu4"]
+atlas = ExtResource("1_wbfu4")
+region = Rect2(50.6167, 979.6232, 958.64764, 413.7021)
+
 [node name="Game" type="Node" unique_id=957337063]
+
+[node name="Control" type="Control" parent="." unique_id=1179891066]
+layout_mode = 3
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_top = 58.0
+offset_right = 453.0
+offset_bottom = -43.0
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0, 0.5)
+
+[node name="Button_NewGame" type="TextureButton" parent="Control" unique_id=1343242364]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.024
+anchor_top = 0.004
+anchor_right = 1.013
+anchor_bottom = 0.31800002
+offset_left = 0.12800026
+offset_top = -0.18799925
+offset_right = 0.11099243
+offset_bottom = 0.053985596
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture_normal = SubResource("AtlasTexture_xkndl")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="Button_Rank" type="TextureButton" parent="Control" unique_id=1172913445]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.029000001
+anchor_top = 0.316
+anchor_right = 1.018
+anchor_bottom = 0.63100004
+offset_left = -0.13700008
+offset_top = 0.147995
+offset_right = -0.1539917
+offset_bottom = -0.15701294
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture_normal = SubResource("AtlasTexture_u44n3")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="Button_Quit" type="TextureButton" parent="Control" unique_id=1157966423]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.031000001
+anchor_top = 0.65400004
+anchor_right = 1.0200001
+anchor_bottom = 0.96900004
+offset_left = -0.043001175
+offset_top = 0.2619629
+offset_right = -0.060058594
+offset_bottom = -0.043029785
+pivot_offset_ratio = Vector2(0.5, 0.5)
+texture_normal = SubResource("AtlasTexture_wbfu4")
+ignore_texture_size = true
+stretch_mode = 4
+
+[node name="Axis" type="Control" parent="." unique_id=2043143782]
+layout_mode = 3
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 340.0
+offset_right = 340.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="Texture_NewGame" type="TextureRect" parent="Axis" unique_id=1581798441]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -946.0
+offset_top = -261.00003
+offset_right = -906.0
+offset_bottom = -221.00003
+scale = Vector2(14.080004, 14.080004)
+texture = ExtResource("3_u44n3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Texture_Rank" type="TextureRect" parent="Axis" unique_id=1138938330]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -1041.0
+offset_top = -272.0
+offset_right = -350.0
+offset_bottom = 296.0
+rotation = -1.5698266
+pivot_offset = Vector2(1021, 269)
+texture = ExtResource("3_sb48q")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Texture_Quit" type="TextureRect" parent="Axis" unique_id=348067533]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -971.0
+offset_top = -261.99988
+offset_right = -292.0
+offset_bottom = 278.00012
+rotation = -3.138707
+scale = Vector2(0.92011476, 0.92011476)
+pivot_offset = Vector2(1014, 260)
+texture = ExtResource("2_xkndl")
+expand_mode = 1
+stretch_mode = 5
