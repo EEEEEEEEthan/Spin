@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://dq3gbq3tcs4hp"]
-
-[ext_resource type="PackedScene" uid="uid://p824wqdipd0h" path="res://Human.glb" id="1_oyodm"]
-
-[node name="Human" unique_id=1183697049 instance=ExtResource("1_oyodm")]
