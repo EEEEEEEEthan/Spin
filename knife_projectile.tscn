@@ -185,9 +185,9 @@ can_sleep = false
 continuous_cd = true
 script = SubResource("GDScript_itxqv")
 stick_collision_layer_mask = 4
-min_stick_relative_speed = 2.0
+min_stick_relative_speed = 1.0
 min_stick_velocity_alignment = 0.7
-max_stick_normal_body_y_angle_deg = 45.0
+max_stick_normal_body_y_angle_deg = 61.5
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1.5, 0, 0, 0, -1.5, 2.2649371e-07, 0, -2.2649371e-07, -1.5, 0, 0, 0)
