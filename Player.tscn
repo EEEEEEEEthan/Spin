@@ -6,6 +6,11 @@
 script/source = "extends Node
 
 const PROJECTILE_SCENE := preload(\"res://knife_projectile.tscn\")
+const THROW_AUDIO_STREAMS: Array[AudioStream] = [
+	preload(\"res://Audios/唰.wav\"),
+	preload(\"res://Audios/唰2.wav\"),
+	preload(\"res://Audios/唰3.wav\"),
+]
 
 @export var min_throw_speed: float = 5.0
 @export var max_throw_speed: float = 32.0
@@ -27,6 +32,7 @@ var _ui_fade_tween: Tween
 @onready var camera_3d: Camera3D = $CameraYaw/Camera3D
 @onready var progress_root: Control = %Progress
 @onready var strength_bar: TextureRect = %Strength
+@onready var throw_audio_player: AudioStreamPlayer = %ThrowAudioPlayer
 
 
 func _ready() -> void:
@@ -81,6 +87,9 @@ func _throw_knife() -> void:
 	if max_charge_seconds > 0.0:
 		charge_ratio = clampf(_charge_elapsed_seconds / max_charge_seconds, 0.0, 1.0)
 	var throw_speed: float = lerpf(min_throw_speed, max_throw_speed, charge_ratio)
+	var throw_audio_stream: AudioStream = THROW_AUDIO_STREAMS.pick_random()
+	throw_audio_player.stream = throw_audio_stream
+	throw_audio_player.play()
 
 	var camera_basis: Basis = camera_3d.global_transform.basis
 	var spawn_origin: Vector3 = (
@@ -252,3 +261,6 @@ grow_vertical = 2
 texture = ExtResource("1_xhfnw")
 script = SubResource("GDScript_kpjcp")
 progress = 1.0
+
+[node name="ThrowAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1700000002]
+unique_name_in_owner = true
