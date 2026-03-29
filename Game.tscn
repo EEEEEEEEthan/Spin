@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8c7skmlgx1bw"]
+[gd_scene format=3 uid="uid://c8c7skmlgx1bw"]
 
-[ext_resource type="Script" path="res://Game.gd" id="1_game"]
+[ext_resource type="Script" uid="uid://dqys2gx4h3pu" path="res://Game.gd" id="1_game"]
+[ext_resource type="PackedScene" uid="uid://q7cck1xb2vm" path="res://Chapter1.tscn" id="2_xkndl"]
 
 [node name="Game" type="Node" unique_id=538117735]
 script = ExtResource("1_game")
+
+[node name="Game2" parent="." unique_id=552426368 instance=ExtResource("2_xkndl")]
