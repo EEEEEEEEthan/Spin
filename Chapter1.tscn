@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://by0ecoe3gqiag" path="res://Wall.blend" id="3_sb48q"]
 [ext_resource type="PackedScene" uid="uid://n8ghmhw2f1oy" path="res://Balloon.tscn" id="3_t88pq"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="3_u44n3"]
+[ext_resource type="Script" path="res://Chapter1.gd" id="4_ch1"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wr31l"]
 rough = true
@@ -23,6 +24,7 @@ size = Vector3(40, 1, 40)
 size = Vector3(7.9804688, 4.519409, 0.18261719)
 
 [node name="Game2" type="Node3D" unique_id=552426368]
+script = ExtResource("4_ch1")
 
 [node name="Player" parent="." unique_id=1151770281 instance=ExtResource("1_wbfu4")]
 
