@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Spin"
 config/description="飞刀大师"
-run/main_scene="uid://dngdo75b7ppo4"
+run/main_scene="uid://cmwe30idxr08a"
 config/features=PackedStringArray("4.6")
 
 [dotnet]

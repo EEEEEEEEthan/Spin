@@ -1,0 +1,147 @@
+[gd_scene format=3 uid="uid://dahfgxxyxlf71"]
+
+[ext_resource type="PackedScene" uid="uid://7083puif0cqn" path="res://Human.blend" id="1_rb7cp"]
+[ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_mgyxi"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gjav3"]
+radius = 0.1352539
+height = 0.2705078
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qefdq"]
+radius = 0.19921875
+height = 0.484375
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s1pbw"]
+radius = 0.16748047
+height = 0.3486328
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_52w7r"]
+radius = 0.08886719
+height = 0.34179688
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3pep5"]
+radius = 0.091796875
+height = 0.33276367
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vta6w"]
+radius = 0.08300781
+height = 0.5185547
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4pc2h"]
+radius = 0.13623047
+height = 0.27246094
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5h71l"]
+radius = 0.103027344
+height = 0.36279297
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hw8ml"]
+radius = 0.09472656
+height = 0.5024414
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tfcff"]
+radius = 0.12756348
+height = 0.25512695
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g80wo"]
+radius = 0.10595703
+height = 0.49658203
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3wngm"]
+radius = 0.10253906
+height = 0.5834961
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rpjrd"]
+radius = 0.1303711
+height = 0.29077148
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0onxu"]
+radius = 0.123046875
+height = 0.48168945
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c523f"]
+radius = 0.11621094
+height = 0.6726074
+
+[node name="Human" unique_id=1797960747 instance=ExtResource("1_rb7cp")]
+
+[node name="身体" parent="Skeleton3D" parent_id_path=PackedInt32Array(304171964) index="0" unique_id=1723885047]
+visible = false
+surface_material_override/0 = ExtResource("2_mgyxi")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." index="2" unique_id=1681188461]
+
+[node name="Collision_髋" type="CollisionShape3D" parent="StaticBody3D" index="0" unique_id=1370157010]
+process_mode = 4
+transform = Transform3D(2.4158507e-07, 5.58096e-08, -1, -7.092963e-08, 1, 5.5809583e-08, 1, 7.0929616e-08, 2.4158507e-07, 1.7405871e-09, 0.8657125, 2.2121494e-09)
+shape = SubResource("CapsuleShape3D_gjav3")
+
+[node name="Collision_胸" type="CollisionShape3D" parent="StaticBody3D" index="1" unique_id=777716889]
+process_mode = 4
+transform = Transform3D(1.8522137e-07, 4.4742666e-07, -1, 1.0132826e-08, 1, 4.4742666e-07, 1, -1.0132909e-08, 1.8522137e-07, 9.362935e-08, 1.0989833, -2.1204258e-09)
+shape = SubResource("CapsuleShape3D_qefdq")
+
+[node name="Collision_头" type="CollisionShape3D" parent="StaticBody3D" index="2" unique_id=1692869497]
+process_mode = 4
+transform = Transform3D(1.573562e-07, 3.2931606e-08, -1, 1.01328235e-08, 1, 3.2931606e-08, 1, -1.0132829e-08, 1.573562e-07, 3.1010978e-09, 1.3542432, -9.541865e-10)
+shape = SubResource("CapsuleShape3D_s1pbw")
+
+[node name="Collision_左肩" type="CollisionShape3D" parent="StaticBody3D" index="3" unique_id=1354994028]
+process_mode = 4
+transform = Transform3D(6.1594665e-06, -1, 1.1920897e-07, 1, 6.1594665e-06, -1.9174815e-06, 1.917473e-06, 1.1922076e-07, 1, -0.14857325, 1.2600763, 1.7713058e-08)
+shape = SubResource("CapsuleShape3D_52w7r")
+
+[node name="Collision_左臂" type="CollisionShape3D" parent="StaticBody3D" index="4" unique_id=353632852]
+process_mode = 4
+transform = Transform3D(-5.017919e-07, -1, 3.863758e-08, 1, -5.01792e-07, -1.8318513e-06, 1.8318441e-06, 3.8636664e-08, 1, -0.4083711, 1.2600771, 3.696477e-08)
+shape = SubResource("CapsuleShape3D_3pep5")
+
+[node name="Collision_左手" type="CollisionShape3D" parent="StaticBody3D" index="5" unique_id=1196329114]
+process_mode = 4
+transform = Transform3D(-1.2845163e-07, -1.0000012, -1.0250737e-07, 1.0000002, -1.0369569e-06, -2.0623359e-06, 1.8891094e-06, -4.290479e-08, 1.0000005, -0.5857614, 1.260077, 4.4318256e-08)
+shape = SubResource("CapsuleShape3D_vta6w")
+
+[node name="Collision_右肩" type="CollisionShape3D" parent="StaticBody3D" index="6" unique_id=242200381]
+process_mode = 4
+transform = Transform3D(3.1918304e-07, 1, 3.943714e-07, -5.4081414e-07, -3.9437123e-07, 1, 1, -3.1918327e-07, 5.40814e-07, 0.14857325, 1.2600753, -4.7421782e-08)
+shape = SubResource("CapsuleShape3D_4pc2h")
+
+[node name="Collision_右臂" type="CollisionShape3D" parent="StaticBody3D" index="7" unique_id=1062685758]
+process_mode = 4
+transform = Transform3D(-5.976967e-09, 1, 3.6350238e-07, -5.4081414e-07, -3.6350238e-07, 1, 1, 5.97677e-09, 5.4081414e-07, 0.40837103, 1.2600753, 8.6919244e-10)
+shape = SubResource("CapsuleShape3D_5h71l")
+
+[node name="Collision_右手" type="CollisionShape3D" parent="StaticBody3D" index="8" unique_id=324146113]
+process_mode = 4
+transform = Transform3D(2.02656e-08, 1, 7.752338e-08, -5.381319e-07, 1.2643628e-07, 1.0000001, 1, -2.0265533e-08, 4.599009e-07, 0.5857613, 1.2600753, -1.3261306e-09)
+shape = SubResource("CapsuleShape3D_hw8ml")
+
+[node name="Collision_右髋" type="CollisionShape3D" parent="StaticBody3D" index="9" unique_id=649141035]
+process_mode = 4
+transform = Transform3D(-6.9504347e-07, 1, -2.0265606e-08, 1, 6.9504347e-07, 2.0265606e-08, 2.026562e-08, -2.0265592e-08, -1, 0.05487937, 0.83452463, -1.1121623e-09)
+shape = SubResource("CapsuleShape3D_tfcff")
+
+[node name="Collision_右腿" type="CollisionShape3D" parent="StaticBody3D" index="10" unique_id=1991189327]
+process_mode = 4
+transform = Transform3D(0.9999999, 2.4586913e-07, 4.0134407e-07, -4.8428774e-07, -0.99999833, -2.682209e-07, -4.5690772e-08, 6.556511e-07, -0.99999976, 0.09712607, 0.5994406, 2.980232e-08)
+shape = SubResource("CapsuleShape3D_g80wo")
+
+[node name="Collision_右脚" type="CollisionShape3D" parent="StaticBody3D" index="11" unique_id=1704989862]
+process_mode = 4
+transform = Transform3D(1.0000007, 4.5042432e-07, 9.3779406e-08, -6.832238e-08, -1.0000006, -8.791704e-09, 1.682852e-07, 6.094579e-08, -1.0000008, 0.09712627, 0.312682, 1.5437136e-08)
+shape = SubResource("CapsuleShape3D_3wngm")
+
+[node name="Collision_左髋" type="CollisionShape3D" parent="StaticBody3D" index="12" unique_id=1018605604]
+process_mode = 4
+transform = Transform3D(5.1136664e-07, -1, -3.166501e-10, 1, 5.1136664e-07, 2.5332008e-09, -2.5332005e-09, -3.166514e-10, 1, -0.05487937, 0.83452463, -1.7377705e-11)
+shape = SubResource("CapsuleShape3D_rpjrd")
+
+[node name="Collision_左腿" type="CollisionShape3D" parent="StaticBody3D" index="13" unique_id=1637197028]
+process_mode = 4
+transform = Transform3D(-1, 4.1124927e-08, 4.37162e-08, -4.1124927e-08, -1, 0, 4.37162e-08, -1.7978255e-15, 1, -0.09712612, 0.5994405, -4.226401e-16)
+shape = SubResource("CapsuleShape3D_0onxu")
+
+[node name="Collision_左脚" type="CollisionShape3D" parent="StaticBody3D" index="14" unique_id=907597008]
+process_mode = 4
+transform = Transform3D(-1, -1.2626424e-08, 4.373179e-08, 1.2626424e-08, -1, 0, 4.373179e-08, 5.5217617e-16, 1, -0.09712612, 0.3126823, 1.6319868e-16)
+shape = SubResource("CapsuleShape3D_c523f")

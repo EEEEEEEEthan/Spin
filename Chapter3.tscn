@@ -5,7 +5,7 @@
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="3_2orck"]
 [ext_resource type="PackedScene" uid="uid://ccu51yko7o522" path="res://Wheel.blend" id="4_4p1cm"]
 [ext_resource type="PackedScene" uid="uid://n8ghmhw2f1oy" path="res://Balloon.tscn" id="5_3sht3"]
-[ext_resource type="PackedScene" uid="uid://dahfgxxyxlf71" path="res://Human.tscn" id="6_oeve8"]
+[ext_resource type="PackedScene" uid="uid://dahfgxxyxlf71" path="res://Human_Collider.tscn" id="6_oeve8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
 shading_mode = 0
