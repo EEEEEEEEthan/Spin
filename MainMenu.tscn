@@ -8,7 +8,7 @@
 [sub_resource type="GDScript" id="GDScript_qoqlk"]
 script/source = "extends Node
 
-## 主菜单：按悬停项旋转 Axis，最短路径 + 过冲回弹（每帧命中检测，避免漏 mouse_exited）
+## 主菜单：按悬停项旋转 Axis；三按钮更小默认尺寸 + 悬停鼓起 / 按下收紧
 
 @onready var axis: Control = %Axis
 @onready var button_new_game: TextureButton = %Button_NewGame
@@ -25,14 +25,37 @@ const TWEEN_TRANS := Tween.TRANS_BACK
 const TWEEN_EASE := Tween.EASE_OUT
 const SCALE_PUNCH := 1.06
 
+const BTN_SCALE_IDLE := 0.82
+const BTN_SCALE_HOVER := 1.1
+const BTN_SCALE_PRESS := 0.88
+const BTN_HOVER_SEC := 0.24
+const BTN_PRESS_SEC := 0.07
+
 var _axis_tween: Tween
 var _menu_hover_angle: float = ANGLE_IDLE
+var _buttons: Array[TextureButton] = []
+var _button_tweens: Array[Tween] = []
+var _pressed_index: int = -1
 
 
 func _ready() -> void:
 	axis.rotation = ANGLE_IDLE
 	_menu_hover_angle = ANGLE_IDLE
+	_buttons = [button_new_game, button_rank, button_quit]
+	_button_tweens.resize(_buttons.size())
+	for index in range(_buttons.size()):
+		var button: TextureButton = _buttons[index]
+		var idle := Vector2(BTN_SCALE_IDLE, BTN_SCALE_IDLE)
+		button.scale = idle
+		button.button_down.connect(_on_button_down.bind(index))
+		button.button_up.connect(_on_button_up.bind(index))
 	set_process(true)
+	call_deferred(\"_sync_button_pivots\")
+
+
+func _sync_button_pivots() -> void:
+	for button in _buttons:
+		button.pivot_offset = button.size * 0.5
 
 
 func _process(_delta: float) -> void:
@@ -41,6 +64,8 @@ func _process(_delta: float) -> void:
 	if not is_equal_approx(target, _menu_hover_angle):
 		_menu_hover_angle = target
 		_tween_axis_to(target)
+		if _pressed_index < 0:
+			_tween_buttons_for_hover(target)
 
 
 func _notification(what: int) -> void:
@@ -48,6 +73,8 @@ func _notification(what: int) -> void:
 		if not is_equal_approx(_menu_hover_angle, ANGLE_IDLE):
 			_menu_hover_angle = ANGLE_IDLE
 			_tween_axis_to(ANGLE_IDLE)
+		if _pressed_index < 0:
+			_tween_buttons_for_hover(ANGLE_IDLE)
 
 
 func _hover_angle_for_mouse(mouse: Vector2) -> float:
@@ -58,6 +85,57 @@ func _hover_angle_for_mouse(mouse: Vector2) -> float:
 	if button_quit.get_global_rect().has_point(mouse):
 		return ANGLE_QUIT
 	return ANGLE_IDLE
+
+
+func _hover_index(angle: float) -> int:
+	if is_equal_approx(angle, ANGLE_NEW):
+		return 0
+	if is_equal_approx(angle, ANGLE_RANK):
+		return 1
+	if is_equal_approx(angle, ANGLE_QUIT):
+		return 2
+	return -1
+
+
+func _kill_btn_tween(index: int) -> void:
+	var tween: Tween = _button_tweens[index]
+	if tween != null and tween.is_valid():
+		tween.kill()
+	_button_tweens[index] = null
+
+
+func _tween_btn_scale(index: int, scale_value: float, duration: float, trans: int, ease: int) -> void:
+	_kill_btn_tween(index)
+	var button: TextureButton = _buttons[index]
+	var tween := create_tween()
+	_button_tweens[index] = tween
+	var target := Vector2(scale_value, scale_value)
+	tween.tween_property(button, \"scale\", target, duration).set_trans(trans).set_ease(ease)
+
+
+func _tween_buttons_for_hover(angle: float) -> void:
+	var hover_i := _hover_index(angle)
+	for index in range(_buttons.size()):
+		var value := BTN_SCALE_HOVER if index == hover_i else BTN_SCALE_IDLE
+		_tween_btn_scale(index, value, BTN_HOVER_SEC, Tween.TRANS_BACK, Tween.EASE_OUT)
+
+
+func _on_button_down(index: int) -> void:
+	_pressed_index = index
+	_kill_btn_tween(index)
+	var button: TextureButton = _buttons[index]
+	var tween := create_tween()
+	_button_tweens[index] = tween
+	tween.tween_property(button, \"scale\", Vector2(BTN_SCALE_PRESS, BTN_SCALE_PRESS), BTN_PRESS_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
+
+func _on_button_up(index: int) -> void:
+	if _pressed_index != index:
+		return
+	_pressed_index = -1
+	var hover_i := _hover_index(_menu_hover_angle)
+	var value := BTN_SCALE_HOVER if index == hover_i else BTN_SCALE_IDLE
+	_tween_btn_scale(index, value, BTN_HOVER_SEC * 0.85, Tween.TRANS_BACK, Tween.EASE_OUT)
 
 
 func _tween_axis_to(target_rad: float) -> void:
@@ -95,8 +173,9 @@ script = SubResource("GDScript_qoqlk")
 layout_mode = 3
 anchors_preset = 9
 anchor_bottom = 1.0
+offset_left = 59.0
 offset_top = 58.0
-offset_right = 453.0
+offset_right = 451.0
 offset_bottom = -43.0
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0, 0.5)

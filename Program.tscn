@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://c8c7skmlgx1bw"]
+
+[ext_resource type="PackedScene" uid="uid://b2kpquvc7r366" path="res://MainMenu.tscn" id="1_0e713"]
+[ext_resource type="PackedScene" uid="uid://choxg0x7j0m2l" path="res://Transition.tscn" id="2_1aumd"]
+
+[node name="Program" type="Node" unique_id=1668299603]
+
+[node name="MainMenu" parent="." unique_id=957337063 instance=ExtResource("1_0e713")]
+
+[node name="Transition" parent="." unique_id=1757002296 instance=ExtResource("2_1aumd")]
+unique_name_in_owner = true
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
