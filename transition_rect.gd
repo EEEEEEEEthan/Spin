@@ -19,6 +19,11 @@ var _switch_tween: Tween
 ## shader：modulate.a 1=全黑 0=全透；reveal 为 true 表示揭开（变透）。可 await。
 func switch(shader_index: int, reveal: bool, duration_seconds: float) -> void:
 	self.index = shader_index
+	# 从隐藏切到显示（盖住画面）时清空字幕，避免上一段文案残留
+	if not reveal:
+		var caption := get_node_or_null("TransitionLabel")
+		if caption is Label:
+			caption.text = ""
 	if _switch_tween != null and _switch_tween.is_valid():
 		_switch_tween.kill()
 	var target_alpha := 0.0 if reveal else 1.0

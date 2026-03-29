@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ccu51yko7o522" path="res://Wheel.blend" id="4_fitsj"]
 [ext_resource type="PackedScene" uid="uid://by0ecoe3gqiag" path="res://Wall.blend" id="4_kteal"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="5_dou4o"]
+[ext_resource type="PackedScene" uid="uid://gjc6sd08wuie" path="res://Target.tscn" id="6_2orck"]
 [ext_resource type="PackedScene" uid="uid://c54hej6oyhcjw" path="res://Human_Renderer.tscn" id="6_63cdw"]
 [ext_resource type="PackedScene" uid="uid://wjhko1i83qfb" path="res://Human_Trigger.tscn" id="7_kteal"]
 
@@ -174,6 +175,24 @@ unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.9833681, 0.4219352)
 
 [node name="Human_Trigger" parent="StaticBody3D2/Wheel/Human_Renderer" unique_id=58876480 instance=ExtResource("7_kteal")]
+
+[node name="Node3D" parent="StaticBody3D2/Wheel" unique_id=65227153 instance=ExtResource("6_2orck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5345738, 0.60970676, 0.09549025)
+
+[node name="Node3D2" parent="StaticBody3D2/Wheel" unique_id=941518802 instance=ExtResource("6_2orck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4526416, 0.60970676, 0.09549025)
+
+[node name="Node3D3" parent="StaticBody3D2/Wheel" unique_id=1225629372 instance=ExtResource("6_2orck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5465878, -0.15206194, 0.09549025)
+
+[node name="Node3D4" parent="StaticBody3D2/Wheel" unique_id=989961504 instance=ExtResource("6_2orck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5182415, -0.60388994, 0.09549025)
+
+[node name="Node3D5" parent="StaticBody3D2/Wheel" unique_id=1241193585 instance=ExtResource("6_2orck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.518993, -0.60388994, 0.09549025)
+
+[node name="Node3D6" parent="StaticBody3D2/Wheel" unique_id=173073039 instance=ExtResource("6_2orck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.518993, -0.08319962, 0.09549025)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=1922935986]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, 0)
