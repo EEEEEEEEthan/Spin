@@ -7,6 +7,63 @@
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="5_dou4o"]
 [ext_resource type="PackedScene" uid="uid://gjc6sd08wuie" path="res://Target.tscn" id="7_63cdw"]
 
+[sub_resource type="GDScript" id="GDScript_chapter2_targets"]
+script/source = "extends Node3D
+
+signal all_targets_hit
+
+## 飞刀扎在轮 StaticBody（layer 含 4）时 reparent 不在靶 Area 子树下；用距离判定已 freeze 的飞刀是否在该靶环心附近。
+const _STUCK_KNIFE_NEAR_TARGET_METERS: float = 0.32
+
+var _completion_started: bool = false
+
+@onready var _wheel_target_nodes: Array[Node3D] = [
+	$StaticBody3D2/Wheel/Node3D,
+	$StaticBody3D2/Wheel/Node3D3,
+	$StaticBody3D2/Wheel/Node3D4,
+]
+
+
+func _process(_delta: float) -> void:
+	if _completion_started:
+		return
+	if not _every_target_has_stuck_knife():
+		return
+	_completion_started = true
+	all_targets_hit.emit()
+
+
+func _every_target_has_stuck_knife() -> bool:
+	for target_node in _wheel_target_nodes:
+		if target_node == null:
+			return false
+		if not _target_has_stuck_knife(target_node):
+			return false
+	return true
+
+
+func _target_has_stuck_knife(target_root: Node3D) -> bool:
+	if _node_has_knife_projectile_descendant(target_root):
+		return true
+	var center: Vector3 = target_root.global_position
+	for node in get_tree().get_nodes_in_group(\"knife_projectile\"):
+		var knife := node as RigidBody3D
+		if knife == null or not knife.freeze:
+			continue
+		if knife.global_position.distance_to(center) <= _STUCK_KNIFE_NEAR_TARGET_METERS:
+			return true
+	return false
+
+
+func _node_has_knife_projectile_descendant(root_node: Node) -> bool:
+	for descendant in root_node.get_children():
+		if descendant.is_in_group(\"knife_projectile\"):
+			return true
+		if _node_has_knife_projectile_descendant(descendant):
+			return true
+	return false
+"
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
 shading_mode = 0
 
@@ -25,6 +82,7 @@ height = 0.1015625
 radius = 1.0048828
 
 [node name="Game2" type="Node3D" unique_id=552426368]
+script = SubResource("GDScript_chapter2_targets")
 
 [node name="Player" parent="." unique_id=1151770281 instance=ExtResource("1_xmarw")]
 

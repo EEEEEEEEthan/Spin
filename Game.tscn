@@ -15,17 +15,25 @@ func _ready() -> void:
 	Transition.clear_caption()
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, true, _OVERLAY_HIDE_SEC)
 	Transition.set_overlay_blocks_input(false)
-	_connect_chapter1_balloon_clear_if_any()
+	_connect_current_chapter_completion_signals()
 
 
-func _connect_chapter1_balloon_clear_if_any() -> void:
+func _connect_current_chapter_completion_signals() -> void:
 	var chapter_root: Node = get_node_or_null(\"Game2\")
-	if chapter_root and chapter_root.has_signal(&\"all_balloons_cleared\"):
+	if chapter_root == null:
+		return
+	if chapter_root.has_signal(&\"all_balloons_cleared\"):
 		chapter_root.all_balloons_cleared.connect(_on_chapter1_all_balloons_cleared)
+	if chapter_root.has_signal(&\"all_targets_hit\"):
+		chapter_root.all_targets_hit.connect(_on_chapter2_all_targets_hit)
 
 
 func _on_chapter1_all_balloons_cleared() -> void:
 	await _run_chapter1_cleared_sequence()
+
+
+func _on_chapter2_all_targets_hit() -> void:
+	await _run_chapter2_cleared_sequence()
 
 
 func _run_chapter1_cleared_sequence() -> void:
@@ -38,6 +46,24 @@ func _run_chapter1_cleared_sequence() -> void:
 	var chapter2_root: Node = preload(\"res://Chapter2.tscn\").instantiate()
 	chapter2_root.name = \"Game2\"
 	add_child(chapter2_root)
+	_connect_current_chapter_completion_signals()
+	old_chapter.queue_free()
+	await get_tree().create_timer(3.0).timeout
+	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, true, _OVERLAY_HIDE_SEC)
+	Transition.set_overlay_blocks_input(false)
+
+
+func _run_chapter2_cleared_sequence() -> void:
+	Transition.set_overlay_blocks_input(true)
+	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
+	await get_tree().create_timer(2.0).timeout
+	await Transition.typewriter_display(\"别担心\", _TYPEWRITER_CHAR_SEC)
+	var old_chapter: Node = $Game2
+	old_chapter.name = \"_Chapter2_done\"
+	var chapter3_root: Node = preload(\"res://Chapter3.tscn\").instantiate()
+	chapter3_root.name = \"Game2\"
+	add_child(chapter3_root)
+	_connect_current_chapter_completion_signals()
 	old_chapter.queue_free()
 	await get_tree().create_timer(3.0).timeout
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, true, _OVERLAY_HIDE_SEC)
