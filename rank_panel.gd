@@ -15,10 +15,12 @@ var _highlight_item: Control = null
 var _highlight_icon: TextureRect = null
 var _highlight_tween: Tween
 var _scroll_tween: Tween
+var _drag_scrolling: bool = false
 
 
 func _ready() -> void:
 	_close_button.pressed.connect(_on_close_pressed)
+	_scroll_container.gui_input.connect(_on_scroll_container_gui_input)
 
 
 func prepare_for_open(focus_entry_id: int) -> void:
@@ -97,6 +99,38 @@ func _target_scroll_for_item(item_root: Control) -> int:
 	var target_y: float = item_root.position.y - viewport_height * 0.5 + item_root.size.y * 0.5
 	var max_scroll: float = maxf(0.0, _list_container.size.y - viewport_height)
 	return int(clampf(target_y, 0.0, max_scroll))
+
+
+func _input(event: InputEvent) -> void:
+	if not _drag_scrolling:
+		return
+	if event is InputEventMouseMotion:
+		var mouse_motion_event := event as InputEventMouseMotion
+		_apply_drag_scroll(mouse_motion_event.relative.y)
+		get_viewport().set_input_as_handled()
+		return
+	if event is InputEventMouseButton:
+		var mouse_button_event := event as InputEventMouseButton
+		if mouse_button_event.button_index == MOUSE_BUTTON_LEFT and not mouse_button_event.pressed:
+			_drag_scrolling = false
+			get_viewport().set_input_as_handled()
+
+
+func _on_scroll_container_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_button_event := event as InputEventMouseButton
+		if mouse_button_event.button_index == MOUSE_BUTTON_LEFT and mouse_button_event.pressed:
+			_drag_scrolling = true
+			if _scroll_tween != null and _scroll_tween.is_valid():
+				_scroll_tween.kill()
+			get_viewport().set_input_as_handled()
+
+
+func _apply_drag_scroll(mouse_relative_y: float) -> void:
+	var viewport_height: float = _scroll_container.get_rect().size.y
+	var max_scroll: float = maxf(0.0, _list_container.size.y - viewport_height)
+	var target_scroll: float = _scroll_container.scroll_vertical - mouse_relative_y
+	_scroll_container.scroll_vertical = int(clampf(target_scroll, 0.0, max_scroll))
 
 
 func _on_close_pressed() -> void:

@@ -3,198 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_cqjrg"]
 [ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="4_e2xy7"]
 [ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="5_fimr5"]
-[ext_resource type="Script" path="res://main_menu.gd" id="6_76k5d"]
-[ext_resource type="PackedScene" path="res://Rank.tscn" id="7_hallf"]
-
-[sub_resource type="GDScript" id="GDScript_qoqlk"]
-script/source = "extends Node
-
-## 主菜单：按悬停项旋转 Axis；三按钮更小默认尺寸 + 悬停鼓起 / 按下收紧
-
-@onready var axis: Control = %Axis
-@onready var button_new_game: BaseButton = %Button_NewGame
-@onready var button_rank: BaseButton = %Button_Rank
-@onready var button_quit: BaseButton = %Button_Quit
-
-const ANGLE_IDLE := -PI * 0.5
-const ANGLE_NEW := 0.0
-const ANGLE_RANK := PI * 0.5
-const ANGLE_QUIT := PI
-
-const TWEEN_SEC := 0.52
-const TWEEN_TRANS := Tween.TRANS_BACK
-const TWEEN_EASE := Tween.EASE_OUT
-const SCALE_PUNCH := 1.06
-
-const BTN_SCALE_IDLE := 0.82
-const BTN_SCALE_HOVER := 1.1
-const BTN_SCALE_PRESS := 0.88
-const BTN_HOVER_SEC := 0.24
-const BTN_PRESS_SEC := 0.07
-
-var _axis_tween: Tween
-var _menu_hover_angle: float = ANGLE_IDLE
-var _buttons: Array[BaseButton] = []
-var _button_tweens: Array[Tween] = []
-var _pressed_index: int = -1
-var _new_game_sequence_running: bool = false
-
-const _NEW_GAME_INTRO_TEXT := \"消灭气球\"
-const _OVERLAY_SHOW_SEC := 0.35
-const _DELAY_AFTER_NAME_BEFORE_TYPEWRITER_SEC := 2.0
-const _INPUT_NAME_CANVAS_LAYER := 101
-const _NAME_INPUT_SCENE := preload(\"res://InputName.tscn\")
-const _TYPEWRITER_CHAR_SEC := 0.1
-const _HOLD_AFTER_INTRO_SEC := 3.0
-const _TRANSITION_SHADER_INDEX := 1
-
-
-func _ready() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	axis.rotation = ANGLE_IDLE
-	_menu_hover_angle = ANGLE_IDLE
-	_buttons = [button_new_game, button_rank, button_quit]
-	_button_tweens.resize(_buttons.size())
-	for index in range(_buttons.size()):
-		var button: BaseButton = _buttons[index]
-		var idle := Vector2(BTN_SCALE_IDLE, BTN_SCALE_IDLE)
-		button.scale = idle
-		button.button_down.connect(_on_button_down.bind(index))
-		button.button_up.connect(_on_button_up.bind(index))
-	button_new_game.pressed.connect(_on_new_game_pressed)
-	set_process(true)
-	call_deferred(\"_sync_button_pivots\")
-
-
-func _sync_button_pivots() -> void:
-	for button in _buttons:
-		button.pivot_offset = button.size * 0.5
-
-
-func _process(_delta: float) -> void:
-	var mouse := get_viewport().get_mouse_position()
-	var target := _hover_angle_for_mouse(mouse)
-	if not is_equal_approx(target, _menu_hover_angle):
-		_menu_hover_angle = target
-		_tween_axis_to(target)
-		if _pressed_index < 0:
-			_tween_buttons_for_hover(target)
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_MOUSE_EXIT:
-		if not is_equal_approx(_menu_hover_angle, ANGLE_IDLE):
-			_menu_hover_angle = ANGLE_IDLE
-			_tween_axis_to(ANGLE_IDLE)
-		if _pressed_index < 0:
-			_tween_buttons_for_hover(ANGLE_IDLE)
-
-
-func _hover_angle_for_mouse(mouse: Vector2) -> float:
-	if button_new_game.get_global_rect().has_point(mouse):
-		return ANGLE_NEW
-	if button_rank.get_global_rect().has_point(mouse):
-		return ANGLE_RANK
-	if button_quit.get_global_rect().has_point(mouse):
-		return ANGLE_QUIT
-	return ANGLE_IDLE
-
-
-func _hover_index(angle: float) -> int:
-	if is_equal_approx(angle, ANGLE_NEW):
-		return 0
-	if is_equal_approx(angle, ANGLE_RANK):
-		return 1
-	if is_equal_approx(angle, ANGLE_QUIT):
-		return 2
-	return -1
-
-
-func _kill_btn_tween(index: int) -> void:
-	var tween: Tween = _button_tweens[index]
-	if tween != null and tween.is_valid():
-		tween.kill()
-	_button_tweens[index] = null
-
-
-func _tween_btn_scale(index: int, scale_value: float, duration: float, trans: int, ease: int) -> void:
-	_kill_btn_tween(index)
-	var button: BaseButton = _buttons[index]
-	var tween := create_tween()
-	_button_tweens[index] = tween
-	var target := Vector2(scale_value, scale_value)
-	tween.tween_property(button, \"scale\", target, duration).set_trans(trans).set_ease(ease)
-
-
-func _tween_buttons_for_hover(angle: float) -> void:
-	var hover_i := _hover_index(angle)
-	for index in range(_buttons.size()):
-		var value := BTN_SCALE_HOVER if index == hover_i else BTN_SCALE_IDLE
-		_tween_btn_scale(index, value, BTN_HOVER_SEC, Tween.TRANS_BACK, Tween.EASE_OUT)
-
-
-func _on_button_down(index: int) -> void:
-	_pressed_index = index
-	_kill_btn_tween(index)
-	var button: BaseButton = _buttons[index]
-	var tween := create_tween()
-	_button_tweens[index] = tween
-	tween.tween_property(button, \"scale\", Vector2(BTN_SCALE_PRESS, BTN_SCALE_PRESS), BTN_PRESS_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-
-
-func _on_button_up(index: int) -> void:
-	if _pressed_index != index:
-		return
-	_pressed_index = -1
-	var hover_i := _hover_index(_menu_hover_angle)
-	var value := BTN_SCALE_HOVER if index == hover_i else BTN_SCALE_IDLE
-	_tween_btn_scale(index, value, BTN_HOVER_SEC * 0.85, Tween.TRANS_BACK, Tween.EASE_OUT)
-
-
-func _tween_axis_to(target_rad: float) -> void:
-	if _axis_tween != null and _axis_tween.is_valid():
-		_axis_tween.kill()
-	axis.scale = Vector2.ONE
-	var from := axis.rotation
-	var delta := fposmod(target_rad - from + PI, TAU) - PI
-	var end := from + delta
-	_axis_tween = create_tween()
-	_axis_tween.set_parallel(true)
-	_axis_tween.tween_property(axis, \"rotation\", end, TWEEN_SEC).set_trans(TWEEN_TRANS).set_ease(TWEEN_EASE)
-	var punch := Vector2(SCALE_PUNCH, SCALE_PUNCH)
-	_axis_tween.tween_property(axis, \"scale\", punch, TWEEN_SEC * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	_axis_tween.chain()
-	_axis_tween.tween_property(axis, \"scale\", Vector2.ONE, TWEEN_SEC * 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-
-
-func _on_new_game_pressed() -> void:
-	if _new_game_sequence_running:
-		return
-	_new_game_sequence_running = true
-	button_new_game.disabled = true
-	await _run_new_game_transition()
-
-
-func _run_new_game_transition() -> void:
-	Transition.set_overlay_blocks_input(true)
-	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
-	Transition.set_overlay_blocks_input(false)
-	var name_layer := CanvasLayer.new()
-	name_layer.layer = _INPUT_NAME_CANVAS_LAYER
-	var input_name_root: Control = _NAME_INPUT_SCENE.instantiate()
-	name_layer.add_child(input_name_root)
-	add_child(name_layer)
-	var line_edit: LineEdit = input_name_root.get_node(\"LineEdit\") as LineEdit
-	line_edit.grab_focus()
-	var chosen: String = await input_name_root.name_confirmed
-	PlayerSession.display_name = chosen
-	name_layer.queue_free()
-	Transition.set_overlay_blocks_input(true)
-	await get_tree().create_timer(_DELAY_AFTER_NAME_BEFORE_TYPEWRITER_SEC).timeout
-	await Transition.typewriter_display(_NEW_GAME_INTRO_TEXT, _TYPEWRITER_CHAR_SEC)
-	await get_tree().create_timer(_HOLD_AFTER_INTRO_SEC).timeout
-	get_tree().change_scene_to_packed(preload(\"res://Game.tscn\"))
-"
+[ext_resource type="Script" uid="uid://dy0uckp48hlq0" path="res://main_menu.gd" id="6_76k5d"]
+[ext_resource type="PackedScene" uid="uid://co07vh5k8usk" path="res://Rank.tscn" id="7_hallf"]
 
 [node name="MainMenu" type="Node" unique_id=957337063]
 script = ExtResource("6_76k5d")
@@ -280,6 +90,7 @@ offset_right = -646.0795
 offset_bottom = 28.028366
 scale = Vector2(14.080004, 14.080004)
 pivot_offset = Vector2(13.63636, 14.829537)
+mouse_filter = 2
 texture = ExtResource("3_cqjrg")
 expand_mode = 1
 stretch_mode = 5
@@ -293,6 +104,7 @@ offset_right = 269.82574
 offset_bottom = 837.85944
 rotation = -1.5698266
 pivot_offset = Vector2(280.70294, 261.91357)
+mouse_filter = 2
 texture = ExtResource("4_e2xy7")
 expand_mode = 1
 stretch_mode = 5
@@ -307,8 +119,9 @@ offset_bottom = 170.59882
 rotation = -3.138707
 scale = Vector2(0.92011476, 0.92011476)
 pivot_offset = Vector2(268.22412, 222.35114)
+mouse_filter = 2
 texture = ExtResource("5_fimr5")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Rank" parent="." instance=ExtResource("7_hallf")]
+[node name="Rank" parent="." unique_id=265515797 instance=ExtResource("7_hallf")]
