@@ -28,6 +28,8 @@ func _connect_current_chapter_completion_signals() -> void:
 		chapter_root.all_targets_hit.connect(_on_chapter2_all_targets_hit)
 	if chapter_root.has_signal(&\"all_chapter3_cleared\"):
 		chapter_root.all_chapter3_cleared.connect(_on_chapter3_all_cleared)
+	if chapter_root.has_signal(&\"all_chapter4_cleared\"):
+		chapter_root.all_chapter4_cleared.connect(_on_chapter4_all_cleared)
 
 
 func _on_chapter1_all_balloons_cleared() -> void:
@@ -40,6 +42,10 @@ func _on_chapter2_all_targets_hit() -> void:
 
 func _on_chapter3_all_cleared() -> void:
 	await _run_chapter3_cleared_sequence()
+
+
+func _on_chapter4_all_cleared() -> void:
+	await _run_chapter4_cleared_sequence()
 
 
 func _run_chapter1_cleared_sequence() -> void:
@@ -91,6 +97,15 @@ func _run_chapter3_cleared_sequence() -> void:
 	await get_tree().create_timer(3.0).timeout
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, true, _OVERLAY_HIDE_SEC)
 	Transition.set_overlay_blocks_input(false)
+
+
+func _run_chapter4_cleared_sequence() -> void:
+	Transition.set_overlay_blocks_input(true)
+	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
+	await get_tree().create_timer(2.0).timeout
+	await Transition.typewriter_display(\"游戏结束喽！\", _TYPEWRITER_CHAR_SEC)
+	Transition.begin_delayed_overlay_reveal(_TRANSITION_SHADER_INDEX, 3.0, _OVERLAY_HIDE_SEC)
+	get_tree().change_scene_to_packed(preload(\"res://MainMenu.tscn\"))
 "
 
 [node name="Game" type="Node" unique_id=538117735]

@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dahfgxxyxlf71" path="res://Human_Collider.tscn" id="7_0qb6f"]
 [ext_resource type="PackedScene" uid="uid://gjc6sd08wuie" path="res://Target.tscn" id="8_1i180"]
 [ext_resource type="PackedScene" uid="uid://db5g1tj6e24pn" path="res://Target.blend" id="9_1jiii"]
+[ext_resource type="Script" path="res://chapter4_game.gd" id="10_ch4"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
 shading_mode = 0
@@ -57,6 +58,7 @@ height = 0.1015625
 radius = 1.0048828
 
 [node name="Game" type="Node3D" unique_id=552426368]
+script = ExtResource("10_ch4")
 
 [node name="Player" parent="." unique_id=1151770281 instance=ExtResource("1_8b0ef")]
 
