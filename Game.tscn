@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://c8c7skmlgx1bw"]
 
 [ext_resource type="PackedScene" uid="uid://q7cck1xb2vm" path="res://Chapter1.tscn" id="2_xkndl"]
+[ext_resource type="AudioStream" uid="uid://cc65t1i8m2q85" path="res://Audios/口哨进行曲.wav" id="3_bgm"]
 
 [sub_resource type="GDScript" id="GDScript_wbfu4"]
 script/source = "extends Node
@@ -11,14 +12,18 @@ const _TRANSITION_SHADER_INDEX := 1
 const _TYPEWRITER_CHAR_SEC := 0.1
 const _FINAL_SCORE_GAP_SEC := 0.5
 const _FINAL_SCORE_HOLD_SEC := 3.0
+const _BGM_FADE_OUT_SEC := 2.0
 
 var _editor_force_completion_running: bool = false
+
+@onready var _bgm_player: AudioStreamPlayer = $BgmPlayer
 
 
 func _ready() -> void:
 	Transition.clear_caption()
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, true, _OVERLAY_HIDE_SEC)
 	Transition.set_overlay_blocks_input(false)
+	_bgm_player.play()
 	_connect_current_chapter_completion_signals()
 
 
@@ -88,6 +93,15 @@ func _on_chapter4_all_cleared() -> void:
 	await _run_chapter4_cleared_sequence()
 
 
+func _fade_out_bgm_and_stop() -> void:
+	if not _bgm_player.playing:
+		return
+	var tween := create_tween()
+	tween.tween_property(_bgm_player, \"volume_db\", -80.0, _BGM_FADE_OUT_SEC)
+	await tween.finished
+	_bgm_player.stop()
+
+
 func _run_chapter1_cleared_sequence() -> void:
 	Transition.set_overlay_blocks_input(true)
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
@@ -152,13 +166,17 @@ func _run_chapter4_cleared_sequence() -> void:
 	await get_tree().create_timer(_FINAL_SCORE_GAP_SEC).timeout
 	await Transition.typewriter_display(\"你中了%d刀！\" % final_score, _TYPEWRITER_CHAR_SEC)
 	await get_tree().create_timer(_FINAL_SCORE_HOLD_SEC).timeout
+	await _fade_out_bgm_and_stop()
 	PlayerSession.submit_current_score_and_prepare_focus()
 	Transition.begin_delayed_overlay_reveal(_TRANSITION_SHADER_INDEX, 0.0, _OVERLAY_HIDE_SEC)
 	_editor_force_completion_running = false
 	get_tree().change_scene_to_file(\"res://MainMenu.tscn\")
 "
 
-[node name="Game" type="Node" unique_id=538117735]
+[node name="Game3" type="Node" unique_id=538117735]
 script = SubResource("GDScript_wbfu4")
+
+[node name="BgmPlayer" type="AudioStreamPlayer" parent="." unique_id=803753086]
+stream = ExtResource("3_bgm")
 
 [node name="Game2" parent="." unique_id=552426368 instance=ExtResource("2_xkndl")]
