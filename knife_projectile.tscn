@@ -168,6 +168,7 @@ radius = 0.001
 size = Vector3(0.025634766, 0.2969513, 0.068359375)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
+editor_description = "刀刃方向向下"
 mass = 0.5
 physics_material_override = SubResource("PhysicsMaterial_g2e78")
 can_sleep = false
