@@ -46,6 +46,7 @@ const _TRANSITION_SHADER_INDEX := 1
 
 
 func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	axis.rotation = ANGLE_IDLE
 	_menu_hover_angle = ANGLE_IDLE
 	_buttons = [button_new_game, button_rank, button_quit]
