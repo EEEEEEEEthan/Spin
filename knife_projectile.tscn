@@ -22,6 +22,9 @@ script/source = "extends RigidBody3D
 ## 相对速度（归一化）与刀尖朝向点积下限；1 为完全同向，0 为垂直，负为背向。
 @export_range(-1.0, 1.0, 0.01) var min_stick_velocity_alignment: float = 0.5
 
+## 接触法线与刚体本地 (0,1,0) 在世界空间中方向的锐角上限（度）；大于则不扎。90 表示不启用此限制。
+@export_range(0.0, 90.0, 0.1) var max_stick_normal_body_y_angle_deg: float = 90.0
+
 ## 首次碰撞后，对组 balloon 的延迟：f1(d) = 系数 / (d + ε)，与 d 负相关（d 越大延迟越短）。
 @export var shockwave_delay_meter_scale: float = 0.15
 @export var shockwave_distance_epsilon: float = 0.05
@@ -137,7 +140,14 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			continue
 		# get_contact_local_normal 在 Godot 4 中实为世界空间法线，勿乘 global_transform.basis。
 		var normal_world: Vector3 = state.get_contact_local_normal(contact_index).normalized()
-		print(\"飞刀扎中 世界法线: \", normal_world)
+		if normal_world.length_squared() < 1e-12:
+			continue
+		if max_stick_normal_body_y_angle_deg < 89.99:
+			var body_y_world: Vector3 = (state.transform.basis * Vector3(0, 1, 0)).normalized()
+			var abs_dot: float = clampf(absf(normal_world.dot(body_y_world)), 0.0, 1.0)
+			var min_cos: float = cos(deg_to_rad(max_stick_normal_body_y_angle_deg))
+			if abs_dot < min_cos:
+				continue
 		_stuck = true
 		state.linear_velocity = Vector3.ZERO
 		state.angular_velocity = Vector3.ZERO
@@ -177,6 +187,7 @@ script = SubResource("GDScript_itxqv")
 stick_collision_layer_mask = 4
 min_stick_relative_speed = 2.0
 min_stick_velocity_alignment = 0.7
+max_stick_normal_body_y_angle_deg = 45.0
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1.5, 0, 0, 0, -1.5, 2.2649371e-07, 0, -2.2649371e-07, -1.5, 0, 0, 0)
