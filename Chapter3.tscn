@@ -5,6 +5,7 @@
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="3_2orck"]
 [ext_resource type="PackedScene" uid="uid://ccu51yko7o522" path="res://Wheel.blend" id="4_4p1cm"]
 [ext_resource type="PackedScene" uid="uid://n8ghmhw2f1oy" path="res://Balloon.tscn" id="5_3sht3"]
+[ext_resource type="PackedScene" uid="uid://c54hej6oyhcjw" path="res://Human_Renderer.tscn" id="6_h3fbr"]
 [ext_resource type="PackedScene" uid="uid://dahfgxxyxlf71" path="res://Human_Collider.tscn" id="6_oeve8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
@@ -94,8 +95,10 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.52
 [node name="Balloon6" parent="StaticBody3D2/Wheel" unique_id=1106021090 instance=ExtResource("5_3sht3")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.4999733, -0.57644117, 0.09222674)
 
-[node name="Human" parent="StaticBody3D2/Wheel" unique_id=1797960747 instance=ExtResource("6_oeve8")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.90886337, 0.2608204)
+[node name="Human" parent="StaticBody3D2/Wheel" unique_id=1797960747 instance=ExtResource("6_h3fbr")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1, 0.40073848)
+
+[node name="Human_Collider" parent="StaticBody3D2/Wheel/Human" unique_id=1010881327 instance=ExtResource("6_oeve8")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=1922935986]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
