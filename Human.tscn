@@ -134,64 +134,64 @@ func set_knife_physical_collision_enabled(enabled: bool) -> void:
 "
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gjav3"]
-radius = 0.06689453
-height = 0.14257813
+radius = 0.1352539
+height = 0.2705078
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qefdq"]
-radius = 0.13232422
-height = 0.45996094
+radius = 0.19921875
+height = 0.484375
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s1pbw"]
-radius = 0.114746094
-height = 0.36914063
+radius = 0.16748047
+height = 0.3486328
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_52w7r"]
-radius = 0.05517578
-height = 0.24902344
+radius = 0.08886719
+height = 0.34179688
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3pep5"]
-radius = 0.056152344
-height = 0.22460938
+radius = 0.091796875
+height = 0.33276367
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vta6w"]
-radius = 0.056152344
-height = 0.33398438
+radius = 0.08300781
+height = 0.5185547
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4pc2h"]
-radius = 0.060546875
-height = 0.24902344
+radius = 0.13623047
+height = 0.27246094
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5h71l"]
-radius = 0.057617188
-height = 0.24414063
+radius = 0.103027344
+height = 0.36279297
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hw8ml"]
-radius = 0.057128906
-height = 0.35253906
+radius = 0.09472656
+height = 0.5024414
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tfcff"]
-radius = 0.09375
-height = 0.20019531
+radius = 0.12756348
+height = 0.25512695
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g80wo"]
-radius = 0.067871094
-height = 0.34375
+radius = 0.10595703
+height = 0.49658203
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3wngm"]
-radius = 0.06640625
-height = 0.390625
+radius = 0.10253906
+height = 0.5834961
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rpjrd"]
-radius = 0.08984375
-height = 0.19824219
+radius = 0.1303711
+height = 0.29077148
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0onxu"]
-radius = 0.068847656
-height = 0.37597656
+radius = 0.123046875
+height = 0.48168945
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c523f"]
-radius = 0.07861328
-height = 0.4345703
+radius = 0.11621094
+height = 0.6726074
 
 [node name="Human" unique_id=1797960747 instance=ExtResource("1_gjav3")]
 script = SubResource("GDScript_qefdq")
