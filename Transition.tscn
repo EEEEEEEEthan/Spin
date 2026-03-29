@@ -46,7 +46,7 @@ func switch(idx: int, on: bool, duration: float):
 	# shader：modulate.a 1=全黑 0=全透；on 仍表示揭开(透)
 	var target_alpha := 0.0 if on else 1.0
 	_switch_tween = create_tween()
-	_switch_tween.tween_property(self, \"self_modulate:a\", target_alpha, duration)
+	_switch_tween.tween_property(self, \"modulate:a\", target_alpha, duration)
 "
 
 [node name="Control" type="ColorRect" unique_id=1757002296]
@@ -56,7 +56,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.5019608)
 script = SubResource("GDScript_ch01m")
 materials = Array[Material]([SubResource("ShaderMaterial_ws5yv")])
 index = 1
