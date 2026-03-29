@@ -4,11 +4,15 @@
 code = "shader_type canvas_item;
 
 uniform float slat_count : hint_range(1.0, 128.0) = 16.0;
+// COLOR.a：1 全黑、0 全透。幂 <1 更快变透；>1 更慢；顶/底插值。
+uniform float power_top : hint_range(0.25, 8.0) = 0.5;
+uniform float power_bottom : hint_range(0.25, 8.0) = 2.5;
 
 void fragment() {
-	float open = COLOR.a;
+	float a = clamp(1.0 - COLOR.a, 0.0, 1.0);
+	float power = mix(power_top, power_bottom, UV.y);
+	float open = pow(a, power);
 	float local_y = fract(UV.y * slat_count);
-	// open=0 全闭合(黑)；open=1 全开(透明)；自每格顶部向下展开，硬边
 	float closed = step(open, local_y);
 	COLOR = vec4(0.0, 0.0, 0.0, closed);
 }
@@ -17,6 +21,8 @@ void fragment() {
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ws5yv"]
 shader = SubResource("Shader_ch01m")
 shader_parameter/slat_count = 16.0
+shader_parameter/power_top = 0.5
+shader_parameter/power_bottom = 2.5
 
 [sub_resource type="GDScript" id="GDScript_ch01m"]
 script/source = "@tool
@@ -37,7 +43,8 @@ func switch(idx: int, on: bool, duration: float):
 	index = idx
 	if _switch_tween != null and _switch_tween.is_valid():
 		_switch_tween.kill()
-	var target_alpha := 1.0 if on else 0.0
+	# shader：modulate.a 1=全黑 0=全透；on 仍表示揭开(透)
+	var target_alpha := 0.0 if on else 1.0
 	_switch_tween = create_tween()
 	_switch_tween.tween_property(self, \"self_modulate:a\", target_alpha, duration)
 "
@@ -49,7 +56,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0)
+color = Color(0, 0, 0, 0.5019608)
 script = SubResource("GDScript_ch01m")
 materials = Array[Material]([SubResource("ShaderMaterial_ws5yv")])
 index = 1
