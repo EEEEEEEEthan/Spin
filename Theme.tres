@@ -1,0 +1,34 @@
+[gd_resource type="Theme" format=3 uid="uid://cpqs7k337vuhn"]
+
+[ext_resource type="FontFile" uid="uid://jty7p50xfhpr" path="res://angelxx_爱给网_aigei_com.ttf" id="1_yd3fu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yd3fu"]
+
+[resource]
+default_font = ExtResource("1_yd3fu")
+Button_Menu/base_type = &"Button"
+Button_Menu/colors/font_color = Color(0, 0, 0, 1)
+Button_Menu/colors/font_disabled_color = Color(0, 0, 0, 1)
+Button_Menu/colors/font_focus_color = Color(0, 0, 0, 1)
+Button_Menu/colors/font_hover_color = Color(0, 0, 0, 1)
+Button_Menu/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+Button_Menu/colors/font_outline_color = Color(0, 0, 0, 1)
+Button_Menu/colors/font_pressed_color = Color(0, 0, 0, 1)
+Button_Menu/colors/icon_disabled_color = Color(0, 0, 0, 1)
+Button_Menu/colors/icon_focus_color = Color(0, 0, 0, 1)
+Button_Menu/colors/icon_hover_color = Color(0, 0, 0, 1)
+Button_Menu/colors/icon_hover_pressed_color = Color(0, 0, 0, 1)
+Button_Menu/colors/icon_normal_color = Color(0, 0, 0, 1)
+Button_Menu/colors/icon_pressed_color = Color(0, 0, 0, 1)
+Button_Menu/font_sizes/font_size = 128
+Button_Menu/styles/disabled = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/disabled_mirrored = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/focus = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/hover = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/hover_mirrored = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/hover_pressed = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/normal = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/normal_mirrored = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/pressed = SubResource("StyleBoxEmpty_yd3fu")
+Button_Menu/styles/pressed_mirrored = SubResource("StyleBoxEmpty_yd3fu")

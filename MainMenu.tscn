@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://b2kpquvc7r366"]
 
-[ext_resource type="Texture2D" uid="uid://dplxiw7dijtg4" path="res://Menu.png" id="2_7r1g0"]
 [ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_cqjrg"]
 [ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="4_e2xy7"]
 [ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="5_fimr5"]
@@ -11,9 +10,9 @@ script/source = "extends Node
 ## 主菜单：按悬停项旋转 Axis；三按钮更小默认尺寸 + 悬停鼓起 / 按下收紧
 
 @onready var axis: Control = %Axis
-@onready var button_new_game: TextureButton = %Button_NewGame
-@onready var button_rank: TextureButton = %Button_Rank
-@onready var button_quit: TextureButton = %Button_Quit
+@onready var button_new_game: BaseButton = %Button_NewGame
+@onready var button_rank: BaseButton = %Button_Rank
+@onready var button_quit: BaseButton = %Button_Quit
 
 const ANGLE_IDLE := -PI * 0.5
 const ANGLE_NEW := 0.0
@@ -33,7 +32,7 @@ const BTN_PRESS_SEC := 0.07
 
 var _axis_tween: Tween
 var _menu_hover_angle: float = ANGLE_IDLE
-var _buttons: Array[TextureButton] = []
+var _buttons: Array[BaseButton] = []
 var _button_tweens: Array[Tween] = []
 var _pressed_index: int = -1
 
@@ -44,7 +43,7 @@ func _ready() -> void:
 	_buttons = [button_new_game, button_rank, button_quit]
 	_button_tweens.resize(_buttons.size())
 	for index in range(_buttons.size()):
-		var button: TextureButton = _buttons[index]
+		var button: BaseButton = _buttons[index]
 		var idle := Vector2(BTN_SCALE_IDLE, BTN_SCALE_IDLE)
 		button.scale = idle
 		button.button_down.connect(_on_button_down.bind(index))
@@ -106,7 +105,7 @@ func _kill_btn_tween(index: int) -> void:
 
 func _tween_btn_scale(index: int, scale_value: float, duration: float, trans: int, ease: int) -> void:
 	_kill_btn_tween(index)
-	var button: TextureButton = _buttons[index]
+	var button: BaseButton = _buttons[index]
 	var tween := create_tween()
 	_button_tweens[index] = tween
 	var target := Vector2(scale_value, scale_value)
@@ -123,7 +122,7 @@ func _tween_buttons_for_hover(angle: float) -> void:
 func _on_button_down(index: int) -> void:
 	_pressed_index = index
 	_kill_btn_tween(index)
-	var button: TextureButton = _buttons[index]
+	var button: BaseButton = _buttons[index]
 	var tween := create_tween()
 	_button_tweens[index] = tween
 	tween.tween_property(button, \"scale\", Vector2(BTN_SCALE_PRESS, BTN_SCALE_PRESS), BTN_PRESS_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
@@ -154,18 +153,6 @@ func _tween_axis_to(target_rad: float) -> void:
 	_axis_tween.tween_property(axis, \"scale\", Vector2.ONE, TWEEN_SEC * 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 "
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xkndl"]
-atlas = ExtResource("2_7r1g0")
-region = Rect2(21.037354, -6.937607, 1044.2412, 425.11456)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_u44n3"]
-atlas = ExtResource("2_7r1g0")
-region = Rect2(10.673706, 488.8869, 1035.6818, 359.49286)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_wbfu4"]
-atlas = ExtResource("2_7r1g0")
-region = Rect2(50.6167, 979.6232, 958.64764, 413.7021)
-
 [node name="MainMenu" type="Node" unique_id=957337063]
 script = SubResource("GDScript_qoqlk")
 
@@ -180,7 +167,7 @@ offset_bottom = -43.0
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0, 0.5)
 
-[node name="Button_NewGame" type="TextureButton" parent="Control" unique_id=1343242364]
+[node name="Button_NewGame" type="Button" parent="Control" unique_id=1377451860]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -193,11 +180,10 @@ offset_top = -0.18799925
 offset_right = 0.11099243
 offset_bottom = 0.053985596
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_normal = SubResource("AtlasTexture_xkndl")
-ignore_texture_size = true
-stretch_mode = 4
+theme_type_variation = &"Button_Menu"
+text = "新游戏"
 
-[node name="Button_Rank" type="TextureButton" parent="Control" unique_id=1172913445]
+[node name="Button_Rank" type="Button" parent="Control" unique_id=469182543]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -210,11 +196,10 @@ offset_top = 0.147995
 offset_right = -0.1539917
 offset_bottom = -0.15701294
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_normal = SubResource("AtlasTexture_u44n3")
-ignore_texture_size = true
-stretch_mode = 4
+theme_type_variation = &"Button_Menu"
+text = "名人堂"
 
-[node name="Button_Quit" type="TextureButton" parent="Control" unique_id=1157966423]
+[node name="Button_Quit" type="Button" parent="Control" unique_id=900587493]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -227,9 +212,8 @@ offset_top = 0.2619629
 offset_right = -0.060058594
 offset_bottom = -0.043029785
 pivot_offset_ratio = Vector2(0.5, 0.5)
-texture_normal = SubResource("AtlasTexture_wbfu4")
-ignore_texture_size = true
-stretch_mode = 4
+theme_type_variation = &"Button_Menu"
+text = "退出"
 
 [node name="Axis" type="Control" parent="." unique_id=2043143782]
 unique_name_in_owner = true

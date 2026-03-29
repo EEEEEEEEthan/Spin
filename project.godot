@@ -30,7 +30,7 @@ enabled=PackedStringArray()
 
 [gui]
 
-theme/custom="uid://c8bqnrg3ipj5v"
+theme/custom="uid://cpqs7k337vuhn"
 theme/custom_font="res://MonoFont.tres"
 
 [layer_names]
