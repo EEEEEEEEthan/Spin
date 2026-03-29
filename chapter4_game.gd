@@ -4,6 +4,8 @@ extends Node3D
 
 signal all_chapter4_cleared
 
+const _BLOOD_SCENE: PackedScene = preload("res://Blood.tscn")
+const _KNIFE_BLOOD_LOCAL_POSITION: Vector3 = Vector3(0.0, -0.12, 0.0)
 const _STUCK_KNIFE_NEAR_TARGET_METERS: float = 0.32
 ## Human_Collider/StaticBody3D 下 CollisionShape 顺序：0 髋、1 胸、2 头…
 const _HUMAN_HEAD_COLLIDER_SHAPE_INDEX: int = 2
@@ -52,10 +54,20 @@ func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, knife: RigidBo
 	if hit_body != _human_hit_static_body:
 		return
 	PlayerSession.register_human_hit(knife)
+	_spawn_blood_on_knife(knife)
 	if collider_shape_index != _HUMAN_HEAD_COLLIDER_SHAPE_INDEX:
 		return
 	_head_shot = true
 	_human_renderer.apply_emoji_dead()
+
+
+func _spawn_blood_on_knife(knife: RigidBody3D) -> void:
+	var blood_particles := _BLOOD_SCENE.instantiate() as GPUParticles3D
+	knife.add_child(blood_particles)
+	blood_particles.position = _KNIFE_BLOOD_LOCAL_POSITION
+	blood_particles.one_shot = false
+	blood_particles.emitting = true
+	blood_particles.restart()
 
 
 func _unhandled_input(event: InputEvent) -> void:
