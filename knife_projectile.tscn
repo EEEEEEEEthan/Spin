@@ -11,6 +11,10 @@ script/source = "extends RigidBody3D
 
 signal knife_stuck(hit_body: Node3D, collider_shape_index: int, should_spawn_blood: bool)
 
+const THUD_AUDIO_STREAM := preload(\"res://Audios/咚.wav\")
+## 关卡内墙/桌/轮盘 StaticBody 为 collision_layer=7（含本层），人体碰撞体为 5（不含）；用 bit2 区分扎在硬表面时播「咚」。
+const _SURFACE_THUD_PHYSICS_LAYER_BIT: int = 2
+
 ## 组 balloon 且含 explode()：仅戳破（queue_free），飞刀不冻结、不 reparent。
 ## 命中体的 collision_layer 与此掩码有交集时才扎住并 reparent。为 0 时保持旧行为：任意碰撞体均可扎住。
 @export_flags_3d_physics var stick_collision_layer_mask: int = 0
@@ -60,6 +64,21 @@ func _hit_allows_stick(hit_body: Node) -> bool:
 	if collision_object == null:
 		return false
 	return (collision_object.collision_layer & stick_collision_layer_mask) != 0
+
+
+func _surface_stick_should_play_thud(hit_body: Node) -> bool:
+	var collision_object := hit_body as CollisionObject3D
+	if collision_object == null:
+		return false
+	return (collision_object.collision_layer & _SURFACE_THUD_PHYSICS_LAYER_BIT) != 0
+
+
+func _play_surface_thud() -> void:
+	var thud_player := AudioStreamPlayer.new()
+	get_tree().root.add_child(thud_player)
+	thud_player.stream = THUD_AUDIO_STREAM
+	thud_player.finished.connect(thud_player.queue_free)
+	thud_player.play()
 
 
 func _shockwave_delay_from_distance(distance: float) -> float:
@@ -174,6 +193,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.angular_velocity = Vector3.ZERO
 		freeze = true
 		freeze_mode = RigidBody3D.FREEZE_MODE_STATIC
+		if _surface_stick_should_play_thud(hit_body):
+			_play_surface_thud()
 		var collider_shape_index: int = state.get_contact_collider_shape(contact_index)
 		var should_spawn_blood: bool = _should_spawn_blood_for_contact(contact_index, state)
 		knife_stuck.emit(hit_body, collider_shape_index, should_spawn_blood)
