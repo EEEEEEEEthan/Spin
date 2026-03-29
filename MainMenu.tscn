@@ -1,10 +1,80 @@
 [gd_scene format=3 uid="uid://b2kpquvc7r366"]
 
-[ext_resource type="Script" uid="uid://x0ehiwggudux" path="res://game_menu.gd" id="1_iwfq2"]
 [ext_resource type="Texture2D" uid="uid://dplxiw7dijtg4" path="res://Menu.png" id="2_7r1g0"]
 [ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_cqjrg"]
 [ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="4_e2xy7"]
 [ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="5_fimr5"]
+
+[sub_resource type="GDScript" id="GDScript_qoqlk"]
+script/source = "extends Node
+
+## 主菜单：按悬停项旋转 Axis，最短路径 + 过冲回弹（每帧命中检测，避免漏 mouse_exited）
+
+@onready var axis: Control = %Axis
+@onready var button_new_game: TextureButton = %Button_NewGame
+@onready var button_rank: TextureButton = %Button_Rank
+@onready var button_quit: TextureButton = %Button_Quit
+
+const ANGLE_IDLE := -PI * 0.5
+const ANGLE_NEW := 0.0
+const ANGLE_RANK := PI * 0.5
+const ANGLE_QUIT := PI
+
+const TWEEN_SEC := 0.52
+const TWEEN_TRANS := Tween.TRANS_BACK
+const TWEEN_EASE := Tween.EASE_OUT
+const SCALE_PUNCH := 1.06
+
+var _axis_tween: Tween
+var _menu_hover_angle: float = ANGLE_IDLE
+
+
+func _ready() -> void:
+	axis.rotation = ANGLE_IDLE
+	_menu_hover_angle = ANGLE_IDLE
+	set_process(true)
+
+
+func _process(_delta: float) -> void:
+	var mouse := get_viewport().get_mouse_position()
+	var target := _hover_angle_for_mouse(mouse)
+	if not is_equal_approx(target, _menu_hover_angle):
+		_menu_hover_angle = target
+		_tween_axis_to(target)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_MOUSE_EXIT:
+		if not is_equal_approx(_menu_hover_angle, ANGLE_IDLE):
+			_menu_hover_angle = ANGLE_IDLE
+			_tween_axis_to(ANGLE_IDLE)
+
+
+func _hover_angle_for_mouse(mouse: Vector2) -> float:
+	if button_new_game.get_global_rect().has_point(mouse):
+		return ANGLE_NEW
+	if button_rank.get_global_rect().has_point(mouse):
+		return ANGLE_RANK
+	if button_quit.get_global_rect().has_point(mouse):
+		return ANGLE_QUIT
+	return ANGLE_IDLE
+
+
+func _tween_axis_to(target_rad: float) -> void:
+	if _axis_tween != null and _axis_tween.is_valid():
+		_axis_tween.kill()
+	axis.scale = Vector2.ONE
+	var from := axis.rotation
+	var delta := fposmod(target_rad - from + PI, TAU) - PI
+	var end := from + delta
+	_axis_tween = create_tween()
+	_axis_tween.set_parallel(true)
+	_axis_tween.tween_property(axis, \"rotation\", end, TWEEN_SEC).set_trans(TWEEN_TRANS).set_ease(TWEEN_EASE)
+	var punch := Vector2(SCALE_PUNCH, SCALE_PUNCH)
+	_axis_tween.tween_property(axis, \"scale\", punch, TWEEN_SEC * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	_axis_tween.chain()
+	_axis_tween.tween_property(axis, \"scale\", Vector2.ONE, TWEEN_SEC * 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xkndl"]
 atlas = ExtResource("2_7r1g0")
@@ -18,8 +88,8 @@ region = Rect2(10.673706, 488.8869, 1035.6818, 359.49286)
 atlas = ExtResource("2_7r1g0")
 region = Rect2(50.6167, 979.6232, 958.64764, 413.7021)
 
-[node name="Game" type="Node" unique_id=957337063]
-script = ExtResource("1_iwfq2")
+[node name="MainMenu" type="Node" unique_id=957337063]
+script = SubResource("GDScript_qoqlk")
 
 [node name="Control" type="Control" parent="." unique_id=1179891066]
 layout_mode = 3
