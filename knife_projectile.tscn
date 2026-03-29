@@ -135,6 +135,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			tip_global = tip_global.normalized()
 		if relative_velocity.normalized().dot(tip_global) < min_stick_velocity_alignment:
 			continue
+		# get_contact_local_normal 在 Godot 4 中实为世界空间法线，勿乘 global_transform.basis。
+		var normal_world: Vector3 = state.get_contact_local_normal(contact_index).normalized()
+		print(\"飞刀扎中 世界法线: \", normal_world)
 		_stuck = true
 		state.linear_velocity = Vector3.ZERO
 		state.angular_velocity = Vector3.ZERO
