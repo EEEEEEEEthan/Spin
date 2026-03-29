@@ -35,6 +35,14 @@ var _menu_hover_angle: float = ANGLE_IDLE
 var _buttons: Array[BaseButton] = []
 var _button_tweens: Array[Tween] = []
 var _pressed_index: int = -1
+var _new_game_sequence_running: bool = false
+
+const _NEW_GAME_INTRO_TEXT := \"消灭气球\"
+const _OVERLAY_SHOW_SEC := 0.35
+const _DELAY_BEFORE_TYPEWRITER_SEC := 1.0
+const _TYPEWRITER_CHAR_SEC := 0.1
+const _HOLD_AFTER_INTRO_SEC := 3.0
+const _TRANSITION_SHADER_INDEX := 1
 
 
 func _ready() -> void:
@@ -48,6 +56,7 @@ func _ready() -> void:
 		button.scale = idle
 		button.button_down.connect(_on_button_down.bind(index))
 		button.button_up.connect(_on_button_up.bind(index))
+	button_new_game.pressed.connect(_on_new_game_pressed)
 	set_process(true)
 	call_deferred(\"_sync_button_pivots\")
 
@@ -151,6 +160,23 @@ func _tween_axis_to(target_rad: float) -> void:
 	_axis_tween.tween_property(axis, \"scale\", punch, TWEEN_SEC * 0.2).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	_axis_tween.chain()
 	_axis_tween.tween_property(axis, \"scale\", Vector2.ONE, TWEEN_SEC * 0.42).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+func _on_new_game_pressed() -> void:
+	if _new_game_sequence_running:
+		return
+	_new_game_sequence_running = true
+	button_new_game.disabled = true
+	await _run_new_game_transition()
+
+
+func _run_new_game_transition() -> void:
+	Transition.set_overlay_blocks_input(true)
+	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
+	await get_tree().create_timer(_DELAY_BEFORE_TYPEWRITER_SEC).timeout
+	await Transition.typewriter_display(_NEW_GAME_INTRO_TEXT, _TYPEWRITER_CHAR_SEC)
+	await get_tree().create_timer(_HOLD_AFTER_INTRO_SEC).timeout
+	get_tree().change_scene_to_packed(preload(\"res://Game.tscn\"))
 "
 
 [node name="MainMenu" type="Node" unique_id=957337063]
