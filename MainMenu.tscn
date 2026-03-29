@@ -2,7 +2,6 @@
 
 [ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_cqjrg"]
 [ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="4_e2xy7"]
-[ext_resource type="Texture2D" uid="uid://bf5s6oti4y585" path="res://名人堂UI.png" id="4_qoqlk"]
 [ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="5_fimr5"]
 
 [sub_resource type="GDScript" id="GDScript_qoqlk"]
@@ -309,52 +308,3 @@ pivot_offset = Vector2(268.22412, 222.35114)
 texture = ExtResource("5_fimr5")
 expand_mode = 1
 stretch_mode = 5
-
-[node name="Rank" type="NinePatchRect" parent="." unique_id=1274291774]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -913.0
-offset_top = 53.0
-offset_right = -1299.0
-offset_bottom = -29.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_qoqlk")
-region_rect = Rect2(0, 0, 512.0318, 512.072)
-patch_margin_left = 66
-patch_margin_top = 133
-patch_margin_right = 75
-patch_margin_bottom = 41
-axis_stretch_vertical = 2
-
-[node name="Label" type="Label" parent="Rank" unique_id=460253188]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -199.0
-offset_top = 22.0
-offset_right = 199.0
-offset_bottom = 120.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 86
-text = "名人堂"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Rank" unique_id=503779094]
-layout_mode = 0
-offset_left = 33.0
-offset_top = 122.0
-offset_right = 733.0
-offset_bottom = 531.0
-mouse_filter = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Rank/ScrollContainer" unique_id=587641905]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RankItem" parent="Rank/ScrollContainer/VBoxContainer" unique_id=1901074593 instance_placeholder="res://RankItem.tscn"]
-layout_mode = 2
