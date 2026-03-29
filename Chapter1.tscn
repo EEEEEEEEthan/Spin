@@ -66,4 +66,13 @@ surface_material_override/0 = ExtResource("3_u44n3")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7597046, 0.025998116)
 shape = SubResource("BoxShape3D_sb48q")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1776556247]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
 [editable path="StaticBody3D/Wall"]
