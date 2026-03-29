@@ -1,8 +1,41 @@
 [gd_scene format=3 uid="uid://cykk13ltobu11"]
 
+[sub_resource type="GDScript" id="GDScript_input_name"]
+script/source = "extends Control
+
+## 姓名输入：最多 30 字；仅当去掉首尾空白后仍有可见内容时回车才确认。
+
+const MAX_DISPLAY_NAME_LENGTH := 30
+
+signal name_confirmed(chosen_name: String)
+
+@onready var _line_edit: LineEdit = $LineEdit
+
+var _visible_char_regex: RegEx
+
+
+func _ready() -> void:
+	_visible_char_regex = RegEx.new()
+	_visible_char_regex.compile(\"\\\\S\")
+	_line_edit.max_length = MAX_DISPLAY_NAME_LENGTH
+	_line_edit.text_submitted.connect(_on_line_edit_text_submitted)
+
+
+func _on_line_edit_text_submitted(_new_text: String) -> void:
+	var trimmed: String = _line_edit.text.strip_edges()
+	if not _has_visible_character(trimmed):
+		return
+	name_confirmed.emit(trimmed)
+
+
+func _has_visible_character(text: String) -> bool:
+	return _visible_char_regex.search(text) != null
+"
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n5svd"]
 
 [node name="InputName" type="Control" unique_id=1906703476]
+script = SubResource("GDScript_input_name")
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

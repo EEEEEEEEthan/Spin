@@ -184,9 +184,8 @@ func _run_new_game_transition() -> void:
 	add_child(name_layer)
 	var line_edit: LineEdit = input_name_root.get_node(\"LineEdit\") as LineEdit
 	line_edit.grab_focus()
-	await line_edit.text_submitted
-	var chosen: String = line_edit.text.strip_edges()
-	PlayerSession.display_name = chosen if chosen != \"\" else \"玩家\"
+	var chosen: String = await input_name_root.name_confirmed
+	PlayerSession.display_name = chosen
 	name_layer.queue_free()
 	Transition.set_overlay_blocks_input(true)
 	await get_tree().create_timer(_DELAY_AFTER_NAME_BEFORE_TYPEWRITER_SEC).timeout
