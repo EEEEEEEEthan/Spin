@@ -50,11 +50,12 @@ func _connect_knife_stuck(node: Node) -> void:
 		rigid.knife_stuck.connect(stuck_handler)
 
 
-func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, knife: RigidBody3D) -> void:
+func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, should_spawn_blood: bool, knife: RigidBody3D) -> void:
 	if hit_body != _human_hit_static_body:
 		return
 	PlayerSession.register_human_hit(knife)
-	_spawn_blood_on_knife(knife)
+	if should_spawn_blood:
+		_spawn_blood_on_knife(knife)
 	if collider_shape_index != _HUMAN_HEAD_COLLIDER_SHAPE_INDEX:
 		return
 	_head_shot = true
