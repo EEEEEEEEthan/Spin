@@ -9,6 +9,8 @@ const _OVERLAY_HIDE_SEC := 0.45
 const _OVERLAY_SHOW_SEC := 0.35
 const _TRANSITION_SHADER_INDEX := 1
 const _TYPEWRITER_CHAR_SEC := 0.1
+const _FINAL_SCORE_GAP_SEC := 0.5
+const _FINAL_SCORE_HOLD_SEC := 3.0
 
 var _editor_force_completion_running: bool = false
 
@@ -145,8 +147,13 @@ func _run_chapter4_cleared_sequence() -> void:
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
 	await get_tree().create_timer(2.0).timeout
 	await Transition.typewriter_display(\"游戏结束喽！\", _TYPEWRITER_CHAR_SEC)
+	var final_score: int = PlayerSession.current_human_hit_count
+	Transition.clear_caption()
+	await get_tree().create_timer(_FINAL_SCORE_GAP_SEC).timeout
+	await Transition.typewriter_display(\"你中了%d刀！\" % final_score, _TYPEWRITER_CHAR_SEC)
+	await get_tree().create_timer(_FINAL_SCORE_HOLD_SEC).timeout
 	PlayerSession.submit_current_score_and_prepare_focus()
-	Transition.begin_delayed_overlay_reveal(_TRANSITION_SHADER_INDEX, 3.0, _OVERLAY_HIDE_SEC)
+	Transition.begin_delayed_overlay_reveal(_TRANSITION_SHADER_INDEX, 0.0, _OVERLAY_HIDE_SEC)
 	_editor_force_completion_running = false
 	get_tree().change_scene_to_file(\"res://MainMenu.tscn\")
 "
