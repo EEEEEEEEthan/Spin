@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://cykk13ltobu11"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n5svd"]
+
+[node name="InputName" type="Control" unique_id=1906703476]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=147555887]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="LineEdit" type="LineEdit" parent="." unique_id=1637800456]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -404.0
+offset_top = -62.5
+offset_right = 404.0
+offset_bottom = 62.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
+theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_colors/font_placeholder_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(1, 1, 1, 1)
+theme_override_colors/clear_button_color = Color(1, 1, 1, 1)
+theme_override_colors/clear_button_color_pressed = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 110
+theme_override_styles/normal = SubResource("StyleBoxEmpty_n5svd")
+theme_override_styles/read_only = SubResource("StyleBoxEmpty_n5svd")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_n5svd")
+text = "姓名:"
