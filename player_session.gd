@@ -6,6 +6,11 @@ var current_human_hit_count: int = 0
 
 const _LEADERBOARD_SAVE_PATH := "user://leaderboard.json"
 
+const _HUMAN_HIT_SFX: Array[AudioStream] = [
+	preload("res://Audios/受击.wav"),
+	preload("res://Audios/受击2.wav"),
+]
+
 var _leaderboard_entries: Array[Dictionary] = []
 var _counted_human_hit_knife_ids: Dictionary = {}
 var _next_entry_id: int = 1
@@ -28,6 +33,16 @@ func register_human_hit(knife: Node) -> void:
 		return
 	_counted_human_hit_knife_ids[knife_id] = true
 	current_human_hit_count += 1
+	_play_human_hit_sfx()
+
+
+func _play_human_hit_sfx() -> void:
+	var stream_index: int = randi() % _HUMAN_HIT_SFX.size()
+	var hit_player := AudioStreamPlayer.new()
+	add_child(hit_player)
+	hit_player.stream = _HUMAN_HIT_SFX[stream_index]
+	hit_player.finished.connect(hit_player.queue_free)
+	hit_player.play()
 
 
 func submit_current_score_and_prepare_focus() -> int:

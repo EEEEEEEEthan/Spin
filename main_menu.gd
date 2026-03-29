@@ -35,6 +35,8 @@ const _MENU_HOVER_SFX: Array[AudioStream] = [
 	preload("res://Audios/唰3.wav"),
 ]
 const _MENU_CLICK_SFX: AudioStream = preload("res://Audios/咚.wav")
+## 主菜单点击咚相对默认响度（约 8 倍）
+const _MENU_CLICK_VOLUME_DB := 18.0
 
 @onready var axis: Control = %Axis
 @onready var button_new_game: BaseButton = %Button_NewGame
@@ -93,6 +95,7 @@ func _ready() -> void:
 	add_child(_menu_hover_audio)
 	_menu_click_audio = AudioStreamPlayer.new()
 	_menu_click_audio.name = "MenuClickSfx"
+	_menu_click_audio.volume_db = _MENU_CLICK_VOLUME_DB
 	add_child(_menu_click_audio)
 
 

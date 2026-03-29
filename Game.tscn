@@ -20,6 +20,10 @@ var _editor_force_completion_running: bool = false
 
 
 func _ready() -> void:
+	var bgm_wav := _bgm_player.stream as AudioStreamWAV
+	if bgm_wav != null:
+		bgm_wav.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	_bgm_player.volume_db = 0.0
 	Transition.clear_caption()
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, true, _OVERLAY_HIDE_SEC)
 	Transition.set_overlay_blocks_input(false)
@@ -178,5 +182,6 @@ script = SubResource("GDScript_wbfu4")
 
 [node name="BgmPlayer" type="AudioStreamPlayer" parent="." unique_id=803753086]
 stream = ExtResource("3_bgm")
+autoplay = true
 
 [node name="Game2" parent="." unique_id=552426368 instance=ExtResource("2_xkndl")]

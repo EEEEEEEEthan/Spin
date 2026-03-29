@@ -12,6 +12,8 @@ script/source = "extends RigidBody3D
 signal knife_stuck(hit_body: Node3D, collider_shape_index: int, should_spawn_blood: bool)
 
 const THUD_AUDIO_STREAM := preload(\"res://Audios/咚.wav\")
+## 与主菜单点击同一素材，关卡内需明显可闻
+const _THUD_VOLUME_DB := 18.0
 ## 关卡内墙/桌/轮盘 StaticBody 为 collision_layer=7（含本层），人体碰撞体为 5（不含）；用 bit2 区分扎在硬表面时播「咚」。
 const _SURFACE_THUD_PHYSICS_LAYER_BIT: int = 2
 
@@ -77,6 +79,7 @@ func _play_surface_thud() -> void:
 	var thud_player := AudioStreamPlayer.new()
 	get_tree().root.add_child(thud_player)
 	thud_player.stream = THUD_AUDIO_STREAM
+	thud_player.volume_db = _THUD_VOLUME_DB
 	thud_player.finished.connect(thud_player.queue_free)
 	thud_player.play()
 
