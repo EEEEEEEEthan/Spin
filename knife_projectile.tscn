@@ -89,14 +89,16 @@ func _schedule_balloon_shockwave_responses(velocity_x: Vector3) -> void:
 		if impulse.length_squared() < 1e-12:
 			continue
 		tree.create_timer(delay_seconds).timeout.connect(
-			_apply_shockwave_impulse_to_balloon_if_valid.bind(balloon, impulse), CONNECT_ONE_SHOT)
+			_apply_shockwave_impulse_to_balloon_if_valid.bind(balloon.get_instance_id(), impulse), CONNECT_ONE_SHOT)
 
 
-func _apply_shockwave_impulse_to_balloon_if_valid(balloon: RigidBody3D, impulse: Vector3) -> void:
-	if not is_instance_valid(balloon) or not balloon.is_inside_tree():
+## timeout + bind 传 Object 引用时，气球可能已 queue_free，再 as 会报「Trying to cast a freed object」。改用 instance_id + instance_from_id。
+func _apply_shockwave_impulse_to_balloon_if_valid(balloon_instance_id: int, impulse: Vector3) -> void:
+	var body := instance_from_id(balloon_instance_id) as RigidBody3D
+	if body == null or not body.is_inside_tree():
 		return
-	if balloon.has_method(\"apply_knife_shockwave_impulse\"):
-		balloon.call(\"apply_knife_shockwave_impulse\", impulse)
+	if body.has_method(\"apply_knife_shockwave_impulse\"):
+		body.call(\"apply_knife_shockwave_impulse\", impulse)
 
 
 func _on_first_collision(state: PhysicsDirectBodyState3D) -> void:
