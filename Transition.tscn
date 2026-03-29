@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://choxg0x7j0m2l"]
+
+[sub_resource type="GDScript" id="GDScript_ch01m"]
+script/source = "extends ColorRect
+
+var _switch_tween: Tween
+
+func switch(on: bool, duration: float):
+	if _switch_tween != null and _switch_tween.is_valid():
+		_switch_tween.kill()
+	var target_alpha := 1.0 if on else 0.0
+	_switch_tween = create_tween()
+	_switch_tween.tween_property(self, \"self_modulate:a\", target_alpha, duration)
+"
+
+[node name="Control" type="ColorRect" unique_id=1757002296]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = SubResource("GDScript_ch01m")
