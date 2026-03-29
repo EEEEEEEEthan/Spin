@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Spin"
 config/description="飞刀大师"
-run/main_scene="uid://cmwe30idxr08a"
+run/main_scene="uid://q7cck1xb2vm"
 config/features=PackedStringArray("4.6")
 
 [dotnet]
@@ -37,7 +37,11 @@ theme/custom_font="res://MonoFont.tres"
 
 2d_physics/layer_1="Platform"
 2d_navigation/layer_1="Platform"
+3d_physics/layer_1="Default"
 2d_navigation/layer_2="Land"
+3d_physics/layer_2="HumanRagdoll"
+3d_physics/layer_3="WorldStatic"
+3d_physics/layer_9="HumanHitDetect"
 
 [physics]
 

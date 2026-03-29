@@ -47,7 +47,7 @@ shape = SubResource("BoxShape3D_u44n3")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=48545751]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
-collision_layer = 3
+collision_layer = 7
 collision_mask = 3
 
 [node name="Wall" parent="StaticBody3D" unique_id=1158833840 instance=ExtResource("3_sb48q")]

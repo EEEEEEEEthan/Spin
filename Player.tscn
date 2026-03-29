@@ -7,7 +7,7 @@ script/source = "extends Node
 
 const PROJECTILE_SCENE := preload(\"res://knife_projectile.tscn\")
 
-@export var min_throw_speed: float = 10.0
+@export var min_throw_speed: float = 5.0
 @export var max_throw_speed: float = 32.0
 @export var max_charge_seconds: float = 1.25
 @export var ui_fade_seconds: float = 0.15
