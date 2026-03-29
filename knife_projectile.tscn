@@ -168,7 +168,7 @@ radius = 0.001
 size = Vector3(0.025634766, 0.2000122, 0.034179688)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
-mass = 0.3
+mass = 0.5
 physics_material_override = SubResource("PhysicsMaterial_g2e78")
 can_sleep = false
 continuous_cd = true
