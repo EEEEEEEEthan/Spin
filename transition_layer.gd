@@ -4,6 +4,7 @@ const _default_layer := 100
 
 @onready var _overlay: ColorRect = $Transition
 @onready var _caption_label: Label = $Transition/TransitionLabel
+@onready var _typewriter_tick: AudioStreamPlayer = $TypewriterTick
 
 
 func _ready() -> void:
@@ -36,6 +37,7 @@ func typewriter_display(full_text: String, seconds_per_character: float) -> void
 	_caption_label.text = ""
 	for end_index in range(1, full_text.length() + 1):
 		_caption_label.text = full_text.substr(0, end_index)
+		_typewriter_tick.play()
 		await get_tree().create_timer(seconds_per_character).timeout
 
 

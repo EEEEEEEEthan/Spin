@@ -2,10 +2,14 @@
 
 [ext_resource type="Script" path="res://transition_layer.gd" id="1_layer"]
 [ext_resource type="PackedScene" uid="uid://choxg0x7j0m2l" path="res://Transition.tscn" id="2_transition"]
+[ext_resource type="AudioStream" uid="uid://bsxd68qku4no2" path="res://Audios/哒.wav" id="3_typewriter_tick"]
 
 [node name="TransitionLayer" type="CanvasLayer"]
 layer = 100
 script = ExtResource("1_layer")
+
+[node name="TypewriterTick" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_typewriter_tick")
 
 [node name="Transition" parent="." instance=ExtResource("2_transition")]
 modulate = Color(1, 1, 1, 0)
