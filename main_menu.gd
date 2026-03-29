@@ -29,6 +29,13 @@ const _PANEL_SLIDE_SEC := 0.62
 const _PANEL_SLIDE_RATIO := 1.18
 const _RANK_ENTRY_AUTO_OPEN_DELAY_SEC := 0.08
 
+const _MENU_HOVER_SFX: Array[AudioStream] = [
+	preload("res://Audios/唰.wav"),
+	preload("res://Audios/唰2.wav"),
+	preload("res://Audios/唰3.wav"),
+]
+const _MENU_CLICK_SFX: AudioStream = preload("res://Audios/咚.wav")
+
 @onready var axis: Control = %Axis
 @onready var button_new_game: BaseButton = %Button_NewGame
 @onready var button_rank: BaseButton = %Button_Rank
@@ -50,6 +57,8 @@ var _menu_panels: Array[Control] = []
 var _menu_panel_base_positions: Array[Vector2] = []
 var _menu_panel_tweens: Array[Tween] = []
 var _rank_panel_base_position: Vector2 = Vector2.ZERO
+var _menu_hover_audio: AudioStreamPlayer
+var _menu_click_audio: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -79,6 +88,12 @@ func _ready() -> void:
 	_pending_rank_entry_id = PlayerSession.consume_pending_rank_entry_id()
 	if _pending_rank_entry_id >= 0:
 		call_deferred(&"_auto_open_rank_after_game_end")
+	_menu_hover_audio = AudioStreamPlayer.new()
+	_menu_hover_audio.name = "MenuHoverSfx"
+	add_child(_menu_hover_audio)
+	_menu_click_audio = AudioStreamPlayer.new()
+	_menu_click_audio.name = "MenuClickSfx"
+	add_child(_menu_click_audio)
 
 
 func _sync_button_pivots() -> void:
@@ -92,6 +107,8 @@ func _process(_delta: float) -> void:
 	var mouse_position: Vector2 = get_viewport().get_mouse_position()
 	var target_angle: float = _hover_angle_for_mouse(mouse_position)
 	if not is_equal_approx(target_angle, _menu_hover_angle):
+		if _hover_index(target_angle) >= 0:
+			_play_menu_hover_sfx()
 		_menu_hover_angle = target_angle
 		_tween_axis_to(target_angle)
 		if _pressed_index < 0:
@@ -153,6 +170,7 @@ func _tween_buttons_for_hover(angle: float) -> void:
 func _on_button_down(index: int) -> void:
 	if _rank_open or _panel_transition_running:
 		return
+	_play_menu_click_sfx()
 	_pressed_index = index
 	_kill_button_tween(index)
 	var button: BaseButton = _buttons[index]
@@ -315,3 +333,14 @@ func _kill_menu_panel_tween(index: int) -> void:
 	if tween != null and tween.is_valid():
 		tween.kill()
 	_menu_panel_tweens[index] = null
+
+
+func _play_menu_hover_sfx() -> void:
+	var stream_index: int = randi() % _MENU_HOVER_SFX.size()
+	_menu_hover_audio.stream = _MENU_HOVER_SFX[stream_index]
+	_menu_hover_audio.play()
+
+
+func _play_menu_click_sfx() -> void:
+	_menu_click_audio.stream = _MENU_CLICK_SFX
+	_menu_click_audio.play()
