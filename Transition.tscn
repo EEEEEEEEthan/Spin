@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://choxg0x7j0m2l"]
+[gd_scene load_steps=4 format=3 uid="uid://choxg0x7j0m2l"]
+
+[ext_resource type="Script" path="res://transition_rect.gd" id="1_rect"]
 
 [sub_resource type="Shader" id="Shader_ch01m"]
 code = "shader_type canvas_item;
@@ -24,31 +26,6 @@ shader_parameter/slat_count = 16.0
 shader_parameter/power_top = 0.5
 shader_parameter/power_bottom = 2.5
 
-[sub_resource type="GDScript" id="GDScript_ch01m"]
-script/source = "@tool
-extends ColorRect
-
-@export var materials: Array[Material] = []
-@export var index: int:
-	get:
-		return index
-	set(value):
-		index = value
-		if not materials.is_empty():
-			material = materials[posmod(index, materials.size())]
-
-var _switch_tween: Tween
-
-func switch(idx: int, on: bool, duration: float):
-	index = idx
-	if _switch_tween != null and _switch_tween.is_valid():
-		_switch_tween.kill()
-	# shader：modulate.a 1=全黑 0=全透；on 仍表示揭开(透)
-	var target_alpha := 0.0 if on else 1.0
-	_switch_tween = create_tween()
-	_switch_tween.tween_property(self, \"modulate:a\", target_alpha, duration)
-"
-
 [node name="Control" type="ColorRect" unique_id=1757002296]
 material = SubResource("ShaderMaterial_ws5yv")
 anchors_preset = 15
@@ -56,6 +33,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = SubResource("GDScript_ch01m")
+script = ExtResource("1_rect")
 materials = Array[Material]([SubResource("ShaderMaterial_ws5yv")])
 index = 1

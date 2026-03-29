@@ -12,8 +12,12 @@ config_version=5
 
 config/name="Spin"
 config/description="飞刀大师"
-run/main_scene="uid://c8c7skmlgx1bw"
+run/main_scene="uid://b2kpquvc7r366"
 config/features=PackedStringArray("4.6")
+
+[autoload]
+
+Transition="*res://TransitionLayer.tscn"
 
 [dotnet]
 
