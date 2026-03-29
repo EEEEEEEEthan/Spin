@@ -1,25 +1,25 @@
 [gd_scene format=3 uid="uid://b2kpquvc7r366"]
 
-[ext_resource type="Script" uid="uid://x0ehiwggudux" path="res://game_menu.gd" id="1_game_menu"]
-[ext_resource type="Texture2D" uid="uid://dplxiw7dijtg4" path="res://Menu.png" id="1_wbfu4"]
-[ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="2_xkndl"]
-[ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="3_sb48q"]
-[ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_u44n3"]
+[ext_resource type="Script" uid="uid://x0ehiwggudux" path="res://game_menu.gd" id="1_iwfq2"]
+[ext_resource type="Texture2D" uid="uid://dplxiw7dijtg4" path="res://Menu.png" id="2_7r1g0"]
+[ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_cqjrg"]
+[ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="4_e2xy7"]
+[ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="5_fimr5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xkndl"]
-atlas = ExtResource("1_wbfu4")
+atlas = ExtResource("2_7r1g0")
 region = Rect2(21.037354, -6.937607, 1044.2412, 425.11456)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u44n3"]
-atlas = ExtResource("1_wbfu4")
+atlas = ExtResource("2_7r1g0")
 region = Rect2(10.673706, 488.8869, 1035.6818, 359.49286)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wbfu4"]
-atlas = ExtResource("1_wbfu4")
+atlas = ExtResource("2_7r1g0")
 region = Rect2(50.6167, 979.6232, 958.64764, 413.7021)
 
 [node name="Game" type="Node" unique_id=957337063]
-script = ExtResource("1_game_menu")
+script = ExtResource("1_iwfq2")
 
 [node name="Control" type="Control" parent="." unique_id=1179891066]
 layout_mode = 3
@@ -104,7 +104,7 @@ offset_right = -646.0795
 offset_bottom = 28.028366
 scale = Vector2(14.080004, 14.080004)
 pivot_offset = Vector2(13.63636, 14.829537)
-texture = ExtResource("3_u44n3")
+texture = ExtResource("3_cqjrg")
 expand_mode = 1
 stretch_mode = 5
 
@@ -117,7 +117,7 @@ offset_right = 269.82574
 offset_bottom = 837.85944
 rotation = -1.5698266
 pivot_offset = Vector2(280.70294, 261.91357)
-texture = ExtResource("3_sb48q")
+texture = ExtResource("4_e2xy7")
 expand_mode = 1
 stretch_mode = 5
 
@@ -131,6 +131,6 @@ offset_bottom = 170.59882
 rotation = -3.138707
 scale = Vector2(0.92011476, 0.92011476)
 pivot_offset = Vector2(268.22412, 222.35114)
-texture = ExtResource("2_xkndl")
+texture = ExtResource("5_fimr5")
 expand_mode = 1
 stretch_mode = 5
