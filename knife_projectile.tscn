@@ -16,17 +16,21 @@ script/source = "extends RigidBody3D
 ## 接触点处两物体世界速度的相对速度模长 ≥ 此值才扎住（含角速度带来的线速度）。≤0 表示不限制。
 @export var min_stick_relative_speed: float = 0.0
 
-## 首次刀刃碰撞后，对组 balloon 的延迟：f1(d) = 系数 / (d + ε)，与 d 负相关（d 越大延迟越短）。
+## 刀尖在本地空间的朝向（单位向量，与场景里「刀刃方向」一致）；相对速度需与此方向大致同向才扎住。
+@export var stick_tip_direction_local: Vector3 = Vector3(0, -1, 0)
+
+## 相对速度（归一化）与刀尖朝向点积下限；1 为完全同向，0 为垂直，负为背向。
+@export_range(-1.0, 1.0, 0.01) var min_stick_velocity_alignment: float = 0.5
+
+## 首次碰撞后，对组 balloon 的延迟：f1(d) = 系数 / (d + ε)，与 d 负相关（d 越大延迟越短）。
 @export var shockwave_delay_meter_scale: float = 0.15
 @export var shockwave_distance_epsilon: float = 0.05
 
 ## 冲击冲量系数：|f2| = 系数 / (d + ε)，方向与首次撞击速度 x 相同，|f2| 与 d 负相关。
 @export var shockwave_impulse_meter_scale: float = 0.0001
 
-@onready var blade: CollisionShape3D = %Blade
-
 var _stuck: bool = false
-var _first_blade_collision_recorded: bool = false
+var _first_collision_recorded: bool = false
 
 
 func _try_pop_balloon(hit_body: Node3D, contact_index: int, state: PhysicsDirectBodyState3D) -> bool:
@@ -90,7 +94,7 @@ func _apply_shockwave_impulse_to_balloon_if_valid(balloon: RigidBody3D, impulse:
 		balloon.call(\"apply_knife_shockwave_impulse\", impulse)
 
 
-func _on_first_blade_collision(state: PhysicsDirectBodyState3D) -> void:
+func _on_first_collision(state: PhysicsDirectBodyState3D) -> void:
 	var velocity_x: Vector3 = state.linear_velocity
 	state.linear_velocity = velocity_x
 	_schedule_balloon_shockwave_responses(velocity_x)
@@ -102,39 +106,35 @@ func _ready() -> void:
 	max_contacts_reported = 8
 
 
-func _collision_shape_index(target: CollisionShape3D) -> int:
-	var index := 0
-	for child in get_children():
-		if child is CollisionShape3D:
-			if child == target:
-				return index
-			index += 1
-	return 0
-
-
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if _stuck:
 		return
-	var blade_index := _collision_shape_index(blade)
 	for contact_index in state.get_contact_count():
-		if state.get_contact_local_shape(contact_index) != blade_index:
-			continue
 		var hit_body := state.get_contact_collider_object(contact_index) as Node3D
 		if hit_body == null or hit_body == self:
 			continue
-		if not _first_blade_collision_recorded:
-			_first_blade_collision_recorded = true
-			_on_first_blade_collision(state)
+		if not _first_collision_recorded:
+			_first_collision_recorded = true
+			_on_first_collision(state)
 		if _try_pop_balloon(hit_body, contact_index, state):
 			break
 		if not _hit_allows_stick(hit_body):
 			continue
-		if min_stick_relative_speed > 0.0:
-			var self_at_contact := state.get_contact_local_velocity_at_position(contact_index)
-			var other_at_contact := state.get_contact_collider_velocity_at_position(contact_index)
-			var relative_velocity := self_at_contact - other_at_contact
-			if relative_velocity.length() < min_stick_relative_speed:
-				continue
+		var self_at_contact := state.get_contact_local_velocity_at_position(contact_index)
+		var other_at_contact := state.get_contact_collider_velocity_at_position(contact_index)
+		var relative_velocity := self_at_contact - other_at_contact
+		var relative_speed: float = relative_velocity.length()
+		if min_stick_relative_speed > 0.0 and relative_speed < min_stick_relative_speed:
+			continue
+		if relative_speed < 1e-6:
+			continue
+		var tip_global: Vector3 = global_transform.basis * stick_tip_direction_local.normalized()
+		if tip_global.length_squared() < 1e-12:
+			tip_global = Vector3(0, -1, 0)
+		else:
+			tip_global = tip_global.normalized()
+		if relative_velocity.normalized().dot(tip_global) < min_stick_velocity_alignment:
+			continue
 		_stuck = true
 		state.linear_velocity = Vector3.ZERO
 		state.angular_velocity = Vector3.ZERO
@@ -161,11 +161,8 @@ grow_amount = 0.01
 next_pass = SubResource("StandardMaterial3D_itxqv")
 shading_mode = 0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_itxqv"]
-radius = 0.001
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_g2e78"]
-size = Vector3(0.025634766, 0.2969513, 0.068359375)
+size = Vector3(0.025634766, 0.2978897, 0.068359375)
 
 [node name="KnifeProjectile" type="RigidBody3D" unique_id=645211914]
 editor_description = "刀刃方向向下"
@@ -175,6 +172,8 @@ can_sleep = false
 continuous_cd = true
 script = SubResource("GDScript_itxqv")
 stick_collision_layer_mask = 4
+min_stick_relative_speed = 2.0
+min_stick_velocity_alignment = 0.7
 
 [node name="Knife" parent="." unique_id=1469815948 instance=ExtResource("1_itxqv")]
 transform = Transform3D(1.5, 0, 0, 0, -1.5, 2.2649371e-07, 0, -2.2649371e-07, -1.5, 0, 0, 0)
@@ -182,14 +181,9 @@ transform = Transform3D(1.5, 0, 0, 0, -1.5, 2.2649371e-07, 0, -2.2649371e-07, -1
 [node name="匕首" parent="Knife" index="0" unique_id=793544672]
 surface_material_override/0 = SubResource("StandardMaterial3D_g2e78")
 
-[node name="Blade" type="CollisionShape3D" parent="." unique_id=432524605]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0.00083007663, -0.18267274, -0.000442804)
-shape = SubResource("SphereShape3D_itxqv")
-
 [node name="Handle" type="CollisionShape3D" parent="." unique_id=1051444601]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00048828125, -0.029167175, 0.0005340576)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00048828125, -0.029636383, 0.0005340576)
 shape = SubResource("BoxShape3D_g2e78")
 
 [editable path="Knife"]
