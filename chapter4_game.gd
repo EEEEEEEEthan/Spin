@@ -5,8 +5,14 @@ extends Node3D
 signal all_chapter4_cleared
 
 const _STUCK_KNIFE_NEAR_TARGET_METERS: float = 0.32
+## Human_Collider/StaticBody3D 下 CollisionShape 顺序：0 髋、1 胸、2 头…
+const _HUMAN_HEAD_COLLIDER_SHAPE_INDEX: int = 2
 
 var _completion_started: bool = false
+var _head_shot: bool = false
+
+@onready var _human_renderer: HumanRenderer = $StaticBody3D2/Wheel/Human
+@onready var _human_hit_static_body: StaticBody3D = $StaticBody3D2/Wheel/Human/Human_Collider/StaticBody3D
 
 @onready var _wheel_target_nodes: Array[Node3D] = [
 	$StaticBody3D2/Wheel/Node3D,
@@ -17,6 +23,47 @@ var _completion_started: bool = false
 	$StaticBody3D2/Wheel/Node3D6,
 	$StaticBody3D2/Wheel/StaticBody3D/Node3D7,
 ]
+
+
+func _ready() -> void:
+	get_tree().node_added.connect(_on_tree_node_added)
+	for node in get_tree().get_nodes_in_group("knife_projectile"):
+		_connect_knife_stuck(node)
+
+
+func _on_tree_node_added(node: Node) -> void:
+	if node.is_in_group("knife_projectile"):
+		_connect_knife_stuck(node)
+
+
+func _connect_knife_stuck(node: Node) -> void:
+	var rigid := node as RigidBody3D
+	if rigid == null:
+		return
+	if not rigid.knife_stuck.is_connected(_on_knife_stuck):
+		rigid.knife_stuck.connect(_on_knife_stuck)
+
+
+func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int) -> void:
+	if hit_body != _human_hit_static_body:
+		return
+	if collider_shape_index != _HUMAN_HEAD_COLLIDER_SHAPE_INDEX:
+		return
+	_head_shot = true
+	_human_renderer.apply_emoji_dead()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
+			return
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			return
+		if _head_shot:
+			_human_renderer.apply_emoji_dead()
+		else:
+			_human_renderer.apply_random_emoji_one_to_four()
 
 
 func _process(_delta: float) -> void:

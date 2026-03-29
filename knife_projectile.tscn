@@ -9,6 +9,8 @@ absorbent = true
 [sub_resource type="GDScript" id="GDScript_itxqv"]
 script/source = "extends RigidBody3D
 
+signal knife_stuck(hit_body: Node3D, collider_shape_index: int)
+
 ## 组 balloon 且含 explode()：仅戳破（queue_free），飞刀不冻结、不 reparent。
 ## 命中体的 collision_layer 与此掩码有交集时才扎住并 reparent。为 0 时保持旧行为：任意碰撞体均可扎住。
 @export_flags_3d_physics var stick_collision_layer_mask: int = 0
@@ -153,6 +155,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.angular_velocity = Vector3.ZERO
 		freeze = true
 		freeze_mode = RigidBody3D.FREEZE_MODE_STATIC
+		var collider_shape_index: int = state.get_contact_collider_shape(contact_index)
+		knife_stuck.emit(hit_body, collider_shape_index)
 		call_deferred(\"_reparent_to_hit\", hit_body)
 		break
 

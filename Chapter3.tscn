@@ -30,6 +30,7 @@ const _STUCK_KNIFE_NEAR_TARGET_METERS: float = 0.32
 @onready var _trigger_area: Area3D = $\"%Human_Renderer/Human_Trigger/Area3D\"
 @onready var _animation_player: AnimationPlayer = $\"%Human_Renderer/AnimationPlayer\"
 @onready var _mirror_root: Node3D = $\"%Human_Renderer/Skeleton3D\"
+@onready var _human_renderer: HumanRenderer = $\"%Human_Renderer\"
 @onready var _wheel_target_nodes: Array[Node3D] = [
 	$StaticBody3D2/Wheel/Node3D,
 	$StaticBody3D2/Wheel/Node3D2,
@@ -52,6 +53,16 @@ func _ready() -> void:
 	if _sign_scale_x == 0.0:
 		_sign_scale_x = 1.0
 	_trigger_area.part.connect(_on_human_hit_part)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
+			return
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			return
+		_human_renderer.apply_random_emoji_one_to_four()
 
 
 func _process(_delta: float) -> void:
