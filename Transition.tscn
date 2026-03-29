@@ -3,15 +3,40 @@
 [sub_resource type="GDScript" id="GDScript_ch01m"]
 script/source = "extends ColorRect
 
+@export var materials: Array[Material] = []
+
 var _switch_tween: Tween
 
-func switch(on: bool, duration: float):
+func switch(index: int, on: bool, duration: float):
+	# index会把材质设置为材质列表里的第index个(长度取模)
+	if not materials.is_empty():
+		material = materials[posmod(index, materials.size())]
 	if _switch_tween != null and _switch_tween.is_valid():
 		_switch_tween.kill()
 	var target_alpha := 1.0 if on else 0.0
 	_switch_tween = create_tween()
 	_switch_tween.tween_property(self, \"self_modulate:a\", target_alpha, duration)
 "
+
+[sub_resource type="Shader" id="Shader_ch01m"]
+code = "shader_type canvas_item;
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+	// Called for every pixel the material is visible on.
+}
+
+//void light() {
+//	// Called for every pixel for every light affecting the CanvasItem.
+//	// Uncomment to replace the default light processing function with this one.
+//}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ws5yv"]
+shader = SubResource("Shader_ch01m")
 
 [node name="Control" type="ColorRect" unique_id=1757002296]
 anchors_preset = 15
@@ -21,3 +46,4 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = SubResource("GDScript_ch01m")
+materials = Array[Material]([SubResource("ShaderMaterial_ws5yv")])
