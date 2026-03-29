@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://n8ghmhw2f1oy" path="res://Balloon.tscn" id="3_t88pq"]
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="3_u44n3"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wr31l"]
+rough = true
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
 shading_mode = 0
 
@@ -25,6 +28,8 @@ size = Vector3(7.9804688, 4.519409, 0.18261719)
 
 [node name="Table" parent="." unique_id=200869156 instance=ExtResource("2_xkndl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.010436341, 0)
+collision_layer = 7
+physics_material_override = SubResource("PhysicsMaterial_wr31l")
 
 [node name="Balloon" parent="Table" unique_id=400769925 instance=ExtResource("3_t88pq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5796246, 0.7307588, 0)

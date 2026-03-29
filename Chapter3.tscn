@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://dngdo75b7ppo4"]
+
+[ext_resource type="PackedScene" uid="uid://bxsfl8hvrdh7b" path="res://Player.tscn" id="1_oeve8"]
+[ext_resource type="PackedScene" uid="uid://by0ecoe3gqiag" path="res://Wall.blend" id="2_h3fbr"]
+[ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="3_2orck"]
+[ext_resource type="PackedScene" uid="uid://ccu51yko7o522" path="res://Wheel.blend" id="4_4p1cm"]
+[ext_resource type="PackedScene" uid="uid://n8ghmhw2f1oy" path="res://Balloon.tscn" id="5_3sht3"]
+[ext_resource type="PackedScene" uid="uid://dahfgxxyxlf71" path="res://Human.tscn" id="6_oeve8"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gybg2"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_xkndl"]
+material = SubResource("StandardMaterial3D_gybg2")
+size = Vector3(40, 1, 40)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u44n3"]
+size = Vector3(40, 1, 40)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sb48q"]
+size = Vector3(7.9804688, 4.519409, 0.18261719)
+
+[sub_resource type="GDScript" id="GDScript_oeve8"]
+script/source = "extends StaticBody3D
+
+var time: float
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	time += delta
+	#rotation = Vector3(0, 0, time)
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_fitsj"]
+height = 0.1015625
+radius = 1.0048828
+
+[node name="Game" type="Node3D" unique_id=552426368]
+
+[node name="Player" parent="." unique_id=1151770281 instance=ExtResource("1_oeve8")]
+
+[node name="Ground" type="StaticBody3D" parent="." unique_id=1957208448]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=1396335306]
+mesh = SubResource("BoxMesh_xkndl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=377258206]
+shape = SubResource("BoxShape3D_u44n3")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=48545751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+collision_layer = 7
+collision_mask = 3
+
+[node name="Wall" parent="StaticBody3D" unique_id=1158833840 instance=ExtResource("2_h3fbr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="Cube" parent="StaticBody3D/Wall" index="0" unique_id=529368497]
+transform = Transform3D(4, 0, 0, 0, 2, 0, 0, 0, 0.09200412, 0, 2.0522444, -2)
+surface_material_override/0 = ExtResource("3_2orck")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=841732013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7597046, 0.025998116)
+shape = SubResource("BoxShape3D_sb48q")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=1727132835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0389857, 0)
+collision_layer = 7
+collision_mask = 3
+script = SubResource("GDScript_oeve8")
+
+[node name="Wheel" parent="StaticBody3D2" unique_id=1641919157 instance=ExtResource("4_4p1cm")]
+
+[node name="柱体" parent="StaticBody3D2/Wheel" index="0" unique_id=90019533]
+layers = 1048575
+surface_material_override/0 = ExtResource("3_2orck")
+
+[node name="Balloon" parent="StaticBody3D2/Wheel" unique_id=400769925 instance=ExtResource("5_3sht3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.49530602, -0.5562701, 0.09222674)
+
+[node name="Balloon2" parent="StaticBody3D2/Wheel" unique_id=1512463111 instance=ExtResource("5_3sht3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.49530602, -0.05587101, 0.09222674)
+
+[node name="Balloon3" parent="StaticBody3D2/Wheel" unique_id=807447821 instance=ExtResource("5_3sht3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.49530602, 0.64870214, 0.09222674)
+
+[node name="Balloon4" parent="StaticBody3D2/Wheel" unique_id=589811937 instance=ExtResource("5_3sht3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.46206212, 0.64870214, 0.09222674)
+
+[node name="Balloon5" parent="StaticBody3D2/Wheel" unique_id=1794893143 instance=ExtResource("5_3sht3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.52951264, -0.085315466, 0.09222674)
+
+[node name="Balloon6" parent="StaticBody3D2/Wheel" unique_id=1106021090 instance=ExtResource("5_3sht3")]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.4999733, -0.57644117, 0.09222674)
+
+[node name="Human" parent="StaticBody3D2/Wheel" unique_id=1797960747 instance=ExtResource("6_oeve8")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -0.90886337, 0.2608204)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=1922935986]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_fitsj")
+
+[editable path="StaticBody3D/Wall"]
+[editable path="StaticBody3D2/Wheel"]
