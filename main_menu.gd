@@ -105,7 +105,7 @@ func _sync_button_pivots() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _rank_open or _panel_transition_running:
+	if _rank_open or _panel_transition_running or _new_game_sequence_running:
 		return
 	var mouse_position: Vector2 = get_viewport().get_mouse_position()
 	var target_angle: float = _hover_angle_for_mouse(mouse_position)
@@ -123,7 +123,12 @@ func _notification(what: int) -> void:
 		if not is_equal_approx(_menu_hover_angle, ANGLE_IDLE):
 			_menu_hover_angle = ANGLE_IDLE
 			_tween_axis_to(ANGLE_IDLE)
-		if _pressed_index < 0 and not _rank_open and not _panel_transition_running:
+		if (
+			_pressed_index < 0
+			and not _rank_open
+			and not _panel_transition_running
+			and not _new_game_sequence_running
+		):
 			_tween_buttons_for_hover(ANGLE_IDLE)
 
 
@@ -171,7 +176,7 @@ func _tween_buttons_for_hover(angle: float) -> void:
 
 
 func _on_button_down(index: int) -> void:
-	if _rank_open or _panel_transition_running:
+	if _rank_open or _panel_transition_running or _new_game_sequence_running:
 		return
 	_play_menu_click_sfx()
 	_pressed_index = index
@@ -183,7 +188,7 @@ func _on_button_down(index: int) -> void:
 
 
 func _on_button_up(index: int) -> void:
-	if _rank_open or _panel_transition_running:
+	if _rank_open or _panel_transition_running or _new_game_sequence_running:
 		return
 	if _pressed_index != index:
 		return
@@ -214,7 +219,9 @@ func _on_new_game_pressed() -> void:
 		return
 	_new_game_sequence_running = true
 	PlayerSession.begin_new_run()
-	button_new_game.disabled = true
+	_set_main_menu_buttons_disabled(true)
+	menu_root.hide()
+	axis.hide()
 	await _run_new_game_transition()
 
 
