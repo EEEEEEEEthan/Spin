@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dxle4gtrl3hwl"]
+
+[sub_resource type="Curve" id="Curve_egopv"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1a1fb"]
+curve = SubResource("Curve_egopv")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_egopv"]
+initial_velocity_min = 2.0
+initial_velocity_max = 3.0
+scale_curve = SubResource("CurveTexture_1a1fb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_egopv"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.01
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1a1fb"]
+next_pass = SubResource("StandardMaterial3D_egopv")
+shading_mode = 0
+albedo_color = Color(0.77254903, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_e02v1"]
+material = SubResource("StandardMaterial3D_1a1fb")
+radius = 0.025
+height = 0.05
+radial_segments = 8
+rings = 8
+
+[node name="Node3D" type="GPUParticles3D" unique_id=1132431225]
+amount = 64
+lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_egopv")
+draw_pass_1 = SubResource("SphereMesh_e02v1")
