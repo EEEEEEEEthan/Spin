@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bf5s6oti4y585" path="res://名人堂UI.png" id="1_7ylcw"]
 [ext_resource type="Texture2D" uid="uid://41an874li5ou" path="res://关闭.png" id="2_k6kda"]
+[ext_resource type="Script" uid="uid://dop5ng15jm3ft" path="res://rank_panel.gd" id="3_1xv11"]
 
 [node name="Rank" type="NinePatchRect" unique_id=1965282946]
 anchors_preset = 15
@@ -20,6 +21,7 @@ patch_margin_top = 133
 patch_margin_right = 75
 patch_margin_bottom = 41
 axis_stretch_vertical = 2
+script = ExtResource("3_1xv11")
 
 [node name="Label" type="Label" parent="." unique_id=2093993946]
 layout_mode = 1
@@ -44,11 +46,13 @@ anchor_left = 0.044000003
 anchor_top = 0.208
 anchor_right = 0.97200006
 anchor_bottom = 0.906
-offset_left = -0.1760025
-offset_top = 0.11199951
-offset_right = 0.11193848
-offset_bottom = 0.083984375
+offset_left = 42.823997
+offset_top = 29.112
+offset_right = -42.88806
+offset_bottom = -28.916016
 mouse_filter = 0
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer" unique_id=666513273]
 layout_mode = 2

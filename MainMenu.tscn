@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://b01aruf1nveqi" path="res://新游戏.png" id="3_cqjrg"]
 [ext_resource type="Texture2D" uid="uid://b3gaycqybvpp8" path="res://名人堂.png" id="4_e2xy7"]
 [ext_resource type="Texture2D" uid="uid://di6qg6oawnmq4" path="res://退出.png" id="5_fimr5"]
+[ext_resource type="Script" path="res://main_menu.gd" id="6_76k5d"]
+[ext_resource type="PackedScene" path="res://Rank.tscn" id="7_hallf"]
 
 [sub_resource type="GDScript" id="GDScript_qoqlk"]
 script/source = "extends Node
@@ -195,7 +197,7 @@ func _run_new_game_transition() -> void:
 "
 
 [node name="MainMenu" type="Node" unique_id=957337063]
-script = SubResource("GDScript_qoqlk")
+script = ExtResource("6_76k5d")
 
 [node name="Control" type="Control" parent="." unique_id=1179891066]
 layout_mode = 3
@@ -308,3 +310,5 @@ pivot_offset = Vector2(268.22412, 222.35114)
 texture = ExtResource("5_fimr5")
 expand_mode = 1
 stretch_mode = 5
+
+[node name="Rank" parent="." instance=ExtResource("7_hallf")]

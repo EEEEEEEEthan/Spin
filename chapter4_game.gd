@@ -43,13 +43,15 @@ func _connect_knife_stuck(node: Node) -> void:
 	var rigid := node as RigidBody3D
 	if rigid == null:
 		return
-	if not rigid.knife_stuck.is_connected(_on_knife_stuck):
-		rigid.knife_stuck.connect(_on_knife_stuck)
+	var stuck_handler: Callable = _on_knife_stuck.bind(rigid)
+	if not rigid.knife_stuck.is_connected(stuck_handler):
+		rigid.knife_stuck.connect(stuck_handler)
 
 
-func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int) -> void:
+func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, knife: RigidBody3D) -> void:
 	if hit_body != _human_hit_static_body:
 		return
+	PlayerSession.register_human_hit(knife)
 	if collider_shape_index != _HUMAN_HEAD_COLLIDER_SHAPE_INDEX:
 		return
 	_head_shot = true

@@ -6,6 +6,7 @@
 
 [node name="Icon" type="TextureRect" parent="." unique_id=1022940024]
 unique_name_in_owner = true
+visible = false
 self_modulate = Color(0.8782256, 0.64886516, 0.5985552, 1)
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
@@ -16,6 +17,7 @@ stretch_mode = 4
 [node name="Name" type="Label" parent="." unique_id=1787714422]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 76
 text = "名字"
@@ -24,6 +26,7 @@ text = "名字"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
+mouse_filter = 1
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 76
 text = "108"
