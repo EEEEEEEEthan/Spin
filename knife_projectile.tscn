@@ -16,9 +16,17 @@ script/source = "extends RigidBody3D
 ## 接触点处两物体世界速度的相对速度模长 ≥ 此值才扎住（含角速度带来的线速度）。≤0 表示不限制。
 @export var min_stick_relative_speed: float = 0.0
 
+## 首次刀刃碰撞后，对组 balloon 的延迟：f1(d) = 系数 / (d + ε)，与 d 负相关（d 越大延迟越短）。
+@export var shockwave_delay_meter_scale: float = 0.15
+@export var shockwave_distance_epsilon: float = 0.05
+
+## 冲击冲量系数：|f2| = 系数 / (d + ε)，方向与首次撞击速度 x 相同，|f2| 与 d 负相关。
+@export var shockwave_impulse_meter_scale: float = 0.0001
+
 @onready var blade: CollisionShape3D = %Blade
 
 var _stuck: bool = false
+var _first_blade_collision_recorded: bool = false
 
 
 func _try_pop_balloon(hit_body: Node3D, contact_index: int, state: PhysicsDirectBodyState3D) -> bool:
@@ -43,6 +51,49 @@ func _hit_allows_stick(hit_body: Node) -> bool:
 	if collision_object == null:
 		return false
 	return (collision_object.collision_layer & stick_collision_layer_mask) != 0
+
+
+func _shockwave_delay_from_distance(distance: float) -> float:
+	return shockwave_delay_meter_scale / (distance + shockwave_distance_epsilon)
+
+
+func _shockwave_impulse_from_distance_and_velocity(distance: float, velocity_x: Vector3) -> Vector3:
+	var speed: float = velocity_x.length()
+	if speed < 1e-6:
+		return Vector3.ZERO
+	var magnitude: float = shockwave_impulse_meter_scale / (distance + shockwave_distance_epsilon)
+	return velocity_x.normalized() * magnitude
+
+
+func _schedule_balloon_shockwave_responses(velocity_x: Vector3) -> void:
+	var tree := get_tree()
+	if tree == null:
+		return
+	var origin: Vector3 = global_position
+	for node in tree.get_nodes_in_group(\"balloon\"):
+		var balloon := node as RigidBody3D
+		if balloon == null:
+			continue
+		var distance: float = origin.distance_to(balloon.global_position)
+		var delay_seconds: float = _shockwave_delay_from_distance(distance)
+		var impulse: Vector3 = _shockwave_impulse_from_distance_and_velocity(distance, velocity_x)
+		if impulse.length_squared() < 1e-12:
+			continue
+		tree.create_timer(delay_seconds).timeout.connect(
+			_apply_shockwave_impulse_to_balloon_if_valid.bind(balloon, impulse), CONNECT_ONE_SHOT)
+
+
+func _apply_shockwave_impulse_to_balloon_if_valid(balloon: RigidBody3D, impulse: Vector3) -> void:
+	if not is_instance_valid(balloon) or not balloon.is_inside_tree():
+		return
+	if balloon.has_method(\"apply_knife_shockwave_impulse\"):
+		balloon.call(\"apply_knife_shockwave_impulse\", impulse)
+
+
+func _on_first_blade_collision(state: PhysicsDirectBodyState3D) -> void:
+	var velocity_x: Vector3 = state.linear_velocity
+	state.linear_velocity = velocity_x
+	_schedule_balloon_shockwave_responses(velocity_x)
 
 
 func _ready() -> void:
@@ -71,6 +122,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		var hit_body := state.get_contact_collider_object(contact_index) as Node3D
 		if hit_body == null or hit_body == self:
 			continue
+		if not _first_blade_collision_recorded:
+			_first_blade_collision_recorded = true
+			_on_first_blade_collision(state)
 		if _try_pop_balloon(hit_body, contact_index, state):
 			break
 		if not _hit_allows_stick(hit_body):

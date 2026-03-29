@@ -4,15 +4,36 @@
 [ext_resource type="Material" uid="uid://qr6ocuxmi0vw" path="res://OutlineMaterial.tres" id="2_rpx6m"]
 [ext_resource type="Texture2D" uid="uid://bso4h3xn18wc7" path="res://Explode.png" id="4_qu23q"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gxany"]
+bounce = 0.8
+
 [sub_resource type="GDScript" id="GDScript_gxany"]
 script/source = "extends RigidBody3D
 
 @onready var balloon_visual: Node3D = $Balloon
 @onready var explode_effect: MeshInstance3D = %Explode
 
+## 冲量作用点在本体局部坐标（相对 RigidBody3D 原点），偏离质心即可产生摆动且线轴锁仍生效。
+@export var knife_shockwave_impulse_offset_local: Vector3 = Vector3(0, 0.1, 0)
+
+## 额外随机角冲量模长（世界空间），每次冲击在随机轴上施加。
+@export var knife_shockwave_random_torque_impulse: float = 0.000015
+
 
 func _ready() -> void:
 	add_to_group(\"balloon\")
+
+
+## 飞刀冲击波：不解除线性轴锁；在局部偏移点施冲量 + 随机角冲量（调度与 f1/f2 在 knife_projectile）。
+func apply_knife_shockwave_impulse(impulse_world: Vector3) -> void:
+	if freeze:
+		return
+	var hit_point_world: Vector3 = global_transform * knife_shockwave_impulse_offset_local
+	apply_impulse(impulse_world, hit_point_world)
+	if knife_shockwave_random_torque_impulse > 0.0:
+		var random_axis: Vector3 = Vector3(randf() * 2.0 - 1.0, randf() * 2.0 - 1.0, randf() * 2.0 - 1.0)
+		if random_axis.length_squared() > 1e-8:
+			apply_torque_impulse(random_axis.normalized() * knife_shockwave_random_torque_impulse)
 
 
 func explode() -> void:
@@ -46,6 +67,7 @@ axis_lock_linear_x = true
 axis_lock_linear_y = true
 axis_lock_linear_z = true
 mass = 0.001
+physics_material_override = SubResource("PhysicsMaterial_gxany")
 gravity_scale = 0.01
 center_of_mass_mode = 1
 center_of_mass = Vector3(0, 0.01, 0)
