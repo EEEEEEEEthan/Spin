@@ -257,6 +257,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.518993, -0.60388994, 0.095
 [node name="Node3D6" parent="StaticBody3D2/Wheel" unique_id=173073039 instance=ExtResource("6_2orck")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.518993, -0.08319962, 0.09549025)
 
+[node name="Label3D" type="Label3D" parent="StaticBody3D2/Wheel" unique_id=122791934]
+transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0, 0.88351727, 0.1549899)
+text = "Ethan"
+font_size = 151
+outline_size = 45
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=1922935986]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1, 0)
 shape = SubResource("CylinderShape3D_fitsj")
