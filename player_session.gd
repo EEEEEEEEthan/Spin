@@ -27,20 +27,22 @@ func begin_new_run() -> void:
 	_pending_rank_entry_id = -1
 
 
-func register_human_hit(knife: Node) -> void:
+func register_human_hit(knife: Node, play_hit_sfx: bool = true, hit_sfx_volume_db: float = 0.0) -> void:
 	var knife_id: int = knife.get_instance_id()
 	if _counted_human_hit_knife_ids.has(knife_id):
 		return
 	_counted_human_hit_knife_ids[knife_id] = true
 	current_human_hit_count += 1
-	_play_human_hit_sfx()
+	if play_hit_sfx:
+		_play_human_hit_sfx(hit_sfx_volume_db)
 
 
-func _play_human_hit_sfx() -> void:
+func _play_human_hit_sfx(volume_db: float) -> void:
 	var stream_index: int = randi() % _HUMAN_HIT_SFX.size()
 	var hit_player := AudioStreamPlayer.new()
 	add_child(hit_player)
 	hit_player.stream = _HUMAN_HIT_SFX[stream_index]
+	hit_player.volume_db = volume_db
 	hit_player.finished.connect(hit_player.queue_free)
 	hit_player.play()
 

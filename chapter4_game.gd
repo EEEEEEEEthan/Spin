@@ -9,6 +9,8 @@ const _KNIFE_BLOOD_LOCAL_POSITION: Vector3 = Vector3(0.0, -0.12, 0.0)
 const _STUCK_KNIFE_NEAR_TARGET_METERS: float = 0.32
 ## Human_Collider/StaticBody3D 下 CollisionShape 顺序：0 髋、1 胸、2 头…
 const _HUMAN_HEAD_COLLIDER_SHAPE_INDEX: int = 2
+## 第四关受击音效相对默认（0 dB）大幅增益
+const _HUMAN_HIT_SFX_VOLUME_DB: float = 20.0
 
 var _completion_started: bool = false
 var _head_shot: bool = false
@@ -53,7 +55,7 @@ func _connect_knife_stuck(node: Node) -> void:
 func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, should_spawn_blood: bool, knife: RigidBody3D) -> void:
 	if hit_body != _human_hit_static_body:
 		return
-	PlayerSession.register_human_hit(knife)
+	PlayerSession.register_human_hit(knife, true, _HUMAN_HIT_SFX_VOLUME_DB)
 	if should_spawn_blood:
 		_spawn_blood_on_knife(knife)
 	if collider_shape_index != _HUMAN_HEAD_COLLIDER_SHAPE_INDEX:

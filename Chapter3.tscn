@@ -82,7 +82,7 @@ func _on_human_hit_part(body_part: StringName, knife: Node3D) -> void:
 	if _knives_triggered.has(knife_id):
 		return
 	_knives_triggered[knife_id] = true
-	PlayerSession.register_human_hit(knife)
+	PlayerSession.register_human_hit(knife, false)
 	_start_or_extend_preview(resolved[0], resolved[1])
 
 
