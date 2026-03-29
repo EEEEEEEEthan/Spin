@@ -63,6 +63,40 @@ height = 0.48168945
 radius = 0.11621094
 height = 0.6726074
 
+[sub_resource type="GDScript" id="GDScript_human_trigger"]
+script/source = "extends Area3D
+
+## 飞刀（knife_projectile 组）进入某部位时发出；部位名与 Collision_* 后缀一致；knife 为飞刀刚体（用于去重等）。
+signal part(body_part: StringName, knife: Node3D)
+
+@export var knife_projectile_group: StringName = &\"knife_projectile\"
+
+var _local_shape_to_part: Dictionary = {}
+
+
+func _ready() -> void:
+	var shape_index := 0
+	for child in get_children():
+		if child is CollisionShape3D:
+			var collision_shape := child as CollisionShape3D
+			if collision_shape.shape == null:
+				continue
+			var node_name := String(collision_shape.name)
+			if node_name.begins_with(\"Collision_\"):
+				_local_shape_to_part[shape_index] = StringName(node_name.trim_prefix(\"Collision_\"))
+			shape_index += 1
+	body_shape_entered.connect(_on_body_shape_entered)
+
+
+func _on_body_shape_entered(_body_rid: RID, body: Node3D, _body_shape_index: int, local_shape_index: int) -> void:
+	if not body.is_in_group(knife_projectile_group):
+		return
+	var body_part: Variant = _local_shape_to_part.get(local_shape_index)
+	if body_part == null:
+		return
+	part.emit(body_part, body)
+"
+
 [node name="Human" unique_id=1797960747 instance=ExtResource("1_e7r5a")]
 
 [node name="身体" parent="Skeleton3D" parent_id_path=PackedInt32Array(304171964) index="0" unique_id=1723885047]
@@ -70,6 +104,7 @@ visible = false
 surface_material_override/0 = ExtResource("2_k36v7")
 
 [node name="Area3D" type="Area3D" parent="." index="2" unique_id=343215769]
+script = SubResource("GDScript_human_trigger")
 
 [node name="Collision_髋" type="CollisionShape3D" parent="Area3D" index="0" unique_id=1370157010]
 process_mode = 4
