@@ -18,6 +18,7 @@ config/features=PackedStringArray("4.6")
 [autoload]
 
 Transition="*res://TransitionLayer.tscn"
+PlayerSession="*res://player_session.gd"
 
 [dotnet]
 

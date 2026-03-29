@@ -45,4 +45,4 @@ theme_override_font_sizes/font_size = 110
 theme_override_styles/normal = SubResource("StyleBoxEmpty_n5svd")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_n5svd")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_n5svd")
-text = "姓名:"
+placeholder_text = "请输入姓名"

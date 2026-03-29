@@ -11,6 +11,7 @@ const _HUMAN_HEAD_COLLIDER_SHAPE_INDEX: int = 2
 var _completion_started: bool = false
 var _head_shot: bool = false
 
+@onready var _player_name_label: Label3D = %Label3D
 @onready var _human_renderer: HumanRenderer = $StaticBody3D2/Wheel/Human
 @onready var _human_hit_static_body: StaticBody3D = $StaticBody3D2/Wheel/Human/Human_Collider/StaticBody3D
 
@@ -26,6 +27,8 @@ var _head_shot: bool = false
 
 
 func _ready() -> void:
+	if PlayerSession.display_name != "":
+		_player_name_label.text = PlayerSession.display_name
 	get_tree().node_added.connect(_on_tree_node_added)
 	for node in get_tree().get_nodes_in_group("knife_projectile"):
 		_connect_knife_stuck(node)
