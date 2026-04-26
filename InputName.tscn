@@ -19,6 +19,12 @@ func _ready() -> void:
 	_visible_char_regex.compile(\"\\\\S\")
 	_line_edit.max_length = MAX_DISPLAY_NAME_LENGTH
 	_line_edit.text_submitted.connect(_on_line_edit_text_submitted)
+	LocaleConfig.locale_changed.connect(_refresh_line_edit_locale)
+	_refresh_line_edit_locale()
+
+
+func _refresh_line_edit_locale() -> void:
+	_line_edit.placeholder_text = tr(\"请输入姓名\")
 
 
 func _on_line_edit_text_submitted(_new_text: String) -> void:

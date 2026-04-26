@@ -91,13 +91,13 @@ func get_local_user_id_for_ui() -> int:
 
 func get_recommended_session_display_name() -> String:
 	if _steam == null:
-		return "玩家"
+		return tr("玩家")
 	var sid: int = int(_steam.getSteamID())
 	if sid == 0:
-		return "玩家"
+		return tr("玩家")
 	var persona: String = String(_steam.getFriendPersonaName(sid)).strip_edges()
 	if persona.is_empty():
-		return "玩家"
+		return tr("玩家")
 	return persona
 
 
@@ -136,7 +136,7 @@ func request_global_leaderboard_async() -> void:
 		var global_rank: int = int(entry.get("global_rank", 0))
 		var persona: String = _steam.getFriendPersonaName(steam_id)
 		if persona.is_empty():
-			persona = "玩家"
+			persona = tr("玩家")
 		var display_name: String = persona
 		if global_rank > 0:
 			display_name = "%d. %s" % [global_rank, persona]

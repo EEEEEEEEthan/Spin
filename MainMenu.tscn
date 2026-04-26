@@ -24,7 +24,7 @@ metadata/_custom_type_script = "uid://xqi7kv2y70eo"
 [node name="MainMenu" type="Node" unique_id=957337063]
 script = ExtResource("6_76k5d")
 
-[node name="Control2" type="Button" parent="." unique_id=1273593812]
+[node name="Button_Language" type="Button" parent="." unique_id=1273593812]
 unique_name_in_owner = true
 offset_left = 899.0
 offset_top = 577.0
@@ -34,7 +34,7 @@ theme_type_variation = &"Button_Menu"
 theme_override_font_sizes/font_size = 43
 text = "简体中文"
 
-[node name="TextureRect" type="TextureRect" parent="Control2" unique_id=1130411325]
+[node name="TextureRect" type="TextureRect" parent="Button_Language" unique_id=1130411325]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -48,7 +48,7 @@ texture = SubResource("Texture2D_cqjrg")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect3" type="TextureRect" parent="Control2" unique_id=219311860]
+[node name="TextureRect3" type="TextureRect" parent="Button_Language" unique_id=219311860]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -62,7 +62,7 @@ texture = SubResource("Texture2D_7r1g0")
 expand_mode = 1
 stretch_mode = 4
 
-[node name="TextureRect2" type="TextureRect" parent="Control2" unique_id=867244246]
+[node name="TextureRect2" type="TextureRect" parent="Button_Language" unique_id=867244246]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -81,64 +81,37 @@ stretch_mode = 4
 flip_h = true
 flip_v = true
 
-[node name="Control" type="Control" parent="." unique_id=1179891066]
-layout_mode = 3
+[node name="Control" type="VBoxContainer" parent="." unique_id=564685003]
 anchors_preset = 9
 anchor_bottom = 1.0
 offset_left = 59.0
 offset_top = 58.0
-offset_right = 451.0
+offset_right = 613.0
 offset_bottom = -43.0
 grow_vertical = 2
 pivot_offset_ratio = Vector2(0, 0.5)
+theme_override_constants/separation = 39
 
 [node name="Button_NewGame" type="Button" parent="Control" unique_id=1377451860]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.024
-anchor_top = 0.004
-anchor_right = 1.013
-anchor_bottom = 0.31800002
-offset_left = 0.12800026
-offset_top = -0.18799925
-offset_right = 0.11099243
-offset_bottom = 0.053985596
-pivot_offset_ratio = Vector2(0.5, 0.5)
+layout_mode = 2
 theme_type_variation = &"Button_Menu"
 text = "新游戏"
+alignment = 0
 
 [node name="Button_Rank" type="Button" parent="Control" unique_id=469182543]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.029000001
-anchor_top = 0.316
-anchor_right = 1.018
-anchor_bottom = 0.63100004
-offset_left = -0.13700008
-offset_top = 0.147995
-offset_right = -0.1539917
-offset_bottom = -0.15701294
-pivot_offset_ratio = Vector2(0.5, 0.5)
+layout_mode = 2
 theme_type_variation = &"Button_Menu"
 text = "名人堂"
+alignment = 0
 
 [node name="Button_Quit" type="Button" parent="Control" unique_id=900587493]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.031000001
-anchor_top = 0.65400004
-anchor_right = 1.0200001
-anchor_bottom = 0.96900004
-offset_left = -0.043001175
-offset_top = 0.2619629
-offset_right = -0.060058594
-offset_bottom = -0.043029785
-pivot_offset_ratio = Vector2(0.5, 0.5)
+layout_mode = 2
 theme_type_variation = &"Button_Menu"
 text = "退出"
+alignment = 0
 
 [node name="Axis" type="Control" parent="." unique_id=2043143782]
 unique_name_in_owner = true

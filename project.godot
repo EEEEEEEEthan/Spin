@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.6")
 
 [autoload]
 
+LocaleConfig="*res://locale_config.gd"
 SteamBridge="*res://steam_bridge.gd"
 Transition="*res://TransitionLayer.tscn"
 PlayerSession="*res://player_session.gd"

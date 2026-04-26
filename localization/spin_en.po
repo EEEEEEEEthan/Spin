@@ -1,0 +1,32 @@
+# Spin 界面英文
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"X-Godot-Project-Locale: en\n"
+
+msgid "新游戏"
+msgstr "New Game"
+
+msgid "名人堂"
+msgstr "Hall of Fame"
+
+msgid "退出"
+msgstr "Quit"
+
+msgid "消灭气球"
+msgstr "Pop the balloons"
+
+msgid "还没有成绩"
+msgstr "No scores yet"
+
+msgid "玩家"
+msgstr "Player"
+
+msgid "请输入姓名"
+msgstr "Enter your name"
+
+msgid "英语"
+msgstr "English"
+
+msgid "简体中文"
+msgstr "Simplified Chinese"

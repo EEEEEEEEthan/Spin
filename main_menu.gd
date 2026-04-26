@@ -16,7 +16,6 @@ const BTN_SCALE_PRESS := 0.88
 const BTN_HOVER_SEC := 0.24
 const BTN_PRESS_SEC := 0.07
 
-const _NEW_GAME_INTRO_TEXT := "消灭气球"
 const _OVERLAY_SHOW_SEC := 0.35
 const _DELAY_BEFORE_TYPEWRITER_SEC := 2.0
 const _TYPEWRITER_CHAR_SEC := 0.1
@@ -40,6 +39,7 @@ const _MENU_CLICK_VOLUME_DB := 18.0
 @onready var button_new_game: BaseButton = %Button_NewGame
 @onready var button_rank: BaseButton = %Button_Rank
 @onready var button_quit: BaseButton = %Button_Quit
+@onready var button_language: BaseButton = %Button_Language
 @onready var menu_root: Control = $Control
 @onready var rank_panel = $Rank
 
@@ -83,6 +83,9 @@ func _ready() -> void:
 	button_quit.pressed.connect(_on_quit_pressed)
 	rank_panel.close_requested.connect(_on_rank_close_requested)
 	rank_panel.hide_instant()
+	LocaleConfig.locale_changed.connect(_on_locale_config_changed)
+	button_language.pressed.connect(_on_language_button_pressed)
+	_apply_main_menu_locale()
 	set_process(true)
 	call_deferred(&"_sync_button_pivots")
 	_pending_rank_entry_id = PlayerSession.consume_pending_rank_entry_id()
@@ -230,7 +233,7 @@ func _run_new_game_transition() -> void:
 	PlayerSession.display_name = SteamBridge.get_recommended_session_display_name()
 	Transition.set_overlay_blocks_input(true)
 	await get_tree().create_timer(_DELAY_BEFORE_TYPEWRITER_SEC).timeout
-	await Transition.typewriter_display(_NEW_GAME_INTRO_TEXT, _TYPEWRITER_CHAR_SEC)
+	await Transition.typewriter_display(tr("消灭气球"), _TYPEWRITER_CHAR_SEC)
 	await get_tree().create_timer(_HOLD_AFTER_INTRO_SEC).timeout
 	get_tree().change_scene_to_packed(preload("res://Game.tscn"))
 
@@ -312,9 +315,25 @@ func _close_rank_panel() -> void:
 	_set_main_menu_buttons_disabled(false)
 
 
+func _on_locale_config_changed(_locale: String) -> void:
+	_apply_main_menu_locale()
+
+
+func _on_language_button_pressed() -> void:
+	LocaleConfig.cycle_to_next_supported_locale()
+
+
+func _apply_main_menu_locale() -> void:
+	button_new_game.text = tr("新游戏")
+	button_rank.text = tr("名人堂")
+	button_quit.text = tr("退出")
+	button_language.text = LocaleConfig.get_language_button_caption()
+
+
 func _set_main_menu_buttons_disabled(disabled: bool) -> void:
 	for button in _buttons:
 		button.disabled = disabled
+	button_language.disabled = disabled
 
 
 func _hidden_right_position(base_position: Vector2) -> Vector2:

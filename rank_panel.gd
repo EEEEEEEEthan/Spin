@@ -7,10 +7,12 @@ const _RANK_ITEM_SCENE := preload("res://RankItem.tscn")
 const _FOCUS_SCROLL_SEC := 0.58
 const _ICON_PULSE_SEC := 0.32
 
+@onready var _title_label: Label = %LabelTitle
 @onready var _scroll_container: ScrollContainer = $ScrollContainer
 @onready var _list_container: VBoxContainer = $ScrollContainer/VBoxContainer
 @onready var _close_button: TextureButton = $TextureButton
 
+var _empty_state_label: Label
 var _highlight_item: Control = null
 var _highlight_icon: TextureRect = null
 var _highlight_tween: Tween
@@ -21,6 +23,8 @@ var _drag_scrolling: bool = false
 func _ready() -> void:
 	_close_button.pressed.connect(_on_close_pressed)
 	_scroll_container.gui_input.connect(_on_scroll_container_gui_input)
+	LocaleConfig.locale_changed.connect(_on_locale_config_changed)
+	_apply_title_locale()
 
 
 func prepare_for_open_async(focus_entry_id: int) -> void:
@@ -40,6 +44,7 @@ func hide_instant() -> void:
 
 
 func _rebuild_entries(focus_entry_id: int) -> void:
+	_empty_state_label = null
 	_highlight_item = null
 	_highlight_icon = null
 	for child in _list_container.get_children():
@@ -57,7 +62,7 @@ func _rebuild_entries(focus_entry_id: int) -> void:
 		var score_label: Label = item_root.get_node("Score") as Label
 		var is_highlighted: bool = int(rank_entry.get("id", -1)) == focus_entry_id
 		icon.visible = is_highlighted
-		name_label.text = String(rank_entry.get("name", "玩家"))
+		name_label.text = String(rank_entry.get("name", tr("玩家")))
 		score_label.text = str(int(rank_entry.get("score", 0)))
 		_list_container.add_child(item_root)
 		if is_highlighted:
@@ -68,7 +73,8 @@ func _rebuild_entries(focus_entry_id: int) -> void:
 
 func _add_empty_state() -> void:
 	var empty_label := Label.new()
-	empty_label.text = "还没有成绩"
+	_empty_state_label = empty_label
+	empty_label.text = tr("还没有成绩")
 	empty_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	empty_label.add_theme_color_override("font_color", Color(0, 0, 0, 1))
 	empty_label.add_theme_font_size_override("font_size", 64)
@@ -137,3 +143,13 @@ func _apply_drag_scroll(mouse_relative_y: float) -> void:
 
 func _on_close_pressed() -> void:
 	close_requested.emit()
+
+
+func _on_locale_config_changed(_locale: String) -> void:
+	_apply_title_locale()
+	if _empty_state_label != null and is_instance_valid(_empty_state_label):
+		_empty_state_label.text = tr("还没有成绩")
+
+
+func _apply_title_locale() -> void:
+	_title_label.text = tr("名人堂")
