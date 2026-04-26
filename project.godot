@@ -32,7 +32,7 @@ naming/script_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/godot_editable_texture/plugin.cfg", "res://addons/godotsteam/plugin.cfg")
 
 [gui]
 
