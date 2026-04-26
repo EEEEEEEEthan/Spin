@@ -24,7 +24,7 @@ PlayerSession="*res://player_session.gd"
 
 [display]
 
-window/size/viewport_width=1366
+window/size/viewport_width=1200
 window/size/viewport_height=768
 window/size/initial_position_type=4
 window/stretch/mode="canvas_items"
