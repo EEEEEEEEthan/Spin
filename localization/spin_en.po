@@ -8,13 +8,13 @@ msgid "新游戏"
 msgstr "New Game"
 
 msgid "名人堂"
-msgstr "Hall of Fame"
+msgstr "Ranks"
 
 msgid "退出"
 msgstr "Quit"
 
 msgid "消灭气球"
-msgstr "Pop the balloons"
+msgstr "Pop balloons"
 
 msgid "还没有成绩"
 msgstr "No scores yet"
@@ -30,3 +30,9 @@ msgstr "English"
 
 msgid "简体中文"
 msgstr "Simplified Chinese"
+
+msgid "游戏结束喽！"
+msgstr "Game over!"
+
+msgid "你中了%d刀！"
+msgstr "You took %d hits!"

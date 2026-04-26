@@ -7,7 +7,8 @@ const _SETTINGS_FILE := "user://language_settings.json"
 const _EN_TRANSLATION_PATH := "res://localization/spin_en.po"
 ## 与 spin_en.po 中 msgid 及项目内 tr 一致，防止仅有 en 时 zh_CN 走 fallback 仍成英文
 const _MSGIDS_ZH: PackedStringArray = [
-	"新游戏", "名人堂", "退出", "消灭气球", "还没有成绩", "玩家", "请输入姓名", "英语", "简体中文"
+	"新游戏", "名人堂", "退出", "消灭气球", "还没有成绩", "玩家", "请输入姓名", "英语", "简体中文",
+	"游戏结束喽！", "你中了%d刀！",
 ]
 const SUPPORTED_LOCALES: Array[String] = ["zh_CN", "en"]
 
