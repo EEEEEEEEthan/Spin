@@ -5,18 +5,20 @@ extends Node
 const _SETTINGS_FILE := "user://language_settings.json"
 ## 不写入 project.godot 的 translation 列表，避免启动器/编辑器预解析 PO 时崩或版本差异。
 const _EN_TRANSLATION_PATH := "res://localization/spin_en.po"
+const _ZH_TW_TRANSLATION_PATH := "res://localization/spin_zh_TW.po"
 ## 与 spin_en.po 中 msgid 及项目内 tr 一致，防止仅有 en 时 zh_CN 走 fallback 仍成英文
 const _MSGIDS_ZH: PackedStringArray = [
-	"新游戏", "名人堂", "退出", "消灭气球", "还没有成绩", "玩家", "请输入姓名", "英语", "简体中文",
+	"新游戏", "名人堂", "退出", "消灭气球", "还没有成绩", "玩家", "请输入姓名", "英语", "简体中文", "繁体中文",
 	"游戏结束喽！", "你中了%d刀！",
 ]
-const SUPPORTED_LOCALES: Array[String] = ["zh_CN", "en"]
+const SUPPORTED_LOCALES: Array[String] = ["zh_CN", "zh_TW", "en"]
 
 signal locale_changed(locale: String)
 
 func _enter_tree() -> void:
 	_register_chinese_identity_translation()
-	_register_english_translation_from_file()
+	_register_translation_from_po(_EN_TRANSLATION_PATH)
+	_register_translation_from_po(_ZH_TW_TRANSLATION_PATH)
 	apply_startup_locale_from_save_or_system()
 
 
@@ -28,21 +30,25 @@ func _register_chinese_identity_translation() -> void:
 	TranslationServer.add_translation(t)
 
 
-func _register_english_translation_from_file() -> void:
-	if not ResourceLoader.exists(_EN_TRANSLATION_PATH):
-		push_warning("未找到英文翻译资源: %s" % _EN_TRANSLATION_PATH)
+func _register_translation_from_po(path: String) -> void:
+	if not ResourceLoader.exists(path):
+		push_warning("未找到翻译资源: %s" % path)
 		return
-	var loaded: Resource = load(_EN_TRANSLATION_PATH) as Resource
+	var loaded: Resource = load(path) as Resource
 	if loaded is Translation:
 		TranslationServer.add_translation(loaded as Translation)
 		return
-	push_warning("资源不是 Translation，已跳过: %s" % _EN_TRANSLATION_PATH)
+	push_warning("资源不是 Translation，已跳过: %s" % path)
 
 
 func get_language_button_caption() -> String:
-	if TranslationServer.get_locale() == "en":
-		return tr("英语")
-	return tr("简体中文")
+	match TranslationServer.get_locale():
+		"en":
+			return tr("英语")
+		"zh_TW":
+			return tr("繁体中文")
+		_:
+			return tr("简体中文")
 
 
 func set_locale_code(locale: String) -> void:
@@ -92,6 +98,8 @@ func _read_saved_locale_code() -> String:
 
 func _map_system_locale(os_locale: String) -> String:
 	var normalized: String = os_locale.to_lower().replace("-", "_")
+	if normalized == "zh_tw" or normalized == "zh_hk" or normalized == "zh_mo":
+		return "zh_TW"
 	if normalized.begins_with("zh"):
 		return "zh_CN"
 	if normalized.begins_with("en"):
