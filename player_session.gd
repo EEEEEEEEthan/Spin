@@ -18,6 +18,10 @@ var _pending_rank_entry_id: int = -1
 
 
 func _ready() -> void:
+	call_deferred("_connect_steam_ranking_signal")
+
+
+func _connect_steam_ranking_signal() -> void:
 	SteamBridge.ranking_mode_ready.connect(_on_steam_ranking_mode_ready, CONNECT_ONE_SHOT)
 
 

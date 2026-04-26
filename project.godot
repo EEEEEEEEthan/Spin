@@ -25,14 +25,6 @@ PlayerSession="*res://player_session.gd"
 
 project/assembly_name="UnnamedProject"
 
-[steam]
-
-initialization/app_id=0
-initialization/initialize_on_startup=false
-initialization/embed_callbacks=false
-leaderboard/human_hits_internal_name="SPIN_HUMAN_HITS"
-multiplayer_peer/max_channels=4
-
 [editor]
 
 naming/scene_name_casing=1
@@ -75,3 +67,11 @@ pen_ink_light_direction={
 "type": "vec3",
 "value": Vector3(-0.4, -0.8, -0.35)
 }
+
+[steam]
+
+initialization/app_id=480
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false
+leaderboard/human_hits_internal_name="SPIN_HUMAN_HITS"
+multiplayer_peer/max_channels=4

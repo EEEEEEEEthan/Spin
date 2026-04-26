@@ -14,12 +14,8 @@ var _initialized: bool = false
 var _leaderboard_ready: bool = false
 var _cached_rows: Array[Dictionary] = []
 
-
-func _ready() -> void:
-	call_deferred("_begin_steam_init")
-
-
-func _begin_steam_init() -> void:
+func _enter_tree() -> void:
+	_ensure_project_root_steam_appid_file()
 	_steam = Engine.get_singleton("Steam")
 	if _steam == null:
 		ranking_mode_ready.emit(false)
@@ -30,6 +26,31 @@ func _begin_steam_init() -> void:
 		ranking_mode_ready.emit(false)
 		return
 	_initialized = true
+	call_deferred("_setup_leaderboard_async")
+
+
+func _ensure_project_root_steam_appid_file() -> void:
+	if not OS.has_feature("editor"):
+		return
+	var app_id: int = int(ProjectSettings.get_setting(_SETTING_APP_ID, 0))
+	if app_id <= 0:
+		return
+	var absolute_path: String = ProjectSettings.globalize_path("res://steam_appid.txt")
+	if FileAccess.file_exists(absolute_path):
+		var existing: String = FileAccess.get_file_as_string(absolute_path).strip_edges()
+		if existing == str(app_id):
+			return
+	var file_access: FileAccess = FileAccess.open(absolute_path, FileAccess.WRITE)
+	if file_access == null:
+		push_warning("无法写入 steam_appid.txt（编辑器验收需要项目根该文件与 App ID 一致）: %s" % absolute_path)
+		return
+	file_access.store_string(str(app_id))
+	file_access.flush()
+
+
+func _setup_leaderboard_async() -> void:
+	if _steam == null or not _initialized:
+		return
 	var board_name: String = String(ProjectSettings.get_setting(_SETTING_BOARD_NAME, "SPIN_HUMAN_HITS"))
 	_steam.findOrCreateLeaderboard(board_name, 2, 1)
 	var find_args: Variant = await _steam.leaderboard_find_result
@@ -45,6 +66,8 @@ func _begin_steam_init() -> void:
 
 func _process(_delta: float) -> void:
 	if not _initialized or _steam == null:
+		return
+	if bool(ProjectSettings.get_setting("steam/initialization/embed_callbacks", false)):
 		return
 	_steam.run_callbacks()
 
