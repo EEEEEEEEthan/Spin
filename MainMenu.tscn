@@ -178,3 +178,4 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="Rank" parent="." unique_id=265515797 instance=ExtResource("7_hallf")]
+axis_stretch_vertical = 0
