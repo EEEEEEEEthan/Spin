@@ -276,7 +276,7 @@ func _open_rank_panel(focus_entry_id: int) -> void:
 	_menu_hover_angle = ANGLE_IDLE
 	_pressed_index = -1
 	_tween_buttons_for_hover(ANGLE_IDLE)
-	rank_panel.prepare_for_open(focus_entry_id)
+	await rank_panel.prepare_for_open_async(focus_entry_id)
 	rank_panel.position = _rank_hidden_left_position()
 	rank_panel.scale = Vector2(0.96, 0.96)
 	for index in range(_menu_panels.size()):

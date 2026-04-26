@@ -17,12 +17,21 @@ config/features=PackedStringArray("4.6")
 
 [autoload]
 
+SteamBridge="*res://steam_bridge.gd"
 Transition="*res://TransitionLayer.tscn"
 PlayerSession="*res://player_session.gd"
 
 [dotnet]
 
 project/assembly_name="UnnamedProject"
+
+[steam]
+
+initialization/app_id=0
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false
+leaderboard/human_hits_internal_name="SPIN_HUMAN_HITS"
+multiplayer_peer/max_channels=4
 
 [editor]
 

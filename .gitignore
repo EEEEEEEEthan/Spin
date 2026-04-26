@@ -1,5 +1,6 @@
 /.engine
 /.godot
+steam_appid.txt
 /.bot/__pycache__/
 /.bot/temp_*.py
 *.blend1

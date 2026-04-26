@@ -18,6 +18,12 @@ var _pending_rank_entry_id: int = -1
 
 
 func _ready() -> void:
+	SteamBridge.ranking_mode_ready.connect(_on_steam_ranking_mode_ready, CONNECT_ONE_SHOT)
+
+
+func _on_steam_ranking_mode_ready(use_steam: bool) -> void:
+	if use_steam:
+		return
 	_load_leaderboard()
 
 
@@ -48,6 +54,11 @@ func _play_human_hit_sfx(volume_db: float) -> void:
 
 
 func submit_current_score_and_prepare_focus() -> int:
+	if SteamBridge.is_active():
+		var local_steam_id: int = SteamBridge.get_local_user_id_for_ui()
+		SteamBridge.queue_upload_score(current_human_hit_count)
+		_pending_rank_entry_id = local_steam_id
+		return local_steam_id
 	var entry_id: int = _next_entry_id
 	_next_entry_id += 1
 	var score_entry := {
@@ -63,6 +74,8 @@ func submit_current_score_and_prepare_focus() -> int:
 
 
 func get_rank_entries() -> Array:
+	if SteamBridge.is_active():
+		return SteamBridge.get_cached_rank_rows()
 	return _leaderboard_entries.duplicate(true)
 
 

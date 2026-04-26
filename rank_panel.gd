@@ -23,8 +23,10 @@ func _ready() -> void:
 	_scroll_container.gui_input.connect(_on_scroll_container_gui_input)
 
 
-func prepare_for_open(focus_entry_id: int) -> void:
+func prepare_for_open_async(focus_entry_id: int) -> void:
 	show()
+	if SteamBridge.is_active():
+		await SteamBridge.request_global_leaderboard_async()
 	_rebuild_entries(focus_entry_id)
 	call_deferred(&"_focus_highlight_entry")
 
