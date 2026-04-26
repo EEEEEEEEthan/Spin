@@ -16,6 +16,14 @@ const BTN_SCALE_PRESS := 0.88
 const BTN_HOVER_SEC := 0.24
 const BTN_PRESS_SEC := 0.07
 
+const LANG_BTN_IDLE := 1.0
+const LANG_BTN_HOVER := 1.16
+const LANG_BTN_PRESS := 0.84
+const LANG_BTN_HOVER_SEC := 0.22
+const LANG_BTN_PRESS_SEC := 0.06
+const LANG_BTN_SWITCH_PUNCH := 1.22
+const LANG_BTN_SWITCH_SETTLE_SEC := 0.36
+
 const _OVERLAY_SHOW_SEC := 0.35
 const _DELAY_BEFORE_TYPEWRITER_SEC := 2.0
 const _TYPEWRITER_CHAR_SEC := 0.1
@@ -59,6 +67,8 @@ var _menu_panel_tweens: Array[Tween] = []
 var _rank_panel_base_position: Vector2 = Vector2.ZERO
 var _menu_hover_audio: AudioStreamPlayer
 var _menu_click_audio: AudioStreamPlayer
+var _language_btn_tween: Tween
+var _language_btn_hovering: bool = false
 
 
 func _ready() -> void:
@@ -85,6 +95,11 @@ func _ready() -> void:
 	rank_panel.hide_instant()
 	LocaleConfig.locale_changed.connect(_on_locale_config_changed)
 	button_language.pressed.connect(_on_language_button_pressed)
+	button_language.mouse_entered.connect(_on_language_button_mouse_entered)
+	button_language.mouse_exited.connect(_on_language_button_mouse_exited)
+	button_language.button_down.connect(_on_language_button_down)
+	button_language.button_up.connect(_on_language_button_up)
+	button_language.scale = Vector2(LANG_BTN_IDLE, LANG_BTN_IDLE)
 	_apply_main_menu_locale()
 	set_process(true)
 	call_deferred(&"_sync_button_pivots")
@@ -103,6 +118,7 @@ func _ready() -> void:
 func _sync_button_pivots() -> void:
 	for button in _buttons:
 		button.pivot_offset = button.size * 0.5
+	button_language.pivot_offset = button_language.size * 0.5
 
 
 func _process(_delta: float) -> void:
@@ -131,6 +147,8 @@ func _notification(what: int) -> void:
 			and not _new_game_sequence_running
 		):
 			_tween_buttons_for_hover(ANGLE_IDLE)
+		_language_btn_hovering = false
+		_tween_language_button_scale(LANG_BTN_IDLE, LANG_BTN_HOVER_SEC, Tween.TRANS_BACK, Tween.EASE_OUT)
 
 
 func _hover_angle_for_mouse(mouse_position: Vector2) -> float:
@@ -319,8 +337,83 @@ func _on_locale_config_changed(_locale: String) -> void:
 	_apply_main_menu_locale()
 
 
+func _kill_language_button_tween() -> void:
+	if _language_btn_tween != null and _language_btn_tween.is_valid():
+		_language_btn_tween.kill()
+	_language_btn_tween = null
+
+
+func _tween_language_button_scale(scale_value: float, duration: float, trans: int, ease_type: int) -> void:
+	_kill_language_button_tween()
+	var tween := create_tween()
+	_language_btn_tween = tween
+	var target := Vector2(scale_value, scale_value)
+	tween.tween_property(button_language, ^"scale", target, duration).set_trans(trans).set_ease(ease_type)
+
+
+func _language_button_interaction_blocked() -> bool:
+	return _rank_open or _panel_transition_running or _new_game_sequence_running
+
+
+func _on_language_button_mouse_entered() -> void:
+	if _language_button_interaction_blocked() or button_language.disabled:
+		return
+	_language_btn_hovering = true
+	_play_menu_hover_sfx()
+	_tween_language_button_scale(LANG_BTN_HOVER, LANG_BTN_HOVER_SEC, Tween.TRANS_BACK, Tween.EASE_OUT)
+
+
+func _on_language_button_mouse_exited() -> void:
+	_language_btn_hovering = false
+	if button_language.disabled:
+		return
+	_tween_language_button_scale(LANG_BTN_IDLE, LANG_BTN_HOVER_SEC * 0.9, Tween.TRANS_BACK, Tween.EASE_OUT)
+
+
+func _on_language_button_down() -> void:
+	if _language_button_interaction_blocked() or button_language.disabled:
+		return
+	_play_menu_click_sfx()
+	_kill_language_button_tween()
+	var tween := create_tween()
+	_language_btn_tween = tween
+	tween.tween_property(
+		button_language,
+		^"scale",
+		Vector2(LANG_BTN_PRESS, LANG_BTN_PRESS),
+		LANG_BTN_PRESS_SEC,
+	).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+
+
+func _on_language_button_up() -> void:
+	if button_language.disabled:
+		return
+	var target := LANG_BTN_HOVER if _language_btn_hovering else LANG_BTN_IDLE
+	_tween_language_button_scale(target, LANG_BTN_HOVER_SEC * 0.85, Tween.TRANS_BACK, Tween.EASE_OUT)
+
+
+func _play_language_switch_punch() -> void:
+	_kill_language_button_tween()
+	var settle := LANG_BTN_HOVER if _language_btn_hovering else LANG_BTN_IDLE
+	var tween := create_tween()
+	_language_btn_tween = tween
+	tween.tween_property(
+		button_language,
+		^"scale",
+		Vector2(LANG_BTN_SWITCH_PUNCH, LANG_BTN_SWITCH_PUNCH),
+		0.1,
+	).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.chain()
+	tween.tween_property(button_language, ^"scale", Vector2(settle, settle), LANG_BTN_SWITCH_SETTLE_SEC).set_trans(
+		Tween.TRANS_BACK,
+	).set_ease(Tween.EASE_OUT)
+
+
 func _on_language_button_pressed() -> void:
+	if _language_button_interaction_blocked():
+		return
 	LocaleConfig.cycle_to_next_supported_locale()
+	_play_language_switch_punch()
 
 
 func _apply_main_menu_locale() -> void:
@@ -334,6 +427,10 @@ func _set_main_menu_buttons_disabled(disabled: bool) -> void:
 	for button in _buttons:
 		button.disabled = disabled
 	button_language.disabled = disabled
+	if disabled:
+		_language_btn_hovering = false
+		_kill_language_button_tween()
+		button_language.scale = Vector2(LANG_BTN_IDLE, LANG_BTN_IDLE)
 
 
 func _hidden_right_position(base_position: Vector2) -> Vector2:
