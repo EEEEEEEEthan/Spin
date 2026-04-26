@@ -36,7 +36,13 @@ func _register_translation_from_po(path: String) -> void:
 		return
 	var loaded: Resource = load(path) as Resource
 	if loaded is Translation:
-		TranslationServer.add_translation(loaded as Translation)
+		var tr_res: Translation = loaded as Translation
+		# spin_zh_TW.po 在部分引擎版本下解析为 en，会与 spin_en.po 冲突
+		if path == _ZH_TW_TRANSLATION_PATH:
+			tr_res.locale = "zh_TW"
+		elif path == _EN_TRANSLATION_PATH:
+			tr_res.locale = "en"
+		TranslationServer.add_translation(tr_res)
 		return
 	push_warning("资源不是 Translation，已跳过: %s" % path)
 
