@@ -4,21 +4,56 @@ extends Node
 
 const _SETTINGS_FILE := "user://language_settings.json"
 ## 不写入 project.godot 的 translation 列表，避免启动器/编辑器预解析 PO 时崩或版本差异。
-const _EN_TRANSLATION_PATH := "res://localization/spin_en.po"
-const _ZH_TW_TRANSLATION_PATH := "res://localization/spin_zh_TW.po"
-## 与 spin_en.po 中 msgid 及项目内 tr 一致，防止仅有 en 时 zh_CN 走 fallback 仍成英文
-const _MSGIDS_ZH: PackedStringArray = [
-	"新游戏", "名人堂", "退出", "消灭气球", "还没有成绩", "玩家", "请输入姓名", "英语", "简体中文", "繁体中文",
-	"游戏结束喽！", "你中了%d刀！",
+const _PO_REGISTRATIONS: Array[Dictionary] = [
+	{"path": "res://localization/spin_en.po", "locale": "en"},
+	{"path": "res://localization/spin_zh_TW.po", "locale": "zh_TW"},
+	{"path": "res://localization/spin_ja.po", "locale": "ja"},
+	{"path": "res://localization/spin_ko.po", "locale": "ko"},
+	{"path": "res://localization/spin_es.po", "locale": "es"},
+	{"path": "res://localization/spin_fr.po", "locale": "fr"},
+	{"path": "res://localization/spin_de.po", "locale": "de"},
+	{"path": "res://localization/spin_pt_BR.po", "locale": "pt_BR"},
 ]
-const SUPPORTED_LOCALES: Array[String] = ["zh_CN", "zh_TW", "en"]
+## 与各 .po 中 msgid 及项目内 tr 一致，防止仅有外语表时 zh_CN 走 fallback 仍成英文
+const _MSGIDS_ZH: PackedStringArray = [
+	"新游戏",
+	"名人堂",
+	"退出",
+	"消灭气球",
+	"还没有成绩",
+	"玩家",
+	"请输入姓名",
+	"英语",
+	"简体中文",
+	"繁体中文",
+	"日语",
+	"韩语",
+	"西班牙语",
+	"法语",
+	"德语",
+	"葡萄牙语",
+	"游戏结束喽！",
+	"你中了%d刀！",
+]
+const SUPPORTED_LOCALES: Array[String] = [
+	"zh_CN",
+	"zh_TW",
+	"en",
+	"ja",
+	"ko",
+	"es",
+	"fr",
+	"de",
+	"pt_BR",
+]
 
 signal locale_changed(locale: String)
 
+
 func _enter_tree() -> void:
 	_register_chinese_identity_translation()
-	_register_translation_from_po(_EN_TRANSLATION_PATH)
-	_register_translation_from_po(_ZH_TW_TRANSLATION_PATH)
+	for entry in _PO_REGISTRATIONS:
+		_register_translation_from_po(String(entry.path), String(entry.locale))
 	apply_startup_locale_from_save_or_system()
 
 
@@ -30,31 +65,41 @@ func _register_chinese_identity_translation() -> void:
 	TranslationServer.add_translation(t)
 
 
-func _register_translation_from_po(path: String) -> void:
-	if not ResourceLoader.exists(path):
-		push_warning("未找到翻译资源: %s" % path)
+func _register_translation_from_po(res_path: String, forced_locale: String) -> void:
+	if not ResourceLoader.exists(res_path):
+		push_warning("未找到翻译资源: %s" % res_path)
 		return
-	var loaded: Resource = load(path) as Resource
+	var loaded: Resource = load(res_path) as Resource
 	if loaded is Translation:
 		var tr_res: Translation = loaded as Translation
-		# spin_zh_TW.po 在部分引擎版本下解析为 en，会与 spin_en.po 冲突
-		if path == _ZH_TW_TRANSLATION_PATH:
-			tr_res.locale = "zh_TW"
-		elif path == _EN_TRANSLATION_PATH:
-			tr_res.locale = "en"
+		tr_res.locale = forced_locale
 		TranslationServer.add_translation(tr_res)
 		return
-	push_warning("资源不是 Translation，已跳过: %s" % path)
+	push_warning("资源不是 Translation，已跳过: %s" % res_path)
 
 
 func get_language_button_caption() -> String:
 	match TranslationServer.get_locale():
-		"en":
-			return tr("英语")
+		"zh_CN":
+			return tr("简体中文")
 		"zh_TW":
 			return tr("繁体中文")
+		"en":
+			return tr("英语")
+		"ja":
+			return tr("日语")
+		"ko":
+			return tr("韩语")
+		"es":
+			return tr("西班牙语")
+		"fr":
+			return tr("法语")
+		"de":
+			return tr("德语")
+		"pt_BR":
+			return tr("葡萄牙语")
 		_:
-			return tr("简体中文")
+			return TranslationServer.get_locale()
 
 
 func set_locale_code(locale: String) -> void:
@@ -69,8 +114,8 @@ func apply_startup_locale_from_save_or_system() -> void:
 	var from_save := _read_saved_locale_code()
 	if from_save.is_empty():
 		TranslationServer.set_locale(_map_system_locale(OS.get_locale()))
-		return
-	TranslationServer.set_locale(from_save)
+	else:
+		TranslationServer.set_locale(from_save)
 
 
 func _persist_locale(locale: String) -> void:
@@ -108,6 +153,18 @@ func _map_system_locale(os_locale: String) -> String:
 		return "zh_TW"
 	if normalized.begins_with("zh"):
 		return "zh_CN"
+	if normalized.begins_with("ja"):
+		return "ja"
+	if normalized.begins_with("ko"):
+		return "ko"
+	if normalized.begins_with("es"):
+		return "es"
+	if normalized.begins_with("fr"):
+		return "fr"
+	if normalized.begins_with("de"):
+		return "de"
+	if normalized.begins_with("pt"):
+		return "pt_BR"
 	if normalized.begins_with("en"):
 		return "en"
 	return "en"

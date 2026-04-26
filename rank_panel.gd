@@ -68,6 +68,7 @@ func _rebuild_entries(focus_entry_id: int) -> void:
 		if is_highlighted:
 			_highlight_item = item_root
 			_highlight_icon = icon
+		item_root.set_meta(&"_spin_rank_entry", rank_entry)
 	_scroll_container.scroll_vertical = 0
 
 
@@ -149,6 +150,16 @@ func _on_locale_config_changed(_locale: String) -> void:
 	_apply_title_locale()
 	if _empty_state_label != null and is_instance_valid(_empty_state_label):
 		_empty_state_label.text = tr("还没有成绩")
+	_refresh_rank_list_row_locales()
+
+
+func _refresh_rank_list_row_locales() -> void:
+	for child in _list_container.get_children():
+		if not child.has_meta(&"_spin_rank_entry"):
+			continue
+		var rank_entry: Dictionary = child.get_meta(&"_spin_rank_entry") as Dictionary
+		var name_label: Label = child.get_node(^"Name") as Label
+		name_label.text = String(rank_entry.get("name", tr("玩家")))
 
 
 func _apply_title_locale() -> void:

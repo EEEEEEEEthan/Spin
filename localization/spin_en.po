@@ -34,6 +34,24 @@ msgstr "Simplified Chinese"
 msgid "繁体中文"
 msgstr "Traditional Chinese"
 
+msgid "日语"
+msgstr "Japanese"
+
+msgid "韩语"
+msgstr "Korean"
+
+msgid "西班牙语"
+msgstr "Spanish"
+
+msgid "法语"
+msgstr "French"
+
+msgid "德语"
+msgstr "German"
+
+msgid "葡萄牙语"
+msgstr "Portuguese"
+
 msgid "游戏结束喽！"
 msgstr "Game over!"
 
