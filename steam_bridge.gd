@@ -89,6 +89,18 @@ func get_local_user_id_for_ui() -> int:
 	return int(_steam.getSteamID())
 
 
+func get_recommended_session_display_name() -> String:
+	if _steam == null:
+		return "玩家"
+	var sid: int = int(_steam.getSteamID())
+	if sid == 0:
+		return "玩家"
+	var persona: String = String(_steam.getFriendPersonaName(sid)).strip_edges()
+	if persona.is_empty():
+		return "玩家"
+	return persona
+
+
 func queue_upload_score(score: int) -> void:
 	if not is_active():
 		return

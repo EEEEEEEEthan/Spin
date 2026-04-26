@@ -18,9 +18,7 @@ const BTN_PRESS_SEC := 0.07
 
 const _NEW_GAME_INTRO_TEXT := "消灭气球"
 const _OVERLAY_SHOW_SEC := 0.35
-const _DELAY_AFTER_NAME_BEFORE_TYPEWRITER_SEC := 2.0
-const _INPUT_NAME_CANVAS_LAYER := 101
-const _NAME_INPUT_SCENE := preload("res://InputName.tscn")
+const _DELAY_BEFORE_TYPEWRITER_SEC := 2.0
 const _TYPEWRITER_CHAR_SEC := 0.1
 const _HOLD_AFTER_INTRO_SEC := 3.0
 const _TRANSITION_SHADER_INDEX := 1
@@ -229,18 +227,9 @@ func _run_new_game_transition() -> void:
 	Transition.set_overlay_blocks_input(true)
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
 	Transition.set_overlay_blocks_input(false)
-	var name_layer := CanvasLayer.new()
-	name_layer.layer = _INPUT_NAME_CANVAS_LAYER
-	var input_name_root: Control = _NAME_INPUT_SCENE.instantiate()
-	name_layer.add_child(input_name_root)
-	add_child(name_layer)
-	var line_edit: LineEdit = input_name_root.get_node("LineEdit") as LineEdit
-	line_edit.grab_focus()
-	var chosen_name: String = await input_name_root.name_confirmed
-	PlayerSession.display_name = chosen_name
-	name_layer.queue_free()
+	PlayerSession.display_name = SteamBridge.get_recommended_session_display_name()
 	Transition.set_overlay_blocks_input(true)
-	await get_tree().create_timer(_DELAY_AFTER_NAME_BEFORE_TYPEWRITER_SEC).timeout
+	await get_tree().create_timer(_DELAY_BEFORE_TYPEWRITER_SEC).timeout
 	await Transition.typewriter_display(_NEW_GAME_INTRO_TEXT, _TYPEWRITER_CHAR_SEC)
 	await get_tree().create_timer(_HOLD_AFTER_INTRO_SEC).timeout
 	get_tree().change_scene_to_packed(preload("res://Game.tscn"))
