@@ -12,7 +12,6 @@ const _HUMAN_HIT_SFX: Array[AudioStream] = [
 ]
 
 var _leaderboard_entries: Array[Dictionary] = []
-var _counted_human_hit_knife_ids: Dictionary = {}
 var _next_entry_id: int = 1
 var _pending_rank_entry_id: int = -1
 
@@ -33,18 +32,16 @@ func _on_steam_ranking_mode_ready(use_steam: bool) -> void:
 
 func begin_new_run() -> void:
 	current_human_hit_count = 0
-	_counted_human_hit_knife_ids.clear()
 	_pending_rank_entry_id = -1
 
 
-func register_human_hit(knife: Node, play_hit_sfx: bool = true, hit_sfx_volume_db: float = 0.0) -> void:
-	var knife_id: int = knife.get_instance_id()
-	if _counted_human_hit_knife_ids.has(knife_id):
-		return
-	_counted_human_hit_knife_ids[knife_id] = true
+## 第四关刀刃扎中人体并生成血迹粒子时调用；名人堂分数 = 扎入计数。
+func increment_human_stuck_knife_score() -> void:
 	current_human_hit_count += 1
-	if play_hit_sfx:
-		_play_human_hit_sfx(hit_sfx_volume_db)
+
+
+func play_human_hit_sfx(volume_db: float = 0.0) -> void:
+	_play_human_hit_sfx(volume_db)
 
 
 func _play_human_hit_sfx(volume_db: float) -> void:

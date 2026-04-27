@@ -55,7 +55,7 @@ func _connect_knife_stuck(node: Node) -> void:
 func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, should_spawn_blood: bool, knife: RigidBody3D) -> void:
 	if hit_body != _human_hit_static_body:
 		return
-	PlayerSession.register_human_hit(knife, true, _HUMAN_HIT_SFX_VOLUME_DB)
+	PlayerSession.play_human_hit_sfx(_HUMAN_HIT_SFX_VOLUME_DB)
 	if should_spawn_blood:
 		_spawn_blood_on_knife(knife)
 	if collider_shape_index != _HUMAN_HEAD_COLLIDER_SHAPE_INDEX:
@@ -65,6 +65,7 @@ func _on_knife_stuck(hit_body: Node3D, collider_shape_index: int, should_spawn_b
 
 
 func _spawn_blood_on_knife(knife: RigidBody3D) -> void:
+	PlayerSession.increment_human_stuck_knife_score()
 	var blood_particles := _BLOOD_SCENE.instantiate() as GPUParticles3D
 	knife.add_child(blood_particles)
 	blood_particles.position = _KNIFE_BLOOD_LOCAL_POSITION
