@@ -1,6 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://cpqs7k337vuhn"]
 
-[ext_resource type="FontFile" uid="uid://jty7p50xfhpr" path="res://angelxx_爱给网_aigei_com.ttf" id="1_yd3fu"]
+[ext_resource type="FontFile" uid="uid://jty7p50xfhpr" path="res://font.ttf" id="1_yd3fu"]
+
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yd3fu"]
 
