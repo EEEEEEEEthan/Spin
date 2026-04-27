@@ -78,7 +78,6 @@ pen_ink_light_direction={
 
 [steam]
 
-initialization/app_id=480
 initialization/initialize_on_startup=false
 initialization/embed_callbacks=false
 leaderboard/human_hits_internal_name="SPIN_HUMAN_HITS"
