@@ -16,6 +16,15 @@ msgstr "終了"
 msgid "消灭气球"
 msgstr "風船を割れ"
 
+msgid "击中靶子"
+msgstr "的を当てろ"
+
+msgid "别担心"
+msgstr "大丈夫"
+
+msgid "转！"
+msgstr "回せ！"
+
 msgid "还没有成绩"
 msgstr "スコアはまだありません"
 

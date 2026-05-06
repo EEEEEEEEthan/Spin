@@ -16,6 +16,15 @@ msgstr "Fim"
 msgid "消灭气球"
 msgstr "Balões"
 
+msgid "击中靶子"
+msgstr "Acerte os alvos"
+
+msgid "别担心"
+msgstr "Não se preocupe"
+
+msgid "转！"
+msgstr "Gira!"
+
 msgid "还没有成绩"
 msgstr "Nenhum"
 

@@ -101,7 +101,7 @@ func _run_chapter1_cleared_sequence() -> void:
 	_play_level_complete_ding()
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
 	await get_tree().create_timer(1.0).timeout
-	await Transition.typewriter_display(\"击中靶子\", _TYPEWRITER_CHAR_SEC)
+	await Transition.typewriter_display(tr(\"击中靶子\"), _TYPEWRITER_CHAR_SEC)
 	var old_chapter: Node = $Game2
 	old_chapter.name = \"_Chapter1_done\"
 	var chapter2_root: Node = preload(\"res://Chapter2.tscn\").instantiate()
@@ -120,7 +120,7 @@ func _run_chapter2_cleared_sequence() -> void:
 	_play_level_complete_ding()
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
 	await get_tree().create_timer(2.0).timeout
-	await Transition.typewriter_display(\"别担心\", _TYPEWRITER_CHAR_SEC)
+	await Transition.typewriter_display(tr(\"别担心\"), _TYPEWRITER_CHAR_SEC)
 	var old_chapter: Node = $Game2
 	old_chapter.name = \"_Chapter2_done\"
 	var chapter3_root: Node = preload(\"res://Chapter3.tscn\").instantiate()
@@ -139,7 +139,7 @@ func _run_chapter3_cleared_sequence() -> void:
 	_play_level_complete_ding()
 	await Transition.switch_overlay(_TRANSITION_SHADER_INDEX, false, _OVERLAY_SHOW_SEC)
 	await get_tree().create_timer(2.0).timeout
-	await Transition.typewriter_display(\"转！\", _TYPEWRITER_CHAR_SEC)
+	await Transition.typewriter_display(tr(\"转！\"), _TYPEWRITER_CHAR_SEC)
 	var old_chapter: Node = $Game2
 	old_chapter.name = \"_Chapter3_done\"
 	var chapter4_root: Node = preload(\"res://Chapter4.tscn\").instantiate()

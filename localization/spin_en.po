@@ -16,6 +16,15 @@ msgstr "Quit"
 msgid "消灭气球"
 msgstr "Pop balloons"
 
+msgid "击中靶子"
+msgstr "Hit the targets"
+
+msgid "别担心"
+msgstr "Don't worry"
+
+msgid "转！"
+msgstr "Spin!"
+
 msgid "还没有成绩"
 msgstr "No scores yet"
 

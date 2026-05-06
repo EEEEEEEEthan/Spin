@@ -16,6 +16,15 @@ msgstr "Ende"
 msgid "消灭气球"
 msgstr "Ballons"
 
+msgid "击中靶子"
+msgstr "Triff die Ziele"
+
+msgid "别担心"
+msgstr "Keine Sorge"
+
+msgid "转！"
+msgstr "Dreh!"
+
 msgid "还没有成绩"
 msgstr "Kein Rang"
 

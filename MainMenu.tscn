@@ -39,7 +39,7 @@ grow_horizontal = 0
 grow_vertical = 0
 theme_type_variation = &"Button_Menu"
 theme_override_font_sizes/font_size = 43
-text = "简体中文"
+text = ""
 
 [node name="TextureRect" type="TextureRect" parent="Button_Language" unique_id=1130411325]
 layout_mode = 1
@@ -103,21 +103,21 @@ theme_override_constants/separation = 39
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Button_Menu"
-text = "新游戏"
+text = ""
 alignment = 0
 
 [node name="Button_Rank" type="Button" parent="Control" unique_id=469182543]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Button_Menu"
-text = "名人堂"
+text = ""
 alignment = 0
 
 [node name="Button_Quit" type="Button" parent="Control" unique_id=900587493]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"Button_Menu"
-text = "退出"
+text = ""
 alignment = 0
 
 [node name="Axis" type="Control" parent="." unique_id=2043143782]

@@ -16,6 +16,15 @@ msgstr "退出"
 msgid "消灭气球"
 msgstr "消滅氣球"
 
+msgid "击中靶子"
+msgstr "擊中靶子"
+
+msgid "别担心"
+msgstr "別擔心"
+
+msgid "转！"
+msgstr "轉！"
+
 msgid "还没有成绩"
 msgstr "還沒有成績"
 

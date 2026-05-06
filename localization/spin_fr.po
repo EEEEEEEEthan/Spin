@@ -16,6 +16,15 @@ msgstr "Fin"
 msgid "消灭气球"
 msgstr "Ballons"
 
+msgid "击中靶子"
+msgstr "Touche la cible"
+
+msgid "别担心"
+msgstr "Ne t'inquiète pas"
+
+msgid "转！"
+msgstr "Tourne !"
+
 msgid "还没有成绩"
 msgstr "Sans score"
 

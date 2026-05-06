@@ -16,6 +16,15 @@ msgstr "Fin"
 msgid "消灭气球"
 msgstr "Globos"
 
+msgid "击中靶子"
+msgstr "Da en el blanco"
+
+msgid "别担心"
+msgstr "No te preocupes"
+
+msgid "转！"
+msgstr "¡Gira!"
+
 msgid "还没有成绩"
 msgstr "Sin puntos"
 

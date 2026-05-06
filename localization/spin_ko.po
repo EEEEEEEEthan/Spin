@@ -16,6 +16,15 @@ msgstr "종료"
 msgid "消灭气球"
 msgstr "풍선 터뜨리기"
 
+msgid "击中靶子"
+msgstr "표적을 맞춰라"
+
+msgid "别担心"
+msgstr "걱정 마"
+
+msgid "转！"
+msgstr "돌려!"
+
 msgid "还没有成绩"
 msgstr "아직 기록이 없습니다"
 
