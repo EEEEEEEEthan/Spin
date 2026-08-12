@@ -53,16 +53,14 @@ func _ready() -> void:
 	if _sign_scale_x == 0.0:
 		_sign_scale_x = 1.0
 	_trigger_area.part.connect(_on_human_hit_part)
+	# 与桌面左键蓄力 / 触控投掷钮蓄力对齐，不再依赖鼠标捕获
+	var player := get_node_or_null(\"Player\")
+	if player != null and player.has_signal(&\"charge_started\"):
+		player.charge_started.connect(_on_player_charge_started)
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
-			return
-		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-			return
-		_human_renderer.apply_random_emoji_one_to_four()
+func _on_player_charge_started() -> void:
+	_human_renderer.apply_random_emoji_one_to_four()
 
 
 func _process(_delta: float) -> void:

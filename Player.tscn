@@ -1,185 +1,10 @@
 [gd_scene format=3 uid="uid://bxsfl8hvrdh7b"]
 
 [ext_resource type="Texture2D" uid="uid://bcjauyuirgh2h" path="res://Strength.png" id="1_xhfnw"]
-
-[sub_resource type="GDScript" id="GDScript_xhfnw"]
-script/source = "extends Node
-
-const PROJECTILE_SCENE := preload(\"res://knife_projectile.tscn\")
-const THROW_AUDIO_STREAMS: Array[AudioStream] = [
-	preload(\"res://Audios/唰.wav\"),
-	preload(\"res://Audios/唰2.wav\"),
-	preload(\"res://Audios/唰3.wav\"),
-]
-
-@export var min_throw_speed: float = 5.0
-@export var max_throw_speed: float = 32.0
-@export var max_charge_seconds: float = 1.25
-@export var ui_fade_seconds: float = 0.15
-## 相对摄像机右侧偏移，避免从镜头中心穿出
-@export var spawn_offset_right: float = 0.35
-## 沿视线向前推出，避免生在相机体内
-@export var spawn_offset_forward: float = 0.4
-## 初速度向上分量 = throw_speed * 该系数，形成抛物线感
-@export var arc_up_factor: float = 0.15
-## 绕飞刀刚体局部 X 轴自旋角速度（弧度/秒，写入世界空间 angular_velocity）
-@export var knife_spin_radians_per_second: float = 7.0
-
-var _charging: bool = false
-var _charge_elapsed_seconds: float = 0.0
-var _ui_fade_tween: Tween
-
-@onready var camera_3d: Camera3D = $CameraYaw/Camera3D
-@onready var progress_root: Control = %Progress
-@onready var strength_bar: TextureRect = %Strength
-@onready var throw_audio_player: AudioStreamPlayer = %ThrowAudioPlayer
-
-
-func _ready() -> void:
-	strength_bar.progress = 1.0
-
-
-func _process(delta: float) -> void:
-	if _charging:
-		_charge_elapsed_seconds = minf(
-			_charge_elapsed_seconds + delta,
-			max_charge_seconds
-		)
-		var charge_ratio := 0.0
-		if max_charge_seconds > 0.0:
-			charge_ratio = clampf(_charge_elapsed_seconds / max_charge_seconds, 0.0, 1.0)
-		strength_bar.progress = charge_ratio
-
-
-func _fade_progress_ui(target_alpha: float) -> void:
-	if _ui_fade_tween != null:
-		_ui_fade_tween.kill()
-	_ui_fade_tween = create_tween()
-	_ui_fade_tween.tween_property(
-		progress_root,
-		^\"modulate\",
-		Color(1.0, 1.0, 1.0, target_alpha),
-		ui_fade_seconds
-	)
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index != MOUSE_BUTTON_LEFT:
-			return
-		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-			return
-		if mouse_event.pressed:
-			_charging = true
-			_charge_elapsed_seconds = 0.0
-			strength_bar.progress = 1.0
-			_fade_progress_ui(1.0)
-		else:
-			if _charging:
-				_throw_knife()
-			_charging = false
-			_fade_progress_ui(0.0)
-
-
-func _throw_knife() -> void:
-	var charge_ratio: float = 0.0
-	if max_charge_seconds > 0.0:
-		charge_ratio = clampf(_charge_elapsed_seconds / max_charge_seconds, 0.0, 1.0)
-	var throw_speed: float = lerpf(min_throw_speed, max_throw_speed, charge_ratio)
-	var throw_audio_stream: AudioStream = THROW_AUDIO_STREAMS.pick_random()
-	throw_audio_player.stream = throw_audio_stream
-	throw_audio_player.play()
-
-	var camera_basis: Basis = camera_3d.global_transform.basis
-	var spawn_origin: Vector3 = (
-		camera_3d.global_position
-		+ camera_basis.x * spawn_offset_right
-		- camera_basis.z * spawn_offset_forward
-	)
-
-	var forward: Vector3 = -camera_basis.z.normalized()
-	var initial_velocity: Vector3 = forward * throw_speed + Vector3.UP * (throw_speed * arc_up_factor)
-
-	var knife: RigidBody3D = PROJECTILE_SCENE.instantiate() as RigidBody3D
-	add_child(knife)
-	knife.global_position = spawn_origin
-	knife.linear_velocity = initial_velocity
-	var spin_axis_world: Vector3 = knife.global_transform.basis.x.normalized()
-	knife.angular_velocity = spin_axis_world * knife_spin_radians_per_second
-"
-
-[sub_resource type="GDScript" id="GDScript_0rwas"]
-script/source = "extends Node3D
-
-## 鼠标移动灵敏度（弧度/像素）
-@export var mouse_look_sensitivity: float = 0.0022
-## 相对进入场景时朝向：左右偏航最大偏转（弧度）
-@export var yaw_limit_radians: float = deg_to_rad(20.0)
-## 相对进入场景时朝向：上下俯仰最大偏转（弧度）
-@export var pitch_limit_radians: float = deg_to_rad(20.0)
-## 视角朝目标角度靠拢的速度（越大越跟手；帧率无关指数平滑）
-@export var view_angle_smoothing: float = 5.0
-
-var _look_yaw: float = 0.0
-var _look_pitch: float = 0.0
-var _target_yaw: float = 0.0
-var _target_pitch: float = 0.0
-var _yaw_center: float = 0.0
-var _pitch_center: float = 0.0
-
-@onready var camera_3d: Camera3D = $Camera3D
-
-
-func _ready() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	_yaw_center = rotation.y
-	_pitch_center = camera_3d.rotation.x
-	_look_yaw = _yaw_center
-	_look_pitch = _pitch_center
-	_target_yaw = _yaw_center
-	_target_pitch = _pitch_center
-
-
-func _process(delta: float) -> void:
-	var smooth_weight: float = 1.0 - exp(-view_angle_smoothing * delta)
-	_look_yaw = lerpf(_look_yaw, _target_yaw, smooth_weight)
-	_look_pitch = lerpf(_look_pitch, _target_pitch, smooth_weight)
-	rotation.y = _look_yaw
-	camera_3d.rotation.x = _look_pitch
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		var key_event := event as InputEventKey
-		if key_event.pressed and key_event.keycode == KEY_ESCAPE:
-			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			else:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-			get_viewport().set_input_as_handled()
-			return
-	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		var motion := event as InputEventMouseMotion
-		_target_yaw -= motion.relative.x * mouse_look_sensitivity
-		_target_pitch -= motion.relative.y * mouse_look_sensitivity
-		_target_yaw = clampf(
-			_target_yaw,
-			_yaw_center - yaw_limit_radians,
-			_yaw_center + yaw_limit_radians
-		)
-		_target_pitch = clampf(
-			_target_pitch,
-			_pitch_center - pitch_limit_radians,
-			_pitch_center + pitch_limit_radians
-		)
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
-			if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-				get_viewport().set_input_as_handled()
-"
+[ext_resource type="Texture2D" uid="uid://c6bedc7ae846e" path="res://手指_投掷.png" id="2_finger"]
+[ext_resource type="Script" uid="uid://4611c4671752c" path="res://player.gd" id="3_player"]
+[ext_resource type="Script" uid="uid://20a4dfb4f6104" path="res://player_camera_look.gd" id="4_look"]
+[ext_resource type="Script" uid="uid://862c9b3c4c6ef" path="res://strength_bar.gd" id="5_strength"]
 
 [sub_resource type="Environment" id="Environment_white_bg"]
 background_mode = 1
@@ -204,28 +29,14 @@ void fragment() {
 shader = SubResource("Shader_xhfnw")
 shader_parameter/progress = 1.0
 
-[sub_resource type="GDScript" id="GDScript_kpjcp"]
-script/source = "@tool
-extends TextureRect
-
-var _progress: float = 0.705
-
-@export_range(0, 1) var progress: float:
-	get:
-		return _progress
-	set(value):
-		_progress = value
-		material.set_shader_parameter(&\"progress\", _progress)
-"
-
 [node name="Player" type="Node" unique_id=1311655955]
-script = SubResource("GDScript_xhfnw")
+script = ExtResource("3_player")
 spawn_offset_right = 0.1
 knife_spin_radians_per_second = -20.0
 
 [node name="CameraYaw" type="Node3D" parent="." unique_id=1151770282]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 5)
-script = SubResource("GDScript_0rwas")
+script = ExtResource("4_look")
 
 [node name="Camera3D" type="Camera3D" parent="CameraYaw" unique_id=15691348]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881898, 0, -0.25881898, 0.9659259, 0, 0, 0)
@@ -248,6 +59,7 @@ offset_right = -25.0
 offset_bottom = -22.0
 grow_horizontal = 0
 grow_vertical = 0
+mouse_filter = 2
 
 [node name="Strength" type="TextureRect" parent="Progress" unique_id=160357816]
 unique_name_in_owner = true
@@ -258,9 +70,32 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 texture = ExtResource("1_xhfnw")
-script = SubResource("GDScript_kpjcp")
+script = ExtResource("5_strength")
 progress = 1.0
+
+[node name="ThrowButton" type="TextureButton" parent="." unique_id=1700000003]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -196.0
+offset_top = -196.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+focus_mode = 0
+keep_pressed_outside = true
+texture_normal = ExtResource("2_finger")
+ignore_texture_size = true
+stretch_mode = 5
+action_mode = 0
 
 [node name="ThrowAudioPlayer" type="AudioStreamPlayer" parent="." unique_id=1700000002]
 unique_name_in_owner = true
