@@ -107,6 +107,9 @@ func _end_charge_and_throw() -> void:
 	_charging = false
 	_throw_touch_index = -1
 	_throw_mouse_held = false
+	# 兜底松手时强制复位按下外观，避免按钮卡在 pressed
+	if _use_throw_button and throw_button != null:
+		throw_button.set_pressed_no_signal(false)
 	_fade_progress_ui(0.0)
 
 
@@ -145,17 +148,16 @@ func _on_throw_button_gui_input(event: InputEvent) -> void:
 func _input(event: InputEvent) -> void:
 	if not _use_throw_button or not _charging:
 		return
-	# Web/触控：触点在按钮外松开时，gui 可能收不到 release，这里兜底投出
+	# Web/触控：触点在按钮外松开时，gui 可能收不到 release，这里兜底投出。
+	# 故意不 set_input_as_handled：CameraYaw._input 需收到同指 release 以清黑名单。
 	if _throw_touch_index >= 0 and event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
 		if not touch.pressed and touch.index == _throw_touch_index:
 			_end_charge_and_throw()
-			get_viewport().set_input_as_handled()
 	elif _throw_mouse_held and event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and not mouse_event.pressed:
 			_end_charge_and_throw()
-			get_viewport().set_input_as_handled()
 
 
 func _unhandled_input(event: InputEvent) -> void:
