@@ -67,6 +67,13 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	axis.rotation = ANGLE_IDLE
 	_menu_hover_angle = ANGLE_IDLE
+	# Web 无法真正退出浏览器标签页：隐藏退出按钮与对应装饰图
+	if OS.has_feature("web"):
+		button_quit.visible = false
+		button_quit.disabled = true
+		var texture_quit: CanvasItem = get_node_or_null("%Texture_Quit") as CanvasItem
+		if texture_quit != null:
+			texture_quit.visible = false
 	_buttons = [button_new_game, button_rank, button_quit]
 	_button_tweens.resize(_buttons.size())
 	_menu_panels = [menu_root, axis]
@@ -133,11 +140,11 @@ func _notification(what: int) -> void:
 
 
 func _hover_angle_for_mouse(mouse_position: Vector2) -> float:
-	if button_new_game.get_global_rect().has_point(mouse_position):
+	if button_new_game.visible and button_new_game.get_global_rect().has_point(mouse_position):
 		return ANGLE_NEW
-	if button_rank.get_global_rect().has_point(mouse_position):
+	if button_rank.visible and button_rank.get_global_rect().has_point(mouse_position):
 		return ANGLE_RANK
-	if button_quit.get_global_rect().has_point(mouse_position):
+	if button_quit.visible and button_quit.get_global_rect().has_point(mouse_position):
 		return ANGLE_QUIT
 	return ANGLE_IDLE
 
@@ -260,6 +267,9 @@ func _on_rank_close_requested() -> void:
 
 func _on_quit_pressed() -> void:
 	if _panel_transition_running or _new_game_sequence_running:
+		return
+	# Web 下 quit 无意义且可能触发异常提示，直接忽略
+	if OS.has_feature("web"):
 		return
 	get_tree().quit()
 

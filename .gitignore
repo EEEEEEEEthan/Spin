@@ -1,5 +1,8 @@
 /.engine
 /.godot
+/.tmp/
 /.bot/__pycache__/
 /.bot/temp_*.py
 *.blend1
+/build/
+/export/

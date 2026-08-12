@@ -36,6 +36,17 @@ func _ready() -> void:
 	get_tree().node_added.connect(_on_tree_node_added)
 	for node in get_tree().get_nodes_in_group("knife_projectile"):
 		_connect_knife_stuck(node)
+	# 与桌面左键蓄力 / 触控投掷钮蓄力对齐，不再依赖鼠标捕获
+	var player := get_node_or_null("Player")
+	if player != null and player.has_signal(&"charge_started"):
+		player.charge_started.connect(_on_player_charge_started)
+
+
+func _on_player_charge_started() -> void:
+	if _head_shot:
+		_human_renderer.apply_emoji_dead()
+	else:
+		_human_renderer.apply_random_emoji_one_to_four()
 
 
 func _on_tree_node_added(node: Node) -> void:
@@ -71,19 +82,6 @@ func _spawn_blood_on_knife(knife: RigidBody3D) -> void:
 	blood_particles.one_shot = false
 	blood_particles.emitting = true
 	blood_particles.restart()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
-			return
-		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-			return
-		if _head_shot:
-			_human_renderer.apply_emoji_dead()
-		else:
-			_human_renderer.apply_random_emoji_one_to_four()
 
 
 func _process(_delta: float) -> void:
