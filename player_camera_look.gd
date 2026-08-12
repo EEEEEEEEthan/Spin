@@ -103,6 +103,8 @@ func _handle_touch_look_input(event: InputEvent) -> void:
 			# 多指：已有视角指时，不抢占第二指（留给别的用途 / 忽略）
 			if _look_touch_index < 0:
 				_look_touch_index = touch.index
+				# 触屏手势进行中时，打断可能残留的鼠标拖拽态
+				_mouse_drag_looking = false
 				get_viewport().set_input_as_handled()
 		elif touch.index == _look_touch_index:
 			_look_touch_index = -1
@@ -115,17 +117,19 @@ func _handle_touch_look_input(event: InputEvent) -> void:
 			return
 		if _look_touch_index < 0:
 			_look_touch_index = drag.index
+			_mouse_drag_looking = false
 		if drag.index != _look_touch_index:
 			return
 		_apply_look_delta(drag.relative, touch_look_sensitivity)
 		get_viewport().set_input_as_handled()
 		return
 
-	# 真触屏上常会额外冒出鼠标事件，忽略以免双倍转视角
-	if DisplayServer.is_touchscreen_available():
+	# 仅当「本手势来自触屏」时忽略伴生鼠标，避免双倍转视角。
+	# 不可用 is_touchscreen_available()：Web 桌面 Chrome 也常为 true，会掐死鼠标拖拽。
+	if _look_touch_index >= 0:
 		return
 
-	# Web 桌面：无捕获时按住左键拖拽转视角（点在投掷钮上不会进 unhandled）
+	# Web 桌面（及无活跃触屏手势时）：按住左键拖拽转视角
 	if event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index != MOUSE_BUTTON_LEFT:

@@ -53,11 +53,11 @@ func _setup_throw_button() -> void:
 	if _use_throw_button:
 		throw_button.visible = true
 		throw_button.mouse_filter = Control.MOUSE_FILTER_STOP
-		# 手指移出按钮仍保持按下态（配合下方全局松手检测）
+		# 手指移出按钮仍保持按下，直到真正松手再 button_up
 		throw_button.keep_pressed_outside = true
+		# 只走 BaseButton 信号，避免 gui_input.accept_event 跳过 button_down/up
 		throw_button.button_down.connect(_on_throw_button_down)
 		throw_button.button_up.connect(_on_throw_button_up)
-		throw_button.gui_input.connect(_on_throw_button_gui_input)
 		# 布局：力度条让出右下角更大的拇指热区
 		progress_root.offset_right = -212.0
 		progress_root.offset_bottom = -28.0
@@ -78,6 +78,12 @@ func _process(delta: float) -> void:
 		strength_bar.progress = charge_ratio
 
 
+func _notification(what: int) -> void:
+	# 失焦 / 触控被系统取消时避免卡在蓄力态
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		_cancel_charge()
+
+
 func _fade_progress_ui(target_alpha: float) -> void:
 	if _ui_fade_tween != null:
 		_ui_fade_tween.kill()
@@ -88,6 +94,12 @@ func _fade_progress_ui(target_alpha: float) -> void:
 		Color(1.0, 1.0, 1.0, target_alpha),
 		ui_fade_seconds
 	)
+
+
+func _is_on_throw_button(screen_position: Vector2) -> bool:
+	if throw_button == null or not throw_button.visible:
+		return false
+	return throw_button.get_global_rect().has_point(screen_position)
 
 
 func _begin_charge() -> void:
@@ -113,7 +125,22 @@ func _end_charge_and_throw() -> void:
 	_fade_progress_ui(0.0)
 
 
+## 失焦等：取消蓄力但不投出
+func _cancel_charge() -> void:
+	if not _charging:
+		_throw_touch_index = -1
+		_throw_mouse_held = false
+		return
+	_charging = false
+	_throw_touch_index = -1
+	_throw_mouse_held = false
+	if _use_throw_button and throw_button != null:
+		throw_button.set_pressed_no_signal(false)
+	_fade_progress_ui(0.0)
+
+
 func _on_throw_button_down() -> void:
+	_throw_mouse_held = true
 	_begin_charge()
 
 
@@ -122,39 +149,29 @@ func _on_throw_button_up() -> void:
 	_end_charge_and_throw()
 
 
-func _on_throw_button_gui_input(event: InputEvent) -> void:
-	# 记录触点 index，供松手落到按钮外时仍能结束蓄力
+func _input(event: InputEvent) -> void:
+	if not _use_throw_button:
+		return
+
+	# 记录投掷钮触点，供按钮外松手 / touchcancel 兜底（不 accept，留给 BaseButton）
 	if event is InputEventScreenTouch:
 		var touch := event as InputEventScreenTouch
 		if touch.pressed:
-			_throw_touch_index = touch.index
-			_begin_charge()
-			throw_button.accept_event()
+			if _is_on_throw_button(touch.position):
+				_throw_touch_index = touch.index
 		elif touch.index == _throw_touch_index:
-			_end_charge_and_throw()
-			throw_button.accept_event()
-	elif event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index != MOUSE_BUTTON_LEFT:
-			return
-		if mouse_event.pressed:
-			_throw_mouse_held = true
-			_begin_charge()
-		else:
-			_end_charge_and_throw()
-		throw_button.accept_event()
-
-
-func _input(event: InputEvent) -> void:
-	if not _use_throw_button or not _charging:
+			# 含 touchcancel 映射的 release：结束蓄力投出；_charging 守卫防双投
+			if _charging:
+				_end_charge_and_throw()
+			else:
+				_throw_touch_index = -1
 		return
-	# Web/触控：触点在按钮外松开时，gui 可能收不到 release，这里兜底投出。
-	# 故意不 set_input_as_handled：CameraYaw._input 需收到同指 release 以清黑名单。
-	if _throw_touch_index >= 0 and event is InputEventScreenTouch:
-		var touch := event as InputEventScreenTouch
-		if not touch.pressed and touch.index == _throw_touch_index:
-			_end_charge_and_throw()
-	elif _throw_mouse_held and event is InputEventMouseButton:
+
+	if not _charging:
+		return
+
+	# 故意不 set_input_as_handled：CameraYaw._input 需收到同指 release 以清黑名单
+	if _throw_mouse_held and event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT and not mouse_event.pressed:
 			_end_charge_and_throw()
